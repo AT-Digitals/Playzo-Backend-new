@@ -1,0 +1,25 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "rules": {
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "eqeqeq": "warn",
+    "no-multiple-empty-lines": ["warn", { "max": 1, "maxEOF": 0 }],
+    "curly": "warn",
+    "no-duplicate-imports": "warn",
+    "semi": ["warn", "always"],
+    "quotes": ["warn", "double"],
+    "no-unreachable": "error",
+    "no-path-concat": "error",
+    "no-cond-assign": ["error", "always"],
+    "sort-imports": "warn"
+  }
+}
