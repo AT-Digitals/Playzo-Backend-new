@@ -6,6 +6,7 @@ import { AuthValidator } from "./middleware/AuthValidator";
 import { Container } from "typedi";
 import { CorsOptions } from "cors";
 import { CsrfHandler } from "./middleware/CsrfHandler";
+import { DatabaseSeeder } from "./utils/DatabaseSeeder";
 import { DefaultHandler } from "./middleware/DefaultHandler";
 import { EnvUtils } from "./utils/EnvUtils";
 import { ErrorHandler } from "./middleware/ErrorHandler";
@@ -81,4 +82,5 @@ useExpressServer(app, {
 app.listen(PORT, async () => {
   console.log(`Server is running http://localhost:${PORT}...`);
   await MongoDatabase.connect();
+  await DatabaseSeeder.init();
 });
