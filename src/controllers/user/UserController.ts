@@ -4,7 +4,7 @@ import {
   Get,
   JsonController,
   Post,
-  Res,
+  Res
 } from "routing-controllers";
 
 import { AuthDto } from "../../dto/auth/AuthDto";
@@ -22,7 +22,7 @@ export class UserController {
     return this.userService.getUser(userDto);
   }
 
-  @Post("/logout")
+  @Post("/auth/logout")
   public async logoutUser(@Res() res: Response) {
     AuthUtils.logoutUser(res);
     return res.send("");

@@ -1,5 +1,6 @@
 import { AdminRequestDto } from "../dto/admin/AdminRequestDto";
 import { AdminUser } from "../models/admin/AdminUser";
+import { UserType } from "../dto/auth/UserType";
 
 export class DatabaseSeeder {
   public static async init() {
@@ -22,8 +23,10 @@ export class DatabaseSeeder {
         phoneNumber,
         name,
         password,
+        role: UserType.ADMIN
       };
       const admin = new AdminUser(defaultAdmin);
+      await admin.setPassword(defaultAdmin.password);
       await admin.save();
       console.log("Created default admin user");
     }

@@ -7,6 +7,7 @@ export class AdminDto extends AuthDto {
   email: string;
   name: string;
   profilePic: string;
+  role: string;
 
   constructor(admin: AdminUserModel) {
     super(admin.id, UserType.ADMIN);
@@ -14,5 +15,6 @@ export class AdminDto extends AuthDto {
     this.email = admin.email;
     this.name = admin.name;
     this.profilePic = admin.profilePic;
+    this.role = admin.role;
   }
 }

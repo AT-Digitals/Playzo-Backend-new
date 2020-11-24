@@ -6,6 +6,7 @@ export interface AdminUserModel extends Document {
   name: string;
   profilePic: string;
   password: string;
+  role: string;
   setPassword(password: string): Promise<void>;
   validateUser(password: string): Promise<boolean>;
 }
