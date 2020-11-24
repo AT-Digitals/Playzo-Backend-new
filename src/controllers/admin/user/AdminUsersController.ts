@@ -1,11 +1,11 @@
 import { Body, Get, JsonController, Post } from "routing-controllers";
 
-import { AdminRequestDto } from "../../../dto/admin/AdminRequestDto";
+import { AdminRequestDto } from "../../../dto/admin/user/AdminRequestDto";
 import { AdminUsersService } from "../../../services/admin/user/AdminUsersService";
 import { IsAdmin } from "../../../middleware/AuthValidator";
 
 @JsonController("/admins/users")
-export class AdminAuthController {
+export class AdminUsersController {
   constructor(private adminUsersService: AdminUsersService) {}
 
   @Post("/")

@@ -1,7 +1,7 @@
 import { Body, JsonController, Post, Res } from "routing-controllers";
 
 import { AdminAuthService } from "../../../services/admin/auth/AdminAuthService";
-import { AdminLoginDto } from "../../../dto/admin/AdminLoginDto";
+import { AdminLoginDto } from "../../../dto/admin/auth/AdminLoginDto";
 import { AuthUtils } from "../../../utils/AuthUtils";
 import { Response } from "express";
 

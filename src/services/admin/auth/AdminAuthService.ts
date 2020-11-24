@@ -1,5 +1,5 @@
-import { AdminDto } from "../../../dto/admin/AdminDto";
-import { AdminLoginDto } from "../../../dto/admin/AdminLoginDto";
+import { AdminDto } from "../../../dto/admin/user/AdminDto";
+import { AdminLoginDto } from "../../../dto/admin/auth/AdminLoginDto";
 import { AdminUser } from "../../../models/admin/AdminUser";
 import { AppError } from "../../../dto/error/AppError";
 import { AppErrorDto } from "../../../dto/error/AppErrorDto";

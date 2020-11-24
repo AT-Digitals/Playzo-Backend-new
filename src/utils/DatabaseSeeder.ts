@@ -1,4 +1,4 @@
-import { AdminRequestDto } from "../dto/admin/AdminRequestDto";
+import { AdminRequestDto } from "../dto/admin/user/AdminRequestDto";
 import { AdminUser } from "../models/admin/AdminUser";
 import { UserType } from "../dto/auth/UserType";
 

@@ -7,7 +7,7 @@ import {
   MinLength
 } from "class-validator";
 
-import { UserType } from "../auth/UserType";
+import { UserType } from "../../auth/UserType";
 
 export class AdminRequestDto {
   @IsDefined({

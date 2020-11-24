@@ -1,6 +1,6 @@
-import { AdminUserModel } from "../../models/admin/AdminUserModel";
-import { AuthDto } from "../auth/AuthDto";
-import { UserType } from "../auth/UserType";
+import { AdminUserModel } from "../../../models/admin/AdminUserModel";
+import { AuthDto } from "../../auth/AuthDto";
+import { UserType } from "../../auth/UserType";
 
 export class AdminDto extends AuthDto {
   phoneNumber: string;

@@ -1,6 +1,6 @@
-import { AdminDto } from "../../../dto/admin/AdminDto";
+import { AdminDto } from "../../../dto/admin/user/AdminDto";
 import { AdminError } from "../../../dto/error/AdminError";
-import { AdminRequestDto } from "../../../dto/admin/AdminRequestDto";
+import { AdminRequestDto } from "../../../dto/admin/user/AdminRequestDto";
 import { AdminUser } from "../../../models/admin/AdminUser";
 import { AppErrorDto } from "../../../dto/error/AppErrorDto";
 import { Service } from "typedi";
