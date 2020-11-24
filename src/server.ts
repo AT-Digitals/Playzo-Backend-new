@@ -35,10 +35,12 @@ const corsOption: CorsOptions = {
     /https:\/\/.*\.faboproperties\.com/,
     "http://faboproperties.comn",
     /http:\/\/.*\.faboproperties\.com/,
-    /http:\/\/localhost:*/,
+    "http://atdigitals.comn",
+    /http:\/\/.*\.atdigitals\.com/,
+    /http:\/\/localhost:*/
   ],
   credentials: true,
-  optionsSuccessStatus: 200,
+  optionsSuccessStatus: 200
 };
 
 const app = express();
@@ -70,13 +72,13 @@ useExpressServer(app, {
   currentUserChecker: AuthValidator.currentUser,
   defaultErrorHandler: false,
   defaults: {
-    undefinedResultCode: HttpStatusCode.NO_CONTENT,
+    undefinedResultCode: HttpStatusCode.NO_CONTENT
   },
   validation: {
     forbidUnknownValues: true,
     whitelist: true,
-    forbidNonWhitelisted: true,
-  },
+    forbidNonWhitelisted: true
+  }
 });
 
 app.listen(PORT, async () => {
