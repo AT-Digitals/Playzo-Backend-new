@@ -1,4 +1,13 @@
-import { IsDefined, IsEmail, Length, MinLength } from "class-validator";
+import {
+  IsDefined,
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  Length,
+  MinLength
+} from "class-validator";
+
+import { UserType } from "../../auth/UserType";
 
 export class AdminRequestDto {
   @IsDefined({
@@ -16,4 +25,8 @@ export class AdminRequestDto {
 
   @IsDefined({ message: "Name is required" })
   name: string;
+
+  @IsNotEmpty({ message: "Role is required" })
+  @IsEnum(UserType, { message: "Please provide a valid role" })
+  role: UserType;
 }
