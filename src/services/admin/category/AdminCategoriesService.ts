@@ -28,6 +28,8 @@ export class AdminCategoriesService {
       this.checkIfCatgoryExistsWithGivenName(categoryRequest.name);
     }
     category.name = categoryRequest.name;
+    category.displayName = categoryRequest.displayName;
+    category.categoryType = categoryRequest.categoryType;
     category.hidden = categoryRequest.hidden;
     category = await category.save();
     return new AdminCategoryDto(category);
