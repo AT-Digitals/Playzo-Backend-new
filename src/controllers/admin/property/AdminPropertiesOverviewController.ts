@@ -31,6 +31,12 @@ export class AdminPropertiesOverviewController {
   }
 
   @IsAdmin()
+  @Get("/:propertyId")
+  public async getPropertyDetails(@Param("propertyId") propertyId: string) {
+    return this.adminPropertiesOverviewService.getPropertyDetails(propertyId);
+  }
+
+  @IsAdmin()
   @Put("/:propertyId")
   public async updatePropertyOverview(
     @Param("propertyId") propertyId: string,

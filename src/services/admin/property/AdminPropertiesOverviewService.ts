@@ -1,4 +1,5 @@
 import { AdminError } from "../../../dto/error/AdminError";
+import { AdminPropertyDetailedDto } from "../../../dto/admin/property/AdminPropertyDetailedDto";
 import { AdminPropertyOverviewDto } from "../../../dto/admin/property/AdminPropertyOverviewDto";
 import { AdminPropertyOverviewRequestDto } from "../../../dto/admin/property/AdminPropertyOverviewRequestDto";
 import { AppErrorDto } from "../../../dto/error/AppErrorDto";
@@ -20,6 +21,12 @@ export class AdminPropertiesOverviewService {
     return new AdminPropertyOverviewDto(property);
   }
 
+  public async getPropertyDetails(propertyId: string) {
+    let property = await this.findByPropertyId(propertyId);
+    property = await property.populate("category").execPopulate();
+    return new AdminPropertyDetailedDto(property);
+  }
+
   public async updatePropertyOverview(
     propertyId: string,
     propertyRequest: AdminPropertyOverviewRequestDto
@@ -35,11 +42,12 @@ export class AdminPropertiesOverviewService {
     property.usps = propertyRequest.usps;
     property.price = propertyRequest.price;
     property = await property.save();
+    property = await property.populate("category").execPopulate();
     return new AdminPropertyOverviewDto(property);
   }
 
   private async findByPropertyId(propertyId: string) {
-    const property = await Property.findById(propertyId);
+    const property = await Property.findById(propertyId).populate("category");
     if (!property) {
       throw new AppErrorDto(AdminError.PROPERTY_ID_DOES_NOT_EXIST);
     }
