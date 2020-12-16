@@ -29,8 +29,6 @@ winston.transports.Console.level = EnvUtils.isProd() ? "warn" : "debug";
 
 const { PORT = 3000 } = process.env;
 
-console.log("ENV...", process.env.DEFAULT_ADMIN_PHONE);
-
 const corsOption: CorsOptions = {
   origin: [
     "https://faboproperties.comn",
