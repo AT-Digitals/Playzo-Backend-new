@@ -30,8 +30,8 @@ export class AdminPropertyOverviewDto {
     this.usps = property.usps;
     this.category = new AdminCategoryDto(property.category);
     this.media = {
-      url: property.media.url,
-      type: property.media.type
+      url: property.media && property.media.url,
+      type: property.media && property.media.type
     }
   }
 }
