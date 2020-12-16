@@ -1,5 +1,4 @@
 import { Schema, model } from "mongoose";
-
 import MongoDatabase from "../../utils/MongoDatabase";
 import { PropertyModel } from "./PropertyModel";
 
@@ -8,6 +7,11 @@ export const PropertyPriceSchema = new Schema({
   to: Number,
   perSqFt: Number
 });
+
+export const PropertyMediaSchema = new Schema({
+  url: [String],
+  type: ['image', 'video']
+})
 
 const PropertySchema = new Schema({
   name: { type: String, required: true },
@@ -18,7 +22,8 @@ const PropertySchema = new Schema({
   category: { type: Schema.Types.ObjectId, ref: "categories", index: true },
   numberOfUnits: Number,
   usps: [String],
-  price: PropertyPriceSchema
+  price: PropertyPriceSchema,
+  media: PropertyMediaSchema
 });
 
 PropertySchema.plugin(MongoDatabase.timeAuditPlugin);

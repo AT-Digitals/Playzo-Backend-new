@@ -2,6 +2,8 @@ import { AdminError } from "../../../dto/error/AdminError";
 import { AdminPropertyDetailedDto } from "../../../dto/admin/property/AdminPropertyDetailedDto";
 import { AdminPropertyOverviewDto } from "../../../dto/admin/property/AdminPropertyOverviewDto";
 import { AdminPropertyOverviewRequestDto } from "../../../dto/admin/property/AdminPropertyOverviewRequestDto";
+import { AdminPropertyMediaDto } from "../../../dto/admin/property/AdminPropertyMediaDto";
+import { PropertyMediaModel } from "../../../models/property/PropertyMediaModel";
 import { AppErrorDto } from "../../../dto/error/AppErrorDto";
 import { Property } from "../../../models/property/Property";
 import { Service } from "typedi";
@@ -19,6 +21,18 @@ export class AdminPropertiesOverviewService {
     let property = new Property({ ...propertyRequest });
     property = await property.save();
     return new AdminPropertyOverviewDto(property);
+  }
+
+  public async addNewImages(
+    propertyRequest: AdminPropertyMediaDto,
+    media: PropertyMediaModel
+  ) {
+    await Property.updateOne({ "_id": propertyRequest.id }, {
+      media,
+    }, { upsert: true })
+
+    return media.url
+
   }
 
   public async getPropertyDetails(propertyId: string) {
