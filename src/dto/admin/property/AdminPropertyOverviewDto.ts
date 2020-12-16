@@ -1,6 +1,7 @@
 import { AdminCategoryDto } from "../category/AdminCategoryDto";
 import { AdminPropertyPriceDto } from "./AdminPropertyPriceDto";
 import { PropertyModel } from "../../../models/property/PropertyModel";
+import { PropertyMediaModel } from "../../../models/property/PropertyMediaModel"
 
 export class AdminPropertyOverviewDto {
   id: string;
@@ -13,6 +14,7 @@ export class AdminPropertyOverviewDto {
   numberOfUnits: number;
   usps: string[];
   price: AdminPropertyPriceDto;
+  media: PropertyMediaModel
 
   constructor(property: PropertyModel) {
     this.id = property.id;
@@ -27,5 +29,9 @@ export class AdminPropertyOverviewDto {
     this.numberOfUnits = property.numberOfUnits;
     this.usps = property.usps;
     this.category = new AdminCategoryDto(property.category);
+    this.media = {
+      url: property.media.url,
+      type: property.media.type
+    }
   }
 }
