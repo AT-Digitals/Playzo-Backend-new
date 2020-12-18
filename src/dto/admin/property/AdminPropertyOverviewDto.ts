@@ -14,7 +14,7 @@ export class AdminPropertyOverviewDto {
   numberOfUnits: number;
   usps: string[];
   price: AdminPropertyPriceDto;
-  media: PropertyMediaModel
+  media: PropertyMediaModel[]
 
   constructor(property: PropertyModel) {
     this.id = property.id;
@@ -29,9 +29,21 @@ export class AdminPropertyOverviewDto {
     this.numberOfUnits = property.numberOfUnits;
     this.usps = property.usps;
     this.category = new AdminCategoryDto(property.category);
-    this.media = {
-      url: property?.media[0]?.url,
-      type: property?.media[0]?.type
-    };
+    this.media = this.getMedia(property)
+
+  }
+
+  getMedia = (property: PropertyModel): PropertyMediaModel[] => {
+    let media: PropertyMediaModel[] = []
+
+    property?.media.forEach(ele => {
+      const temp: PropertyMediaModel = {
+        url: ele["url"],
+        type: ele["type"]
+      }
+      media.push(temp)
+    })
+
+    return media
   }
 }

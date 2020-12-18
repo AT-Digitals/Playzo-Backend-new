@@ -16,9 +16,9 @@ export class AdminPropertiesMediaService {
         let mediaList = property.media
         mediaList = [...mediaList, ...media]
         property.media = mediaList
-        property = await property.save()
+        await property.save()
 
-        return property
+        return media.map(ele => ele.url)
 
     }
 
