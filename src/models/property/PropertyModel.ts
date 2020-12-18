@@ -13,5 +13,5 @@ export interface PropertyModel extends Document {
   numberOfUnits: number;
   usps: string[];
   price: PropertyPriceModal;
-  media: PropertyMediaModel
+  media: PropertyMediaModel[]
 }

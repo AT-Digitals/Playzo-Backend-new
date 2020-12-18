@@ -19,18 +19,19 @@ export default class MongoDatabase {
   }
 
   private static getConnectionString() {
-    const url = process.env.DB_URL;
-    const user = process.env.DB_USER;
-    const password = process.env.DB_PASSWORD;
-    const database = process.env.DB_DATABASE;
-    const authDatabase = process.env.DB_AUTH_DATABASE;
+    // const url = process.env.DB_URL;
+    // const user = process.env.DB_USER;
+    // const password = process.env.DB_PASSWORD;
+    // const database = process.env.DB_DATABASE;
+    // const authDatabase = process.env.DB_AUTH_DATABASE;
     return (
-      "mongodb://" +
-      (user ? `${user}:${password}@` : "@") +
-      url +
-      "/" +
-      database +
-      (authDatabase ? `?authSource=${authDatabase}` : "")
+      // "mongodb://" +
+      // (user ? `${user}:${password}@` : "@") +
+      // url +
+      // "/" +
+      // database +
+      // (authDatabase ? `?authSource=${authDatabase}` : "")
+      "mongodb+srv://db_user_fabo:fabo_admin_1234@cluster0.kmhcu.mongodb.net/db_fabo?retryWrites=true&w=majority"
     );
   }
 

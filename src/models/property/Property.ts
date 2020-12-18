@@ -8,10 +8,18 @@ export const PropertyPriceSchema = new Schema({
   perSqFt: Number
 });
 
+const MediaType = Object.freeze({
+  Image: "image",
+  Video: "video"
+});
+
 export const PropertyMediaSchema = new Schema({
-  url: [String],
-  type: ['image', 'video']
-})
+  url: String,
+  type: {
+    type: String,
+    enum: Object.values(MediaType)
+  }
+});
 
 const PropertySchema = new Schema({
   name: { type: String, required: true },
@@ -23,7 +31,7 @@ const PropertySchema = new Schema({
   numberOfUnits: Number,
   usps: [String],
   price: PropertyPriceSchema,
-  media: PropertyMediaSchema
+  media: [PropertyMediaSchema]
 });
 
 PropertySchema.plugin(MongoDatabase.timeAuditPlugin);

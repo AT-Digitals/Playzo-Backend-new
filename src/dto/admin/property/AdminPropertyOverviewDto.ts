@@ -1,7 +1,7 @@
 import { AdminCategoryDto } from "../category/AdminCategoryDto";
 import { AdminPropertyPriceDto } from "./AdminPropertyPriceDto";
 import { PropertyModel } from "../../../models/property/PropertyModel";
-import { PropertyMediaModel } from "../../../models/property/PropertyMediaModel"
+import { PropertyMediaModel } from "../../../models/property/PropertyMediaModel";
 
 export class AdminPropertyOverviewDto {
   id: string;
@@ -30,8 +30,8 @@ export class AdminPropertyOverviewDto {
     this.usps = property.usps;
     this.category = new AdminCategoryDto(property.category);
     this.media = {
-      url: property.media && property.media.url,
-      type: property.media && property.media.type
-    }
+      url: property?.media[0]?.url,
+      type: property?.media[0]?.type
+    };
   }
 }

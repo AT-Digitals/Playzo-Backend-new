@@ -7,5 +7,5 @@ export class AdminPropertyMediaDto {
     id: string;
 
     @Allow()
-    desktopImage: Express.Multer.File[]
+    medias: Express.Multer.File[]
 }

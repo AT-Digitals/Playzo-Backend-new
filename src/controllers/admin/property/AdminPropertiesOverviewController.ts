@@ -8,10 +8,7 @@ import {
 } from "routing-controllers";
 import { AdminPropertiesOverviewService } from "../../../services/admin/property/AdminPropertiesOverviewService";
 import { AdminPropertyOverviewRequestDto } from "../../../dto/admin/property/AdminPropertyOverviewRequestDto";
-import { AdminPropertyMediaDto } from "../../../dto/admin/property/AdminPropertyMediaDto";
-import { Mediatype } from "../../../models/property/PropertyMediaModel";
 import { IsAdmin } from "../../../middleware/AuthValidator";
-import { UploadUtils, UploadedFiles, UploadedImages } from "../../../utils/UploadUtil";
 
 @JsonController("/admins/properties")
 export class AdminPropertiesOverviewController {
@@ -31,20 +28,6 @@ export class AdminPropertiesOverviewController {
     @Body() propertyRequest: AdminPropertyOverviewRequestDto
   ) {
     return this.adminPropertiesOverviewService.addNewProperty(propertyRequest);
-  }
-
-  @IsAdmin()
-  @Post("/images")
-  public async addImages(
-    @Body() req: AdminPropertyMediaDto,
-    @UploadedImages("desktopImage") desktopFile: UploadedFiles
-  ) {
-
-    const desktopImage = UploadUtils.getUploadedUrls(desktopFile);
-    return this.adminPropertiesOverviewService.addNewImages(req, {
-      url: desktopImage,
-      type: Mediatype.image
-    });
   }
 
   @IsAdmin()
