@@ -1,7 +1,7 @@
 import { AdminCategoryDto } from "../category/AdminCategoryDto";
 import { AdminPropertyPriceDto } from "./AdminPropertyPriceDto";
+import { AdminPropertyMediaDto } from "./AdminPropertyMediaDto"
 import { PropertyModel } from "../../../models/property/PropertyModel";
-import { PropertyMediaModel } from "../../../models/property/PropertyMediaModel";
 
 export class AdminPropertyOverviewDto {
   id: string;
@@ -14,7 +14,7 @@ export class AdminPropertyOverviewDto {
   numberOfUnits: number;
   usps: string[];
   price: AdminPropertyPriceDto;
-  media: PropertyMediaModel[]
+  media: AdminPropertyMediaDto[];
 
   constructor(property: PropertyModel) {
     this.id = property.id;
@@ -29,21 +29,21 @@ export class AdminPropertyOverviewDto {
     this.numberOfUnits = property.numberOfUnits;
     this.usps = property.usps;
     this.category = new AdminCategoryDto(property.category);
-    this.media = this.getMedia(property)
+    this.media = this.getMedia(property);
 
   }
 
-  getMedia = (property: PropertyModel): PropertyMediaModel[] => {
-    let media: PropertyMediaModel[] = []
+  getMedia = (property: PropertyModel): AdminPropertyMediaDto[] => {
+    let media: AdminPropertyMediaDto[] = [];
 
-    property?.media.forEach(ele => {
-      const temp: PropertyMediaModel = {
+    media = property?.media.map(ele => {
+      const temp: AdminPropertyMediaDto = {
         url: ele["url"],
         type: ele["type"]
-      }
-      media.push(temp)
-    })
+      };
+      return temp
+    });
 
-    return media
+    return media;
   }
 }

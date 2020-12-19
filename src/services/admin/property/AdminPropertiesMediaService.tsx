@@ -1,24 +1,23 @@
 import { Service } from "typedi";
 import { Property } from "../../../models/property/Property";
-import { AdminPropertyMediaDto } from "../../../dto/admin/property/AdminPropertyMediaDto";
 import { PropertyMediaModel } from "../../../models/property/PropertyMediaModel";
 import { AppErrorDto } from "../../../dto/error/AppErrorDto";
+import { AdminPropertyDetailedDto } from "../../../dto/admin/property/AdminPropertyDetailedDto";
 import { AdminError } from "../../../dto/error/AdminError";
 
 @Service()
 export class AdminPropertiesMediaService {
     public async addNewImages(
-        propertyRequest: AdminPropertyMediaDto,
+        id: string,
         media: PropertyMediaModel[]
     ) {
 
-        let property = await this.findByPropertyId(propertyRequest.id);
-        let mediaList = property.media
-        mediaList = [...mediaList, ...media]
-        property.media = mediaList
-        await property.save()
+        let property = await this.findByPropertyId(id);
+        property.media = [...property.media, ...media]
+        await property.save();
+        property = await property.populate("category").execPopulate();
 
-        return media.map(ele => ele.url)
+        return new AdminPropertyDetailedDto(property);
 
     }
 

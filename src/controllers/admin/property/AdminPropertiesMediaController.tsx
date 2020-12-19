@@ -1,10 +1,9 @@
 import {
-    Body,
     JsonController,
     Post,
+    Param,
 } from "routing-controllers";
 import { AdminPropertiesMediaService } from "../../../services/admin/property/AdminPropertiesMediaService";
-import { AdminPropertyMediaDto } from "../../../dto/admin/property/AdminPropertyMediaDto";
 import { Mediatype, PropertyMediaModel } from "../../../models/property/PropertyMediaModel";
 import { IsAdmin } from "../../../middleware/AuthValidator";
 import { UploadUtils, UploadedFiles, UploadedImages } from "../../../utils/UploadUtil";
@@ -16,25 +15,25 @@ export class AdminPropertyMediaController {
     ) { }
 
     @IsAdmin()
-    @Post("/images")
+    @Post("/images/:propertyId")
     public async addImages(
-        @Body() req: AdminPropertyMediaDto,
-        @UploadedImages("medias") desktopFile: UploadedFiles
+        @UploadedImages("medias") desktopFile: UploadedFiles,
+        @Param("propertyId") propertyId: string
     ) {
 
         const imageList = UploadUtils.getUploadedUrls(desktopFile);
 
-        const mediaList: PropertyMediaModel[] = [];
+        let mediaList: PropertyMediaModel[] = [];
 
-        imageList.forEach(ele => {
+        mediaList = imageList.map(ele => {
             const temp: PropertyMediaModel = {
                 url: ele,
                 type: Mediatype.image
             };
-            mediaList.push(temp);
+            return temp
         });
 
-        return this.adminPropertiesMediaService.addNewImages(req, mediaList);
+        return this.adminPropertiesMediaService.addNewImages(propertyId, mediaList);
 
     }
 }

@@ -1,5 +1,8 @@
+import {
+    Allow,
+} from "class-validator";
 
-
-export class AdminPropertyMediaRequestDto {
-    id: string
+export class AdminPropertyMediaDto {
+    @Allow()
+    medias: Express.Multer.File[]
 }

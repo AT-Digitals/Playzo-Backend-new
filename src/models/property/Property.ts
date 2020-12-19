@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose";
 import MongoDatabase from "../../utils/MongoDatabase";
 import { PropertyModel } from "./PropertyModel";
+import { Mediatype } from "./PropertyMediaModel";
 
 export const PropertyPriceSchema = new Schema({
   from: Number,
@@ -8,16 +9,11 @@ export const PropertyPriceSchema = new Schema({
   perSqFt: Number
 });
 
-const MediaType = Object.freeze({
-  Image: "image",
-  Video: "video"
-});
-
 export const PropertyMediaSchema = new Schema({
   url: String,
   type: {
     type: String,
-    enum: Object.values(MediaType)
+    enum: [Mediatype.image, Mediatype.video]
   }
 });
 
