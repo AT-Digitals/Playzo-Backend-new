@@ -14,6 +14,7 @@ export class DatabaseSeeder {
       const phoneNumber = process.env.DEFAULT_ADMIN_PHONE;
       const name = "Admin";
       const password = process.env.DEFAULT_ADMIN_PASSWORD;
+
       if (!(email && phoneNumber && password)) {
         console.error("Please provide default admin credentials in env");
         return;

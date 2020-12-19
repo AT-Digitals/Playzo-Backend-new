@@ -22,7 +22,7 @@ import express from "express";
 import path from "path";
 import winston from "winston";
 
-dotenv.config({ path: ".env" });
+dotenv.config({ path: `${path.join(__dirname, "..", ".env")}` });
 
 // Winston configuration
 winston.transports.Console.level = EnvUtils.isProd() ? "warn" : "debug";

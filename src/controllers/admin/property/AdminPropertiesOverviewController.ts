@@ -14,7 +14,7 @@ import { IsAdmin } from "../../../middleware/AuthValidator";
 export class AdminPropertiesOverviewController {
   constructor(
     private adminPropertiesOverviewService: AdminPropertiesOverviewService
-  ) {}
+  ) { }
 
   @IsAdmin()
   @Get("/")
