@@ -8,14 +8,14 @@ import { Mediatype, PropertyMediaModel } from "../../../models/property/Property
 import { IsAdmin } from "../../../middleware/AuthValidator";
 import { UploadUtils, UploadedFiles, UploadedImages } from "../../../utils/UploadUtil";
 
-@JsonController("/admins/properties/media")
+@JsonController("/admins/properties/:propertyId/media")
 export class AdminPropertyMediaController {
     constructor(
         private adminPropertiesMediaService: AdminPropertiesMediaService
     ) { }
 
     @IsAdmin()
-    @Post("/images/:propertyId")
+    @Post("/images")
     public async addImages(
         @UploadedImages("medias") desktopFile: UploadedFiles,
         @Param("propertyId") propertyId: string
