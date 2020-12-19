@@ -29,21 +29,8 @@ export class AdminPropertyOverviewDto {
     this.numberOfUnits = property.numberOfUnits;
     this.usps = property.usps;
     this.category = new AdminCategoryDto(property.category);
-    this.media = this.getMedia(property);
+    this.media = property?.media.map(ele => new AdminPropertyMediaDto(ele))
 
   }
 
-  getMedia = (property: PropertyModel): AdminPropertyMediaDto[] => {
-    let media: AdminPropertyMediaDto[] = [];
-
-    media = property?.media.map(ele => {
-      const temp: AdminPropertyMediaDto = {
-        url: ele["url"],
-        type: ele["type"]
-      };
-      return temp
-    });
-
-    return media;
-  }
 }
