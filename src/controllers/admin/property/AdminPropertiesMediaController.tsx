@@ -23,15 +23,10 @@ export class AdminPropertyMediaController {
 
         const imageList = UploadUtils.getUploadedUrls(desktopFile);
 
-        let mediaList: PropertyMediaModel[] = [];
-
-        mediaList = imageList.map(ele => {
-            const temp: PropertyMediaModel = {
-                url: ele,
-                type: Mediatype.image
-            };
-            return temp
-        });
+        const mediaList = imageList.map((ele): PropertyMediaModel => ({
+            url: ele,
+            type: Mediatype.image
+        }));
 
         return this.adminPropertiesMediaService.addNewImages(propertyId, mediaList);
 

@@ -5,5 +5,6 @@ export enum Mediatype {
 
 export interface PropertyMediaModel {
     type: Mediatype,
-    url: string
+    url: string,
+    _id?: string
 }
