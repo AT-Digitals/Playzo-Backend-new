@@ -1,10 +1,11 @@
+import { Document } from "mongoose";
+
 export enum Mediatype {
-    image = "image",
-    video = "video"
+  image = "image",
+  video = "video",
 }
 
-export interface PropertyMediaModel {
-    type: Mediatype,
-    url: string,
-    _id?: string
+export interface PropertyMediaModel extends Document {
+  type: Mediatype;
+  url: string;
 }
