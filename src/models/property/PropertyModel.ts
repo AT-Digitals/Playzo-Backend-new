@@ -1,7 +1,7 @@
 import { CategoryModel } from "../category/CategoryModel";
 import { Document } from "mongoose";
-import { PropertyPriceModal } from "./PropertyPriceModel";
 import { PropertyMediaModel } from "./PropertyMediaModel";
+import { PropertyPriceModal } from "./PropertyPriceModel";
 
 export interface PropertyModel extends Document {
   name: string;
@@ -13,5 +13,5 @@ export interface PropertyModel extends Document {
   numberOfUnits: number;
   usps: string[];
   price: PropertyPriceModal;
-  media: PropertyMediaModel[]
+  media: PropertyMediaModel[];
 }
