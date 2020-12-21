@@ -27,7 +27,8 @@ const PropertySchema = new Schema({
   numberOfUnits: Number,
   usps: [String],
   price: PropertyPriceSchema,
-  media: [PropertyMediaSchema]
+  media: [PropertyMediaSchema],
+  amenities: [String]
 });
 
 PropertySchema.plugin(MongoDatabase.timeAuditPlugin);

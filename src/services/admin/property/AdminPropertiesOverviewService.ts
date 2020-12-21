@@ -46,7 +46,7 @@ export class AdminPropertiesOverviewService {
     return new AdminPropertyOverviewDto(property);
   }
 
-  private async findByPropertyId(propertyId: string) {
+  public async findByPropertyId(propertyId: string) {
     const property = await Property.findById(propertyId).populate("category");
     if (!property) {
       throw new AppErrorDto(AdminError.PROPERTY_ID_DOES_NOT_EXIST);
