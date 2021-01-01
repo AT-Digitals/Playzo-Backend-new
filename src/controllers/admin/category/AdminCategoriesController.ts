@@ -4,7 +4,7 @@ import {
   JsonController,
   Param,
   Post,
-  Put
+  Put,
 } from "routing-controllers";
 
 import { AdminCategoriesService } from "../../../services/admin/category/AdminCategoriesService";

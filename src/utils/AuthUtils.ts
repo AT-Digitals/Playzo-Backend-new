@@ -20,7 +20,7 @@ export class AuthUtils {
     res.cookie(this.COOKIE_NAME, token, {
       httpOnly: true,
       secure: EnvUtils.isProd(),
-      signed: true
+      signed: true,
     });
   }
 
@@ -48,7 +48,7 @@ export class AuthUtils {
       httpOnly: true,
       secure: EnvUtils.isProd(),
       signed: true,
-      maxAge: 0
+      maxAge: 0,
     });
   }
 }

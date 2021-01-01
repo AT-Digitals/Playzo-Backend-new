@@ -9,7 +9,7 @@ import { Service } from "typedi";
 export class AdminCategoriesService {
   public async getAllCategories() {
     const categories = await Category.find();
-    return categories.map(category => new AdminCategoryDto(category));
+    return categories.map((category) => new AdminCategoryDto(category));
   }
 
   public async addNewCategory(categoryRequest: AdminCategoryRequestDto) {

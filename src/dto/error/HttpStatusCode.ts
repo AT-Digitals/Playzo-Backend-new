@@ -4,7 +4,7 @@ export enum HttpStatusCode {
   BAD_REQUEST = 400,
   UNAUTHORIZED = 401,
   FORBIDDEN = 403,
-  NOT_FOUND = 404
+  NOT_FOUND = 404,
 }
 
 export const defaultErrorStatus = HttpStatusCode.BAD_REQUEST;

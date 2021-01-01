@@ -5,17 +5,20 @@ import { Service } from "typedi";
 
 @Service()
 export class AdminPropertiesAmenitiesService {
-    constructor(
-        private AdminPropertyOverviewService: AdminPropertiesOverviewService
-    ) {
+  constructor(
+    private AdminPropertyOverviewService: AdminPropertiesOverviewService
+  ) {}
+  public async updateAmenities(
+    amenities: AdminPropertyAmenitiesRequestDto,
+    propertyId: string
+  ) {
+    let property = await this.AdminPropertyOverviewService.findByPropertyId(
+      propertyId
+    );
+    property.amenities = amenities.amenities;
+    await property.save();
+    property = await property.populate("category").execPopulate();
 
-    }
-    public async updateAmenities(amenities: AdminPropertyAmenitiesRequestDto, propertyId: string) {
-        let property = await this.AdminPropertyOverviewService.findByPropertyId(propertyId);
-        property.amenities = amenities.amenities;
-        await property.save();
-        property = await property.populate("category").execPopulate();
-
-        return new AdminPropertyDetailedDto(property);
-    }
+    return new AdminPropertyDetailedDto(property);
+  }
 }

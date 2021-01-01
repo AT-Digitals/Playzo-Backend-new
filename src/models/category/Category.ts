@@ -10,9 +10,9 @@ const CategorySchema = new Schema({
   categoryType: {
     type: String,
     enum: [CategoryType.NEW, CategoryType.RESALE],
-    default: CategoryType.NEW
+    default: CategoryType.NEW,
   },
-  hidden: { type: Boolean, default: false }
+  hidden: { type: Boolean, default: false },
 });
 
 CategorySchema.plugin(MongoDatabase.timeAuditPlugin);

@@ -3,7 +3,7 @@ import {
   IsDateString,
   IsDefined,
   Validate,
-  ValidateNested
+  ValidateNested,
 } from "class-validator";
 
 import { AdminPropertyPriceRequestDto } from "./AdminPropertyPriceRequestDto";

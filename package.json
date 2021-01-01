@@ -61,11 +61,30 @@
     "@typescript-eslint/eslint-plugin": "^4.8.1",
     "@typescript-eslint/parser": "^4.8.1",
     "concurrently": "^5.3.0",
-    "eslint": "^7.13.0",
+    "eslint": "^7.16.0",
+    "husky": "^4.3.6",
     "import-sort-parser-typescript": "^6.0.0",
+    "lint-staged": "^10.5.3",
     "nodemon": "^2.0.6",
+    "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
     "ts-watch": "^1.0.8",
     "typescript": "^4.1.2"
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "eslint src/*.{js,ts,tsx} --fix-dry-run",
+      "prettier --write",
+      "git add"
+    ],
+    "src/**/*.{html,css,scss,md,json,js}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }

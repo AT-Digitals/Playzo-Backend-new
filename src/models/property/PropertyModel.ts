@@ -15,6 +15,6 @@ export interface PropertyModel extends Document {
   usps: string[];
   price: PropertyPriceModal;
   media: PropertyMediaModel[];
-  amenities: string[],
-  specifications: PropertySpecificationModal
+  amenities: string[];
+  specifications: PropertySpecificationModal;
 }

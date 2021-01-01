@@ -24,7 +24,7 @@ export class DatabaseSeeder {
         phoneNumber,
         name,
         password,
-        role: UserType.ADMIN
+        role: UserType.ADMIN,
       };
       const admin = new AdminUser(defaultAdmin);
       await admin.setPassword(defaultAdmin.password);

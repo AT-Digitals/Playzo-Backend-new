@@ -7,7 +7,7 @@ import { PasswordHash } from "./PasswordHash";
 export default class MongoDatabase {
   private static connectionProperty: mongoose.ConnectionOptions = {
     useUnifiedTopology: true,
-    useNewUrlParser: true
+    useNewUrlParser: true,
   };
 
   private static dbStatusFn(error: mongoose.Error) {
