@@ -28,5 +28,4 @@ export class AdminPropertyOverviewDto {
     this.usps = property.usps;
     this.category = new AdminCategoryDto(property.category);
   }
-
 }

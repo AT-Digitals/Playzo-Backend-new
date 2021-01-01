@@ -10,7 +10,7 @@ import { Service } from "typedi";
 export class AdminPropertiesOverviewService {
   public async getAllProperties() {
     const properties = await Property.find().populate("category");
-    return properties.map(property => new AdminPropertyOverviewDto(property));
+    return properties.map((property) => new AdminPropertyOverviewDto(property));
   }
 
   public async addNewProperty(

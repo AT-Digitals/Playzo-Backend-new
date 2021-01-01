@@ -10,7 +10,7 @@ import { Service } from "typedi";
 export class AdminAuthService {
   public async login(loginDto: AdminLoginDto) {
     const admin = await AdminUser.findOne({
-      phoneNumber: loginDto.phoneNumber
+      phoneNumber: loginDto.phoneNumber,
     });
     if (!admin || !(await admin.validateUser(loginDto.password))) {
       throw new AppErrorDto(

@@ -4,7 +4,7 @@ import {
   JsonController,
   Param,
   Post,
-  Put
+  Put,
 } from "routing-controllers";
 import { AdminPropertiesOverviewService } from "../../../services/admin/property/AdminPropertiesOverviewService";
 import { AdminPropertyOverviewRequestDto } from "../../../dto/admin/property/AdminPropertyOverviewRequestDto";
@@ -14,7 +14,7 @@ import { IsAdmin } from "../../../middleware/AuthValidator";
 export class AdminPropertiesOverviewController {
   constructor(
     private adminPropertiesOverviewService: AdminPropertiesOverviewService
-  ) { }
+  ) {}
 
   @IsAdmin()
   @Get("/")

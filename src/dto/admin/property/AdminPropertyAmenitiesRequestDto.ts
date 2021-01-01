@@ -1,8 +1,6 @@
-import {
-    Allow,
-} from "class-validator";
+import { Allow } from "class-validator";
 
 export class AdminPropertyAmenitiesRequestDto {
-    @Allow()
-    amenities: string[]
+  @Allow()
+  amenities: string[];
 }

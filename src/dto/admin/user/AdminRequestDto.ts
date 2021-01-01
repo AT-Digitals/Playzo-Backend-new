@@ -4,14 +4,14 @@ import {
   IsEnum,
   IsNotEmpty,
   Length,
-  MinLength
+  MinLength,
 } from "class-validator";
 
 import { UserType } from "../../auth/UserType";
 
 export class AdminRequestDto {
   @IsDefined({
-    message: "Phone number is required"
+    message: "Phone number is required",
   })
   @Length(10, 10, { message: "Phone number must be exactly 10 digits" })
   public phoneNumber: string;

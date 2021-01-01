@@ -10,7 +10,7 @@ const AdminUserSchema = new Schema({
   name: String,
   profilePic: String,
   password: { type: String, required: true },
-  role: { type: String, required: true, enum: [UserType.ADMIN] }
+  role: { type: String, required: true, enum: [UserType.ADMIN] },
 });
 
 AdminUserSchema.methods.setPassword = MongoDatabase.setPassword;

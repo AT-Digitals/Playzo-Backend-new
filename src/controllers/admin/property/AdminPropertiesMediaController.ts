@@ -15,7 +15,7 @@ import { IsAdmin } from "../../../middleware/AuthValidator";
 export class AdminPropertyMediaController {
   constructor(
     private adminPropertiesMediaService: AdminPropertiesMediaService
-  ) { }
+  ) {}
 
   @IsAdmin()
   @Post("/images")
@@ -27,10 +27,10 @@ export class AdminPropertyMediaController {
 
     const mediaList = imageList.map(
       (url): PropertyMediaModel =>
-      ({
-        url,
-        type: Mediatype.image,
-      } as PropertyMediaModel)
+        ({
+          url,
+          type: Mediatype.image,
+        } as PropertyMediaModel)
     );
 
     return this.adminPropertiesMediaService.addNewImages(propertyId, mediaList);

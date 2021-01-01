@@ -6,7 +6,7 @@ export class AuthDto {
   public getTokenObject() {
     return {
       id: this.id,
-      userType: this.userType
+      userType: this.userType,
     };
   }
 }

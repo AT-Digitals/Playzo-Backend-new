@@ -1,4 +1,4 @@
 export enum CategoryType {
   NEW = "NEW",
-  RESALE = "RESALE"
+  RESALE = "RESALE",
 }

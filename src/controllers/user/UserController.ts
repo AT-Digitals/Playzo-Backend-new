@@ -4,7 +4,7 @@ import {
   Get,
   JsonController,
   Post,
-  Res
+  Res,
 } from "routing-controllers";
 
 import { AuthDto } from "../../dto/auth/AuthDto";

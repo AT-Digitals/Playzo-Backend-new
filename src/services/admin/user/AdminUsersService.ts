@@ -9,7 +9,7 @@ import { Service } from "typedi";
 export class AdminUsersService {
   public async createAdmin(adminDto: AdminRequestDto) {
     const user = await AdminUser.findOne({
-      $or: [{ phoneNumber: adminDto.phoneNumber }, { email: adminDto.email }]
+      $or: [{ phoneNumber: adminDto.phoneNumber }, { email: adminDto.email }],
     });
     if (user) {
       throw new AppErrorDto(AdminError.ADMIN_EXISTS);
@@ -21,6 +21,6 @@ export class AdminUsersService {
 
   public async getAllAdmins() {
     const admins = await AdminUser.find();
-    return admins.map(admin => new AdminDto(admin));
+    return admins.map((admin) => new AdminDto(admin));
   }
 }

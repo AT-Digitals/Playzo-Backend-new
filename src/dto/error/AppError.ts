@@ -5,5 +5,5 @@ export enum AppError {
   ACCESS_DENIED = "Access denied to the request resource",
   NOT_FOUND = "Requested resource not found",
   FAILED_CSRF = "Invalid Request. Please login from site",
-  UPLOAD_INVALID_FILE_TYPE = "Invalid file type provided."
+  UPLOAD_INVALID_FILE_TYPE = "Invalid file type provided.",
 }

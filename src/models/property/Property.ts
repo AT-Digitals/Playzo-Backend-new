@@ -7,20 +7,20 @@ import { PropertyModel } from "./PropertyModel";
 export const PropertyPriceSchema = new Schema({
   from: Number,
   to: Number,
-  perSqFt: Number
+  perSqFt: Number,
 });
 
 export const PropertyMediaSchema = new Schema({
   url: String,
   type: {
     type: String,
-    enum: [Mediatype.image, Mediatype.video]
-  }
+    enum: [Mediatype.image, Mediatype.video],
+  },
 });
 
 const SpecificationSchema = new Schema({
   name: String,
-  value: String
+  value: String,
 });
 
 export const PropertySpecificationSchema = new Schema({
@@ -30,7 +30,7 @@ export const PropertySpecificationSchema = new Schema({
   Kitchen: [SpecificationSchema],
   Electrical: [SpecificationSchema],
   Fittings: [SpecificationSchema],
-  Others: [SpecificationSchema]
+  Others: [SpecificationSchema],
 });
 
 const PropertySchema = new Schema({
@@ -45,7 +45,7 @@ const PropertySchema = new Schema({
   price: PropertyPriceSchema,
   media: [PropertyMediaSchema],
   amenities: [String],
-  specifications: PropertySpecificationSchema
+  specifications: PropertySpecificationSchema,
 });
 
 PropertySchema.plugin(MongoDatabase.timeAuditPlugin);

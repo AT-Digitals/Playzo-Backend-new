@@ -7,9 +7,9 @@ import { Service } from "typedi";
 
 @Service()
 export class AdminPropertiesMediaService {
-  constructor(private AdminPropertyOverviewService: AdminPropertiesOverviewService) {
-
-  }
+  constructor(
+    private AdminPropertyOverviewService: AdminPropertiesOverviewService
+  ) {}
 
   public async addNewImages(id: string, media: PropertyMediaModel[]) {
     let property = await this.AdminPropertyOverviewService.findByPropertyId(id);
@@ -21,7 +21,9 @@ export class AdminPropertiesMediaService {
   }
 
   public async deleteMedia(propertyId: string, mediaId: string) {
-    let property = await this.AdminPropertyOverviewService.findByPropertyId(propertyId);
+    let property = await this.AdminPropertyOverviewService.findByPropertyId(
+      propertyId
+    );
     const isMediaExist = property.media.some((media) => media.id === mediaId);
 
     if (!isMediaExist) {
