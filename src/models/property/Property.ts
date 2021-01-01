@@ -1,7 +1,8 @@
 import { Schema, model } from "mongoose";
+
+import { Mediatype } from "./PropertyMediaModel";
 import MongoDatabase from "../../utils/MongoDatabase";
 import { PropertyModel } from "./PropertyModel";
-import { Mediatype } from "./PropertyMediaModel";
 
 export const PropertyPriceSchema = new Schema({
   from: Number,
@@ -17,6 +18,21 @@ export const PropertyMediaSchema = new Schema({
   }
 });
 
+const SpecificationSchema = new Schema({
+  name: String,
+  value: String
+});
+
+export const PropertySpecificationSchema = new Schema({
+  Flooring: [SpecificationSchema],
+  Windows: [SpecificationSchema],
+  Bathroom: [SpecificationSchema],
+  Kitchen: [SpecificationSchema],
+  Electrical: [SpecificationSchema],
+  Fittings: [SpecificationSchema],
+  Others: [SpecificationSchema]
+});
+
 const PropertySchema = new Schema({
   name: { type: String, required: true },
   city: { type: String, index: true },
@@ -28,7 +44,8 @@ const PropertySchema = new Schema({
   usps: [String],
   price: PropertyPriceSchema,
   media: [PropertyMediaSchema],
-  amenities: [String]
+  amenities: [String],
+  specifications: PropertySpecificationSchema
 });
 
 PropertySchema.plugin(MongoDatabase.timeAuditPlugin);
