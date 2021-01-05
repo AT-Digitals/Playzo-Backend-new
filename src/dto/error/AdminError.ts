@@ -5,4 +5,5 @@ export enum AdminError {
   PROPERTY_ID_DOES_NOT_EXIST = "Cannot find a property with the given ID",
   MEDIA_ID_DOES_NOT_EXIST = "Cannot find a media with the given ID",
   SPECIFICATION_CATEGORY_NOT_VALID = "Please provide one of the valid specification category",
+  CAROUSEL_IMAGE_NOT_FOUND = "Cannot find a Carousel Image with given ID",
 }

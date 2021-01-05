@@ -7,11 +7,10 @@ import {
 
 import { AdminHomePageServices } from "../../../services/admin/homePage/HomePageServices";
 import { HomePageCarouselModel } from "../../../models/homePage/HomePageCarouselModel";
-import { HomePageCarouselMediamodel } from "../../../models/homePage/HomePageCarouselMediaModel";
 import { IsAdmin } from "../../../middleware/AuthValidator";
 
-@JsonController("/admins/homePage/media")
-export class AdminHomePageController {
+@JsonController("/admins/homePage/carousel")
+export class AdminHomePageCarouselController {
   constructor(private AdminHomePageService: AdminHomePageServices) {}
 
   @IsAdmin()
@@ -20,14 +19,10 @@ export class AdminHomePageController {
     const imageList = UploadUtils.getUploadedUrls(desktopFile);
 
     const mediaList = imageList.map(
-      (url) => ({ url } as HomePageCarouselMediamodel)
+      (url) => ({ url } as HomePageCarouselModel)
     );
 
-    const image = {
-      image: mediaList,
-    } as HomePageCarouselModel;
-
-    return this.AdminHomePageService.addImages(image);
+    return this.AdminHomePageService.addImages(mediaList);
   }
 
   @IsAdmin()
@@ -36,8 +31,9 @@ export class AdminHomePageController {
     return this.AdminHomePageService.getAllImages();
   }
 
-  @Get("/images/user")
-  public async getAllImages() {
-    return this.AdminHomePageService.getAllImages();
+  @IsAdmin()
+  @Delete("/:imageId/image")
+  public async deleteCarouselImage(@Param("imageId") imageId: string) {
+    return this.AdminHomePageService.deleteImage(imageId);
   }
 }

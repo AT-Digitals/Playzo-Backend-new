@@ -1,9 +1,11 @@
-import { HomePageCarouselMediaDto } from "./HomePageCarouselMediaDto";
+import { AdminHomePageCarouselMediaDto } from "./HomePageCarouselMediaDto";
 import { HomePageCarouselModel } from "../../../models/homePage/HomePageCarouselModel";
 
-export class HomePageCarouselDto {
-  image: HomePageCarouselMediaDto[];
-  constructor(carousel: HomePageCarouselModel) {
-    this.image = carousel.image.map((url) => new HomePageCarouselMediaDto(url));
+export class AdminHomePageCarouselDto {
+  images: AdminHomePageCarouselMediaDto[];
+  constructor(carousels: HomePageCarouselModel[]) {
+    this.images = carousels.map(
+      (carousel) => new AdminHomePageCarouselMediaDto(carousel)
+    );
   }
 }

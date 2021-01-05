@@ -1,6 +1,6 @@
-import { HomePageCarouselModel } from "../../../models/homePage/HomePageCarouselModel";
+import { HomePageCarouselModel } from "../../models/homePage/HomePageCarouselModel";
 
-export class AdminHomePageCarouselMediaDto {
+export class CarouselMediaDto {
   url: string;
   id: string;
 
