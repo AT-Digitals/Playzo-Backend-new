@@ -1,4 +1,4 @@
-import { Get, JsonController } from "routing-controllers";
+import { Get, JsonController, Param } from "routing-controllers";
 
 import { HomePageServices } from "../../services/anonymous/HomePageServices";
 
@@ -9,5 +9,10 @@ export class HomePageController {
   @Get("/carousels")
   public async getAllCarousels() {
     return this.AnonymousHomePageServices.getAllImages();
+  }
+
+  @Get("/categories/:categoryId")
+  public async getAllItems(@Param("categoryId") categoryId: string) {
+    return this.AnonymousHomePageServices.getPropertiesOfCategory(categoryId);
   }
 }
