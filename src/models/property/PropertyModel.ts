@@ -10,7 +10,7 @@ export interface PropertyModel extends Document {
   subLocation: string;
   reraNumber: string;
   possessionBy: Date;
-  category: CategoryModel["id"];
+  category: CategoryModel["id"] | CategoryModel;
   numberOfUnits: number;
   usps: string[];
   price: PropertyPriceModal;

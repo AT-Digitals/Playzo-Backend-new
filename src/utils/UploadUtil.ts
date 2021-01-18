@@ -24,7 +24,7 @@ const diskStorage = multer.diskStorage({
 
 const fileUploadOptions = ({
   allowedMimeTypes = [],
-  fileSize = 1024 * 1024 * 2,
+  fileSize = 1024 * 1024 * 50,
   maxFilenameLength = 255,
 }: {
   allowedMimeTypes?: string[];
