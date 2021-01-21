@@ -39,7 +39,7 @@ const PropertySchema = new Schema({
   subLocation: String,
   reraNumber: String,
   possessionBy: Date,
-  category: { type: Schema.Types.ObjectId, ref: "categories", index: true },
+  categories: [{ type: Schema.Types.ObjectId, ref: "categories", index: true }],
   numberOfUnits: Number,
   usps: [String],
   price: PropertyPriceSchema,

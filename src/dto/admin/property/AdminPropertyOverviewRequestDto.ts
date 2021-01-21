@@ -29,7 +29,7 @@ export class AdminPropertyOverviewRequestDto {
 
   @IsDefined({ message: "Category is required" })
   @Validate(IsValidCategory)
-  category: string;
+  categories: string[];
 
   @Allow()
   numberOfUnits: number;
