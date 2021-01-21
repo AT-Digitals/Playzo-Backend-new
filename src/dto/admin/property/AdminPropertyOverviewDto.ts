@@ -1,5 +1,6 @@
 import { AdminCategoryDto } from "../category/AdminCategoryDto";
 import { AdminPropertyPriceDto } from "./AdminPropertyPriceDto";
+import { CategoryModel } from "../../../models/category/CategoryModel";
 import { PropertyModel } from "../../../models/property/PropertyModel";
 
 export class AdminPropertyOverviewDto {
@@ -9,7 +10,7 @@ export class AdminPropertyOverviewDto {
   subLocation: string;
   reraNumber: string;
   possessionBy: Date | null;
-  category: AdminCategoryDto;
+  categories: AdminCategoryDto[];
   numberOfUnits: number;
   usps: string[];
   price: AdminPropertyPriceDto;
@@ -26,6 +27,8 @@ export class AdminPropertyOverviewDto {
       : null;
     this.numberOfUnits = property.numberOfUnits;
     this.usps = property.usps;
-    this.category = new AdminCategoryDto(property.category);
+    this.categories = property.categories.map(
+      (category: CategoryModel) => new AdminCategoryDto(category)
+    );
   }
 }

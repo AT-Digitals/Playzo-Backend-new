@@ -9,7 +9,7 @@ import { Service } from "typedi";
 @Service()
 export class AdminPropertiesOverviewService {
   public async getAllProperties() {
-    const properties = await Property.find().populate("category");
+    const properties = await Property.find().populate("categories");
     return properties.map((property) => new AdminPropertyOverviewDto(property));
   }
 
@@ -23,7 +23,7 @@ export class AdminPropertiesOverviewService {
 
   public async getPropertyDetails(propertyId: string) {
     let property = await this.findByPropertyId(propertyId);
-    property = await property.populate("category").execPopulate();
+    property = await property.populate("categories").execPopulate();
     return new AdminPropertyDetailedDto(property);
   }
 
@@ -37,7 +37,7 @@ export class AdminPropertiesOverviewService {
     property.subLocation = propertyRequest.subLocation;
     property.reraNumber = propertyRequest.reraNumber;
     property.possessionBy = propertyRequest.possessionBy;
-    property.category = propertyRequest.category;
+    property.categories = propertyRequest.categories;
     property.numberOfUnits = propertyRequest.numberOfUnits;
     property.usps = propertyRequest.usps;
     property.price = propertyRequest.price;
