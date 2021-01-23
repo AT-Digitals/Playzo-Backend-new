@@ -23,7 +23,11 @@ export class AdminPropertiesOverviewService {
 
   public async getPropertyDetails(propertyId: string) {
     let property = await this.findByPropertyId(propertyId);
-    property = await property.populate("categories").execPopulate();
+    property = await property
+      .populate("categories")
+      .populate("propertyDeveloper")
+      .execPopulate();
+
     return new AdminPropertyDetailedDto(property);
   }
 
@@ -41,8 +45,12 @@ export class AdminPropertiesOverviewService {
     property.numberOfUnits = propertyRequest.numberOfUnits;
     property.usps = propertyRequest.usps;
     property.price = propertyRequest.price;
+    property.propertyDeveloper = propertyRequest.propertyDeveloper;
     property = await property.save();
-    property = await property.populate("category").execPopulate();
+    property = await property
+      .populate("categories")
+      .populate("propertyDeveloper")
+      .execPopulate();
     return new AdminPropertyOverviewDto(property);
   }
 

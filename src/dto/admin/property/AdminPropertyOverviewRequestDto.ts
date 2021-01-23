@@ -8,6 +8,7 @@ import {
 
 import { AdminPropertyPriceRequestDto } from "./AdminPropertyPriceRequestDto";
 import { IsValidCategory } from "../../../validators/CategoryValidator";
+import { IsValidPropertyDeveloper } from "../../../validators/PropertyDeveloperValidator";
 import { Type } from "class-transformer";
 
 export class AdminPropertyOverviewRequestDto {
@@ -30,6 +31,10 @@ export class AdminPropertyOverviewRequestDto {
   @IsDefined({ message: "Category is required" })
   @Validate(IsValidCategory)
   categories: string[];
+
+  @IsDefined({ message: "Property Developer is required" })
+  @Validate(IsValidPropertyDeveloper)
+  propertyDeveloper: string;
 
   @Allow()
   numberOfUnits: number;

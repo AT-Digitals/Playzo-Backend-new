@@ -46,6 +46,11 @@ const PropertySchema = new Schema({
   media: [PropertyMediaSchema],
   amenities: [String],
   specifications: PropertySpecificationSchema,
+  propertyDeveloper: {
+    type: Schema.Types.ObjectId,
+    ref: "propertyDevelopers",
+    index: true,
+  },
 });
 
 PropertySchema.plugin(MongoDatabase.timeAuditPlugin);

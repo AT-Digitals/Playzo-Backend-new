@@ -1,7 +1,8 @@
+import { CategoryModel } from "../../models/category/CategoryModel";
 import { Mediatype } from "../../models/property/PropertyMediaModel";
 import { PropertyModel } from "../../models/property/PropertyModel";
 import { PropertySpecifictionDto } from "./PropertySpecificationDto";
-
+import { elemT } from "../../utils/UnionArray";
 export class PropertyDto {
   name: string;
   city: string;
@@ -59,7 +60,9 @@ export class PropertyDto {
       to: property.price.to,
       perSqFt: property.price.perSqFt,
     };
-    this.category = property.category.displayName;
+    this.category = elemT(property.categories)
+      .map((category: CategoryModel) => category.displayName)
+      .join(",");
     this.possessionDate = property.possessionBy;
     this.images = property.media
       .filter((m) => m.type === Mediatype.image)
