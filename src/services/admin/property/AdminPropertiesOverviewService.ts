@@ -22,12 +22,7 @@ export class AdminPropertiesOverviewService {
   }
 
   public async getPropertyDetails(propertyId: string) {
-    let property = await this.findByPropertyId(propertyId);
-    property = await property
-      .populate("categories")
-      .populate("propertyDeveloper")
-      .execPopulate();
-
+    const property = await this.findByPropertyId(propertyId);
     return new AdminPropertyDetailedDto(property);
   }
 
@@ -41,7 +36,7 @@ export class AdminPropertiesOverviewService {
     property.subLocation = propertyRequest.subLocation;
     property.reraNumber = propertyRequest.reraNumber;
     property.possessionBy = propertyRequest.possessionBy;
-    property.categories = propertyRequest.categories;
+    property.categories = propertyRequest.categories as any;
     property.numberOfUnits = propertyRequest.numberOfUnits;
     property.usps = propertyRequest.usps;
     property.price = propertyRequest.price;
@@ -55,7 +50,9 @@ export class AdminPropertiesOverviewService {
   }
 
   public async findByPropertyId(propertyId: string) {
-    const property = await Property.findById(propertyId).populate("category");
+    const property = await Property.findById(propertyId)
+      .populate("categories")
+      .populate("propertyDeveloper");
     if (!property) {
       throw new AppErrorDto(AdminError.PROPERTY_ID_DOES_NOT_EXIST);
     }

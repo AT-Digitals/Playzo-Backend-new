@@ -32,8 +32,10 @@ export class AdminPropertyOverviewDto {
     this.categories = elemT(property.categories).map(
       (category: CategoryModel) => new AdminCategoryDto(category)
     );
-    this.propertyDeveloper = new PropertyDeveloperDto(
-      property.propertyDeveloper
-    );
+    if (property.propertyDeveloper) {
+      this.propertyDeveloper = new PropertyDeveloperDto(
+        property.propertyDeveloper
+      );
+    }
   }
 }

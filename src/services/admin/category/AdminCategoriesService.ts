@@ -13,7 +13,7 @@ export class AdminCategoriesService {
   }
 
   public async addNewCategory(categoryRequest: AdminCategoryRequestDto) {
-    this.checkIfCatgoryExistsWithGivenName(categoryRequest.name);
+    await this.checkIfCatgoryExistsWithGivenName(categoryRequest.name);
     let category = new Category({ ...categoryRequest });
     category = await category.save();
     return new AdminCategoryDto(category);
@@ -25,7 +25,7 @@ export class AdminCategoriesService {
   ) {
     let category = await this.findOneByCategoryId(categoryId);
     if (category.name !== categoryRequest.name) {
-      this.checkIfCatgoryExistsWithGivenName(categoryRequest.name);
+      await this.checkIfCatgoryExistsWithGivenName(categoryRequest.name);
     }
     category.name = categoryRequest.name;
     category.displayName = categoryRequest.displayName;
@@ -44,7 +44,8 @@ export class AdminCategoriesService {
   }
 
   private async checkIfCatgoryExistsWithGivenName(name: string) {
-    const category = await Category.find({ name });
+    const category = await Category.findOne({ name });
+    console.log(category);
     if (category) {
       throw new AppErrorDto(AdminError.CATEGORY_NAME_ALREADY_EXISTS);
     }

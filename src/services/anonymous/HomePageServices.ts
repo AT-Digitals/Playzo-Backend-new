@@ -18,11 +18,14 @@ export class HomePageServices {
     const category = await Category.find({ name: categoryName });
     let properties: PropertyModel[] = [];
     if (category && category.length > 0) {
-      properties = await Property.find({ category: category[0].id }).populate(
-        "category"
+      properties = await Property.find({ categories: category[0].id }).populate(
+        "categories"
       );
     } else {
-      properties = await Property.find({}).populate("category");
+      properties = await Property.find({}).populate([
+        "categories",
+        "propertyDeveloper",
+      ]);
     }
     return properties.map((property) => new PropertyDto(property));
   }

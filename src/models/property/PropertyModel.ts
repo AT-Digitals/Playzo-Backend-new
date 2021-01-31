@@ -11,7 +11,7 @@ export interface PropertyModel extends Document {
   subLocation: string;
   reraNumber: string;
   possessionBy: Date;
-  categories: CategoryModel["id"][] | CategoryModel[];
+  categories: CategoryModel[];
   numberOfUnits: number;
   usps: string[];
   price: PropertyPriceModal;
