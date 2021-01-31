@@ -31,9 +31,9 @@ const { PORT = 3000 } = process.env;
 
 const corsOption: CorsOptions = {
   origin: [
-    "https://faboproperties.comn",
+    "https://faboproperties.com",
     /https:\/\/.*\.faboproperties\.com/,
-    "http://faboproperties.comn",
+    "http://faboproperties.com",
     /http:\/\/.*\.faboproperties\.com/,
     "http://atdigitals.comn",
     /http:\/\/.*\.atdigitals\.com/,
