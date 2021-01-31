@@ -24,12 +24,12 @@ export default class MongoDatabase {
     const password = process.env.DB_PASSWORD;
     const database = process.env.DB_DATABASE;
     const authDatabase = process.env.DB_AUTH_DATABASE;
+    const protocol =
+      process.env.DB_USE_SRV === "true" ? "mongodb+srv" : "mongodb";
     return (
-      "mongodb://" +
+      `${protocol}://` +
       (user ? `${user}:${password}@` : "@") +
-      url +
-      "/" +
-      database +
+      `${url}/${database}` +
       (authDatabase ? `?authSource=${authDatabase}` : "")
     );
   }
