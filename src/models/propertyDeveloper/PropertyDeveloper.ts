@@ -8,6 +8,7 @@ const PropertyDeveloperSchema = new Schema({
   totalProjects: String,
   experience: String,
   content: String,
+  image: String,
 });
 
 PropertyDeveloperSchema.plugin(MongoDatabase.timeAuditPlugin);

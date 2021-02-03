@@ -5,4 +5,5 @@ export interface PropertyDeveloperModel extends Document {
   totalProjects: string;
   experience: string;
   content: string;
+  image: string;
 }
