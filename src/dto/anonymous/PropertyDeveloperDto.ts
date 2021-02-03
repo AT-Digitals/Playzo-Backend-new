@@ -6,6 +6,7 @@ export class PropertyDeveloperDto {
   totalProjects: string;
   experience: string;
   content: string;
+  image: string;
 
   constructor(propertyDeveloper: PropertyDeveloperModel) {
     this.id = propertyDeveloper.id;
@@ -13,5 +14,6 @@ export class PropertyDeveloperDto {
     this.totalProjects = propertyDeveloper.totalProjects;
     this.experience = propertyDeveloper.experience;
     this.content = propertyDeveloper.content;
+    this.image = propertyDeveloper.image;
   }
 }

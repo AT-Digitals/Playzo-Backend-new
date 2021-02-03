@@ -7,7 +7,9 @@ import { Service } from "typedi";
 @Service()
 export class InnerPageServices {
   public async getProperty(propertyId: string) {
-    const property = await Property.findById(propertyId);
+    const property = await Property.findById(propertyId).populate(
+      "propertyDeveloper"
+    );
     if (property) {
       return new PropertyDto(property);
     } else {
