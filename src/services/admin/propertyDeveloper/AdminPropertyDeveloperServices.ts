@@ -3,7 +3,6 @@ import { AdminPropertyDeveloperDto } from "../../../dto/admin/propertyDeveloper/
 import { AdminPropertyDeveloperRequestDto } from "../../../dto/admin/propertyDeveloper/AdminPropertyDeveloperRequestDto";
 import { AppErrorDto } from "../../../dto/error/AppErrorDto";
 import { PropertyDeveloper } from "../../../models/propertyDeveloper/PropertyDeveloper";
-import { PropertyDeveloperDto } from "../../../dto/admin/propertyDeveloper/PropertyDeveloperDto";
 import { Service } from "typedi";
 
 @Service()

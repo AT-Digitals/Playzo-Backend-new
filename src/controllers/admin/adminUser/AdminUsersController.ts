@@ -1,7 +1,7 @@
 import { Body, Get, JsonController, Post } from "routing-controllers";
 
 import { AdminRequestDto } from "../../../dto/admin/user/AdminRequestDto";
-import { AdminUsersService } from "../../../services/admin/user/AdminUsersService";
+import { AdminUsersService } from "../../../services/admin/adminUser/AdminUsersService";
 import { IsAdmin } from "../../../middleware/AuthValidator";
 
 @JsonController("/admins/users")
