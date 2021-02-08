@@ -1,5 +1,4 @@
 import { AdminError } from "../../dto/error/AdminError";
-import { AdminUser } from "../../models/admin/AdminUser";
 import { AppErrorDto } from "../../dto/error/AppErrorDto";
 import { Service } from "typedi";
 import { User } from "../../models/user/User";
