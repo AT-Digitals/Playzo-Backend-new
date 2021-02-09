@@ -15,12 +15,17 @@ export class AdminPropertyDeveloperService {
     );
   }
 
-  public async getImage(propertyDeveloperId: string) {
-    const propertyDeveloper = await this.findById(propertyDeveloperId);
-    return propertyDeveloper.image;
+  public async addNewPropertyDeveloper(
+    propertyDeveloperRequest: AdminPropertyDeveloperRequestDto
+  ) {
+    let propertyDeveloper = new PropertyDeveloper({
+      ...propertyDeveloperRequest,
+    });
+    propertyDeveloper = await propertyDeveloper.save();
+    return new AdminPropertyDeveloperDto(propertyDeveloper);
   }
 
-  public async addImage(propertyDeveloperId: string, image: string) {
+  public async updateImage(propertyDeveloperId: string, image: string) {
     let propertyDeveloper = await this.findById(propertyDeveloperId);
     propertyDeveloper.image = image;
     propertyDeveloper = await propertyDeveloper.save();
@@ -49,20 +54,9 @@ export class AdminPropertyDeveloperService {
     const propertyDeveloper = await PropertyDeveloper.findById(
       propertyDeveloperId
     );
-    if (propertyDeveloper) {
-      return propertyDeveloper;
-    } else {
+    if (!propertyDeveloper) {
       throw new AppErrorDto(AdminError.PROPERTY_DEVELOPER_ID_DOES_NOT_EXIST);
     }
-  }
-
-  public async addNewPropertyDeveloper(
-    propertyDeveloperRequest: AdminPropertyDeveloperRequestDto
-  ) {
-    let propertyDeveloper = new PropertyDeveloper({
-      ...propertyDeveloperRequest,
-    });
-    propertyDeveloper = await propertyDeveloper.save();
-    return new AdminPropertyDeveloperDto(propertyDeveloper);
+    return propertyDeveloper;
   }
 }
