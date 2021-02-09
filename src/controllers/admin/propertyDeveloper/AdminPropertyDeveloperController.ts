@@ -15,6 +15,8 @@ import {
   UploadedFile,
   UploadedImage,
 } from "../../../utils/UploadUtil";
+import { AppErrorDto } from "../../../dto/error/AppErrorDto";
+import { AppError } from "../../../dto/error/AppError";
 
 @JsonController("/admins/propertyDeveloper")
 export class AdminPropertiesOverviewController {
@@ -26,6 +28,16 @@ export class AdminPropertiesOverviewController {
   @Get("/")
   public async getAllPropertyDevelopers() {
     return this.adminPropertyDeveloperService.getAllPropertyDevelopers();
+  }
+
+  @IsAdmin()
+  @Post("/")
+  public async addNewPropertyDeveloper(
+    @Body() propertyDeveloperRequest: AdminPropertyDeveloperRequestDto
+  ) {
+    return this.adminPropertyDeveloperService.addNewPropertyDeveloper(
+      propertyDeveloperRequest
+    );
   }
 
   @IsAdmin()
@@ -51,36 +63,20 @@ export class AdminPropertiesOverviewController {
   }
 
   @IsAdmin()
-  @Get("/:propertyDeveloperId/image")
-  public async getImage(
+  @Put("/:propertyDeveloperId/image")
+  public async updateImage(
+    @UploadedImage("medias") imageFile: UploadedFile,
     @Param("propertyDeveloperId") propertyDeveloperId: string
   ) {
-    return this.adminPropertyDeveloperService.getImage(propertyDeveloperId);
-  }
-
-  @IsAdmin()
-  @Post("/:propertyDeveloperId/image")
-  public async addImage(
-    @UploadedImage("medias") desktopFile: UploadedFile,
-    @Param("propertyDeveloperId") propertyDeveloperId: string
-  ) {
-    const image = UploadUtils.getUploadedUrl(desktopFile);
+    const image = UploadUtils.getUploadedUrl(imageFile);
 
     if (image) {
-      return this.adminPropertyDeveloperService.addImage(
+      return this.adminPropertyDeveloperService.updateImage(
         propertyDeveloperId,
         image
       );
+    } else {
+      throw new AppErrorDto(AppError.INPUT_PARAM_ERROR);
     }
-  }
-
-  @IsAdmin()
-  @Post("/")
-  public async addNewPropertyDeveloper(
-    @Body() propertyDeveloperRequest: AdminPropertyDeveloperRequestDto
-  ) {
-    return this.adminPropertyDeveloperService.addNewPropertyDeveloper(
-      propertyDeveloperRequest
-    );
   }
 }

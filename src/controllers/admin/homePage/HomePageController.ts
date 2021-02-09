@@ -32,7 +32,7 @@ export class AdminHomePageCarouselController {
   }
 
   @IsAdmin()
-  @Delete("/:imageId/image")
+  @Delete("/images/:imageId")
   public async deleteCarouselImage(@Param("imageId") imageId: string) {
     return this.AdminHomePageService.deleteImage(imageId);
   }
