@@ -17,19 +17,42 @@ export class AuthService {
     let user = new User({ ...userDto, isVerified: false });
 
     user = await user.save();
-
+    user = await user.populate("favouriteProperties").execPopulate();
     return new UserDto(user);
   }
 
-  public async verifyUser(userId: string) {
-    let user = await User.findById(userId);
+  public async loginUser(phoneNumber: string) {
+    let user = await User.findOne({ phoneNumber });
+    if (user && user.isVerified) {
+      user = await user.populate("favouriteProperties").execPopulate();
+      return new UserDto(user);
+    } else {
+      throw new AppErrorDto(AdminError.USER_NOT_VERIFIED);
+    }
+  }
+
+  private async findById(userId: string) {
+    const user = await User.findById(userId);
 
     if (!user) {
       throw new AppErrorDto(AdminError.USER_EXISTS);
     }
 
+    return user;
+  }
+
+  public async verifyUser(userId: string) {
+    let user = await this.findById(userId);
+
     user.isVerified = true;
     user = await user.save();
+    user = await user.populate("favouriteProperties").execPopulate();
+    return new UserDto(user);
+  }
+
+  public async getUser(userId: string) {
+    let user = await this.findById(userId);
+    user = await user.populate("favouriteProperties").execPopulate();
     return new UserDto(user);
   }
 }
