@@ -1,4 +1,4 @@
-import { Get, JsonController } from "routing-controllers";
+import { Get, JsonController, Param } from "routing-controllers";
 
 import { IsAdmin } from "../../../middleware/AuthValidator";
 import { UsersService } from "../../../services/admin/user/UserServices";
@@ -11,5 +11,11 @@ export class UsersController {
   @IsAdmin()
   public async getAllAdminUsers() {
     return this.usersService.getAllUsers();
+  }
+
+  @Get("/:userId")
+  @IsAdmin()
+  public async getUser(@Param("userId") userId: string) {
+    return this.usersService.getUser(userId);
   }
 }

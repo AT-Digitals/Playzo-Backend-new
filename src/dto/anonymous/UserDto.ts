@@ -1,5 +1,7 @@
+import { PropertyDto } from "./PropertyDto";
+import { PropertyModel } from "../../models/property/PropertyModel";
 import { UserModel } from "../../models/user/UserModel";
-
+import { elemT } from "../../utils/UnionArray";
 export class UserDto {
   email: string;
   phoneNumber: string;
@@ -7,6 +9,7 @@ export class UserDto {
   isVerified: boolean;
   otp: string;
   id: string;
+  favouriteProperties: PropertyDto[];
 
   constructor(user: UserModel) {
     this.id = user.id;
@@ -15,5 +18,8 @@ export class UserDto {
     this.isVerified = user.isVerified;
     this.otp = user.otp;
     this.name = user.name;
+    this.favouriteProperties = elemT(user.favouriteProperties).map(
+      (property: PropertyModel) => new PropertyDto(property)
+    );
   }
 }

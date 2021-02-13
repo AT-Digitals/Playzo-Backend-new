@@ -9,6 +9,13 @@ const UserSchema = new Schema({
   name: String,
   otp: String,
   isVerified: Boolean,
+  favouriteProperties: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "properties",
+      index: true,
+    },
+  ],
 });
 
 UserSchema.plugin(MongoDatabase.timeAuditPlugin);

@@ -16,3 +16,19 @@ export class UserRequestDto {
   @Allow()
   otp: string;
 }
+
+export class LoginRequestDto {
+  @Length(10, 10, { message: "Phone number must be exactly 10 digits" })
+  public phoneNumber: string;
+}
+
+export class AddFavouriteDto {
+  @Allow()
+  userId: string;
+
+  @Allow()
+  propertyId: string;
+
+  @Allow()
+  toAdd: boolean;
+}

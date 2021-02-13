@@ -1,4 +1,5 @@
 export enum AdminError {
+  USER_NOT_VERIFIED = "user not verified yet",
   USER_EXISTS = "user exists with the provided credentials",
   ADMIN_EXISTS = "An admin exists with the provided credentials",
   CATEGORY_ID_DOES_NOT_EXIST = "Cannot find a category with the given ID",
