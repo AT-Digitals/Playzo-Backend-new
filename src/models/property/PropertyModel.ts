@@ -1,6 +1,7 @@
 import { CategoryModel } from "../category/CategoryModel";
 import { Document } from "mongoose";
 import { PropertyDeveloperModel } from "../propertyDeveloper/PropertyDeveloperModel";
+import { PropertyFloorPlanModel } from "./PropertyFloorPlanModel";
 import { PropertyMediaModel } from "./PropertyMediaModel";
 import { PropertyPriceModal } from "./PropertyPriceModel";
 import { PropertySpecificationModal } from "./PropertySpecificationModal";
@@ -19,4 +20,5 @@ export interface PropertyModel extends Document {
   amenities: string[];
   specifications: PropertySpecificationModal;
   propertyDeveloper: PropertyDeveloperModel["id"] | PropertyDeveloperModel;
+  floorPlan: PropertyFloorPlanModel[];
 }

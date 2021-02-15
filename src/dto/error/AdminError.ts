@@ -1,4 +1,5 @@
 export enum AdminError {
+  FLOOR_PLAN_DOES_NOT_EXIST = "Floor Plan does not exist with given ID",
   USER_NOT_VERIFIED = "user not verified yet",
   USER_EXISTS = "user exists with the provided credentials",
   ADMIN_EXISTS = "An admin exists with the provided credentials",

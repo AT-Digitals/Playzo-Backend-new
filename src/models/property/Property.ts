@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 
+import { CategoryType } from "./PropertyFloorPlanModel";
 import { Mediatype } from "./PropertyMediaModel";
 import MongoDatabase from "../../utils/MongoDatabase";
 import { PropertyModel } from "./PropertyModel";
@@ -16,6 +17,27 @@ export const PropertyMediaSchema = new Schema({
     type: String,
     enum: [Mediatype.image, Mediatype.video],
   },
+});
+
+export const AreaSchema = new Schema({
+  sqFt: String,
+  details: String,
+});
+
+export const FloorPlanSchema = new Schema({
+  image: String,
+  area: AreaSchema,
+  noOfUnits: String,
+  agreementPrice: String,
+});
+
+export const PropertyFloorPlanSchema = new Schema({
+  category: {
+    type: String,
+    enum: [CategoryType.Appartment, CategoryType.Plot, CategoryType.Villa],
+  },
+  variation: String,
+  floorPlans: [FloorPlanSchema],
 });
 
 const SpecificationSchema = new Schema({
@@ -51,6 +73,7 @@ const PropertySchema = new Schema({
     ref: "propertyDevelopers",
     index: true,
   },
+  floorPlan: [PropertyFloorPlanSchema],
 });
 
 PropertySchema.plugin(MongoDatabase.timeAuditPlugin);
