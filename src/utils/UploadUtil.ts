@@ -55,6 +55,13 @@ const imageFileTypes: string[] = [
   "image/svg+xml",
 ];
 
+const videoFileTypes: string[] = [
+  "video/mp4",
+  "video/quicktime",
+  "video/x-msvideo",
+  "video/x-ms-wmv",
+];
+
 export type UploadedFile = Express.Multer.File | undefined;
 export type UploadedFiles = Express.Multer.File[] | undefined;
 
@@ -80,6 +87,20 @@ export const UploadedImage = (name: string) =>
   UploadedFile(name, {
     options: fileUploadOptions({
       allowedMimeTypes: imageFileTypes,
+    }),
+  });
+
+export const UploadedVideo = (name: string) =>
+  UploadedFile(name, {
+    options: fileUploadOptions({
+      allowedMimeTypes: videoFileTypes,
+    }),
+  });
+
+export const UploadedVideos = (name: string) =>
+  UploadedFiles(name, {
+    options: fileUploadOptions({
+      allowedMimeTypes: videoFileTypes,
     }),
   });
 

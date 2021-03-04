@@ -21,4 +21,5 @@ export interface PropertyModel extends Document {
   specifications: PropertySpecificationModal;
   propertyDeveloper: PropertyDeveloperModel["id"] | PropertyDeveloperModel;
   floorPlan: PropertyFloorPlanModel[];
+  paymentTranches: string;
 }

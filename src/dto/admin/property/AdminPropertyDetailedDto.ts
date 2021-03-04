@@ -8,6 +8,7 @@ export class AdminPropertyDetailedDto {
   media: AdminPropertyMediaDto[];
   amenities: string[];
   specifications: AdminPropertySpecificationDto;
+  paymentTranches: string;
 
   constructor(property: PropertyModel) {
     this.id = property.id;
@@ -17,5 +18,6 @@ export class AdminPropertyDetailedDto {
     this.specifications = new AdminPropertySpecificationDto(
       property.specifications
     );
+    this.paymentTranches = property.paymentTranches;
   }
 }
