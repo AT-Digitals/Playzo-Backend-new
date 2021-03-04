@@ -5,8 +5,11 @@ import {
 } from "../../../models/property/PropertyMediaModel";
 import {
   UploadUtils,
+  UploadedFile,
   UploadedFiles,
+  UploadedImage,
   UploadedImages,
+  UploadedVideos,
 } from "../../../utils/UploadUtil";
 import { AdminPropertiesMediaService } from "../../../services/admin/property/AdminPropertiesMediaService";
 import { IsAdmin } from "../../../middleware/AuthValidator";
@@ -34,6 +37,40 @@ export class AdminPropertyMediaController {
     );
 
     return this.adminPropertiesMediaService.addNewImages(propertyId, mediaList);
+  }
+
+  @IsAdmin()
+  @Post("/videos")
+  public async addVideos(
+    @UploadedVideos("medias") desktopFile: UploadedFiles,
+    @Param("propertyId") propertyId: string
+  ) {
+    const imageList = UploadUtils.getUploadedUrls(desktopFile);
+
+    const mediaList = imageList.map(
+      (url): PropertyMediaModel =>
+        ({
+          url,
+          type: Mediatype.video,
+        } as PropertyMediaModel)
+    );
+
+    return this.adminPropertiesMediaService.addNewImages(propertyId, mediaList);
+  }
+
+  @IsAdmin()
+  @Post("/paymentTranche")
+  public async addPaymentTranche(
+    @UploadedImage("medias") desktopFile: UploadedFile,
+    @Param("propertyId") propertyId: string
+  ) {
+    const image = UploadUtils.getUploadedUrl(desktopFile);
+    if (image) {
+      return this.adminPropertiesMediaService.addPaymentTranche(
+        propertyId,
+        image
+      );
+    }
   }
 
   @IsAdmin()

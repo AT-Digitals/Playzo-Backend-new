@@ -1,6 +1,7 @@
 import { CategoryModel } from "../../models/category/CategoryModel";
 import { Mediatype } from "../../models/property/PropertyMediaModel";
 import { PropertyDeveloperDto } from "./PropertyDeveloperDto";
+import { PropertyMediaDto } from "./PropertyMediaDto";
 import { PropertyModel } from "../../models/property/PropertyModel";
 import { PropertySpecifictionDto } from "./PropertySpecificationDto";
 export class PropertyDto {
@@ -24,8 +25,9 @@ export class PropertyDto {
     Fittings: PropertySpecifictionDto[];
     Others: PropertySpecifictionDto[];
   };
-  images: string[];
+  media: PropertyMediaDto[];
   propertyDeveloper: PropertyDeveloperDto;
+  paymentTranches: string;
   constructor(property: PropertyModel) {
     this.id = property.id;
     this.name = property.name;
@@ -69,13 +71,12 @@ export class PropertyDto {
       .map((category: CategoryModel) => category.displayName)
       .join(", ");
     this.possessionDate = property.possessionBy;
-    this.images = property.media
-      .filter((m) => m.type === Mediatype.image)
-      .map((m) => m.url);
+    this.media = property.media.map((mm) => new PropertyMediaDto(mm));
     if (property.propertyDeveloper) {
       this.propertyDeveloper = new PropertyDeveloperDto(
         property.propertyDeveloper
       );
     }
+    this.paymentTranches = property.paymentTranches;
   }
 }

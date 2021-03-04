@@ -74,6 +74,7 @@ const PropertySchema = new Schema({
     index: true,
   },
   floorPlan: [PropertyFloorPlanSchema],
+  paymentTranches: String,
 });
 
 PropertySchema.plugin(MongoDatabase.timeAuditPlugin);

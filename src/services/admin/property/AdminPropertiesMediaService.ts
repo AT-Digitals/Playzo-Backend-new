@@ -20,6 +20,14 @@ export class AdminPropertiesMediaService {
     return new AdminPropertyDetailedDto(property);
   }
 
+  public async addPaymentTranche(id: string, paymentTranche: string) {
+    let property = await this.AdminPropertyOverviewService.findByPropertyId(id);
+    property.paymentTranches = paymentTranche;
+    await property.save();
+    property = await property.populate("category").execPopulate();
+    return new AdminPropertyDetailedDto(property);
+  }
+
   public async deleteMedia(propertyId: string, mediaId: string) {
     let property = await this.AdminPropertyOverviewService.findByPropertyId(
       propertyId
