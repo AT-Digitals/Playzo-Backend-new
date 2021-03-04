@@ -1,5 +1,4 @@
 import { CategoryModel } from "../../models/category/CategoryModel";
-import { Mediatype } from "../../models/property/PropertyMediaModel";
 import { PropertyDeveloperDto } from "./PropertyDeveloperDto";
 import { PropertyMediaDto } from "./PropertyMediaDto";
 import { PropertyModel } from "../../models/property/PropertyModel";
