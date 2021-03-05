@@ -55,6 +55,11 @@ export const PropertySpecificationSchema = new Schema({
   Others: [SpecificationSchema],
 });
 
+export const PropertyLocationSchema = new Schema({
+  latitude: Number,
+  longitude: Number,
+});
+
 const PropertySchema = new Schema({
   name: { type: String, required: true },
   city: { type: String, index: true },
@@ -75,6 +80,7 @@ const PropertySchema = new Schema({
   },
   floorPlan: [PropertyFloorPlanSchema],
   paymentTranches: String,
+  location: PropertyLocationSchema,
 });
 
 PropertySchema.plugin(MongoDatabase.timeAuditPlugin);

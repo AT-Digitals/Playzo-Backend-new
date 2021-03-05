@@ -1,5 +1,6 @@
 import { CategoryModel } from "../../models/category/CategoryModel";
 import { PropertyDeveloperDto } from "./PropertyDeveloperDto";
+import { PropertyLocationModel } from "../../models/property/PropertyLocationModel";
 import { PropertyMediaDto } from "./PropertyMediaDto";
 import { PropertyModel } from "../../models/property/PropertyModel";
 import { PropertySpecifictionDto } from "./PropertySpecificationDto";
@@ -27,6 +28,8 @@ export class PropertyDto {
   media: PropertyMediaDto[];
   propertyDeveloper: PropertyDeveloperDto;
   paymentTranches: string;
+  location: PropertyLocationModel;
+
   constructor(property: PropertyModel) {
     this.id = property.id;
     this.name = property.name;
@@ -77,5 +80,9 @@ export class PropertyDto {
       );
     }
     this.paymentTranches = property.paymentTranches;
+    this.location = {
+      latitude: property.location.latitude,
+      longitude: property.location.longitude,
+    } as PropertyLocationModel;
   }
 }
