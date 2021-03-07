@@ -1,9 +1,9 @@
+import { PropertyModel, PropertyType } from "./PropertyModel";
 import { Schema, model } from "mongoose";
 
 import { CategoryType } from "./PropertyFloorPlanModel";
 import { Mediatype } from "./PropertyMediaModel";
 import MongoDatabase from "../../utils/MongoDatabase";
-import { PropertyModel } from "./PropertyModel";
 
 export const PropertyPriceSchema = new Schema({
   from: Number,
@@ -55,6 +55,11 @@ export const PropertySpecificationSchema = new Schema({
   Others: [SpecificationSchema],
 });
 
+export const PropertyLocationSchema = new Schema({
+  latitude: Number,
+  longitude: Number,
+});
+
 const PropertySchema = new Schema({
   name: { type: String, required: true },
   city: { type: String, index: true },
@@ -75,6 +80,11 @@ const PropertySchema = new Schema({
   },
   floorPlan: [PropertyFloorPlanSchema],
   paymentTranches: String,
+  location: PropertyLocationSchema,
+  propertyType: {
+    type: String,
+    enum: [PropertyType.Appartment, PropertyType.Villa],
+  },
 });
 
 PropertySchema.plugin(MongoDatabase.timeAuditPlugin);

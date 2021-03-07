@@ -1,6 +1,7 @@
 import { AdminPropertyMediaDto } from "./AdminPropertyMediaDto";
 import { AdminPropertyOverviewDto } from "./AdminPropertyOverviewDto";
 import { AdminPropertySpecificationDto } from "./AdminPropertySpecificationDto";
+import { PropertyLocationModel } from "../../../models/property/PropertyLocationModel";
 import { PropertyModel } from "../../../models/property/PropertyModel";
 export class AdminPropertyDetailedDto {
   id: string;
@@ -9,6 +10,7 @@ export class AdminPropertyDetailedDto {
   amenities: string[];
   specifications: AdminPropertySpecificationDto;
   paymentTranches: string;
+  location: PropertyLocationModel;
 
   constructor(property: PropertyModel) {
     this.id = property.id;
@@ -19,5 +21,11 @@ export class AdminPropertyDetailedDto {
       property.specifications
     );
     this.paymentTranches = property.paymentTranches;
+    if (property.location) {
+      this.location = {
+        latitude: property.location.latitude,
+        longitude: property.location.longitude,
+      } as PropertyLocationModel;
+    }
   }
 }
