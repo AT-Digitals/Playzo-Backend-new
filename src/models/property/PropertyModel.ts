@@ -7,6 +7,11 @@ import { PropertyMediaModel } from "./PropertyMediaModel";
 import { PropertyPriceModal } from "./PropertyPriceModel";
 import { PropertySpecificationModal } from "./PropertySpecificationModal";
 
+export enum PropertyType {
+  Appartment = "Appartment",
+  Villa = "Villa",
+}
+
 export interface PropertyModel extends Document {
   name: string;
   city: string;
@@ -24,4 +29,5 @@ export interface PropertyModel extends Document {
   floorPlan: PropertyFloorPlanModel[];
   paymentTranches: string;
   location: PropertyLocationModel;
+  propertyType: PropertyType;
 }

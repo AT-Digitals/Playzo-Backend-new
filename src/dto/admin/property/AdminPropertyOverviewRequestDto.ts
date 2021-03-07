@@ -9,6 +9,7 @@ import {
 import { AdminPropertyPriceRequestDto } from "./AdminPropertyPriceRequestDto";
 import { IsValidCategory } from "../../../validators/CategoryValidator";
 import { IsValidPropertyDeveloper } from "../../../validators/PropertyDeveloperValidator";
+import { PropertyType } from "../../../models/property/PropertyModel";
 import { Type } from "class-transformer";
 
 export class AdminPropertyOverviewRequestDto {
@@ -45,4 +46,7 @@ export class AdminPropertyOverviewRequestDto {
   @ValidateNested()
   @Type(() => AdminPropertyPriceRequestDto)
   price: AdminPropertyPriceRequestDto;
+
+  @IsDefined({ message: "Property Type is required" })
+  propertyType: PropertyType;
 }

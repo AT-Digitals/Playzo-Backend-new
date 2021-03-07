@@ -21,9 +21,11 @@ export class AdminPropertyDetailedDto {
       property.specifications
     );
     this.paymentTranches = property.paymentTranches;
-    this.location = {
-      latitude: property.location.latitude,
-      longitude: property.location.longitude,
-    } as PropertyLocationModel;
+    if (property.location) {
+      this.location = {
+        latitude: property.location.latitude,
+        longitude: property.location.longitude,
+      } as PropertyLocationModel;
+    }
   }
 }

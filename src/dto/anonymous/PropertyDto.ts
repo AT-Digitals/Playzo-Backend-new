@@ -29,6 +29,7 @@ export class PropertyDto {
   propertyDeveloper: PropertyDeveloperDto;
   paymentTranches: string;
   location: PropertyLocationModel;
+  propertyType: string;
 
   constructor(property: PropertyModel) {
     this.id = property.id;
@@ -80,9 +81,12 @@ export class PropertyDto {
       );
     }
     this.paymentTranches = property.paymentTranches;
-    this.location = {
-      latitude: property.location.latitude,
-      longitude: property.location.longitude,
-    } as PropertyLocationModel;
+    if (property.location) {
+      this.location = {
+        latitude: property.location.latitude,
+        longitude: property.location.longitude,
+      } as PropertyLocationModel;
+    }
+    this.propertyType = property.propertyType;
   }
 }
