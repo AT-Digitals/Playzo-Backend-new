@@ -10,7 +10,7 @@ export default class MongoDatabase {
     useNewUrlParser: true,
   };
 
-  private static dbStatusFn(error: mongoose.Error) {
+  private static dbStatusFn(error: mongoose.CallbackError) {
     if (error) {
       console.log(error.message);
     } else {
