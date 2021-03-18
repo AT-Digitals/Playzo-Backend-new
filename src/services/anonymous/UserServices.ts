@@ -24,7 +24,7 @@ export class UserServices {
       user.favouriteProperties = [...user.favouriteProperties, property.id];
     } else {
       user.favouriteProperties = user.favouriteProperties.filter(
-        (id) => id != property.id
+        (id) => id !== property.id
       );
     }
 
