@@ -2,10 +2,12 @@ import { AddFavouriteDto } from "../../dto/anonymous/UserRequestDto";
 import { AdminError } from "../../dto/error/AdminError";
 import { AdminPropertiesOverviewService } from "../admin/property/AdminPropertiesOverviewService";
 import { AppErrorDto } from "../../dto/error/AppErrorDto";
+import { PropertyDto } from "../../dto/anonymous/PropertyDto";
+import { PropertyModel } from "../../models/property/PropertyModel";
 import { Service } from "typedi";
 import { User } from "../../models/user/User";
 import { UserDto } from "../../dto/anonymous/UserDto";
-
+import { elemT } from "../../utils/UnionArray";
 @Service()
 export class UserServices {
   constructor(
@@ -31,6 +33,18 @@ export class UserServices {
     user = await user.populate("favouriteProperties").execPopulate();
 
     return new UserDto(user);
+  }
+
+  public async getShortlistedProperties(userId: string) {
+    const user = await (await this.findById(userId))
+      .populate("favouriteProperties")
+      .execPopulate();
+
+    const properties = user.favouriteProperties;
+
+    return elemT(properties).map(
+      (property: PropertyModel) => new PropertyDto(property)
+    );
   }
 
   private async findById(userId: string) {
