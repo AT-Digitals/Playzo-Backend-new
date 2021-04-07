@@ -1,4 +1,5 @@
 import { CategoryModel } from "../../models/category/CategoryModel";
+import { FloorPlanOverviewDto } from "./FloorPlanDto";
 import { PropertyDeveloperDto } from "./PropertyDeveloperDto";
 import { PropertyLocationModel } from "../../models/property/PropertyLocationModel";
 import { PropertyMediaDto } from "./PropertyMediaDto";
@@ -30,6 +31,7 @@ export class PropertyDto {
   paymentTranches: string;
   location: PropertyLocationModel;
   propertyType: string;
+  floorPlan?: FloorPlanOverviewDto[];
 
   constructor(property: PropertyModel) {
     this.id = property.id;
@@ -88,5 +90,8 @@ export class PropertyDto {
       } as PropertyLocationModel;
     }
     this.propertyType = property.propertyType;
+    this.floorPlan = property.floorPlan.map(
+      (floor) => new FloorPlanOverviewDto(floor)
+    );
   }
 }

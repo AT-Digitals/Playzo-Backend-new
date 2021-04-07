@@ -1,4 +1,7 @@
-import { FloorPlan } from "../../models/property/PropertyFloorPlanModel";
+import {
+  FloorPlan,
+  PropertyFloorPlanModel,
+} from "../../models/property/PropertyFloorPlanModel";
 
 export class FloorPlanDto {
   image: string;
@@ -19,5 +22,15 @@ export class FloorPlanDto {
     };
     this.noOfUnits = floorPlan.noOfUnits;
     this.agreementPrice = floorPlan.agreementPrice;
+  }
+}
+
+export class FloorPlanOverviewDto {
+  category: string;
+  variation: string;
+
+  constructor(floorPlan: PropertyFloorPlanModel) {
+    this.category = floorPlan.category;
+    this.variation = floorPlan.variation;
   }
 }

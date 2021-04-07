@@ -1,6 +1,7 @@
 import { AdminError } from "../../dto/error/AdminError";
 import { AppErrorDto } from "../../dto/error/AppErrorDto";
 import { Property } from "../../models/property/Property";
+import { PropertyDeveloper } from "../../models/propertyDeveloper/PropertyDeveloper";
 import { PropertyDto } from "../../dto/anonymous/PropertyDto";
 import { PropertyPriceModal } from "../../models/property/PropertyPriceModel";
 import { PropertyRequestDto } from "../../dto/anonymous/PropertyRequestDto";
@@ -10,6 +11,7 @@ import { Service } from "typedi";
 @Service()
 export class SearchServices {
   public async getProperties(type: PropertyType, city: string, query: string) {
+    const propertyDeveloper = await this.getPropertyDeveloperByName(query);
     const properties = await Property.find({
       $or: [
         { propertyType: type },
@@ -25,10 +27,21 @@ export class SearchServices {
         {
           name: query,
         },
+        {
+          propertyDeveloper,
+        },
       ],
     }).populate("propertyDeveloper");
 
     return properties.map((property) => new PropertyDto(property));
+  }
+
+  public async getPropertyDeveloperByName(name: string) {
+    const propertyDeveloper = await PropertyDeveloper.findOne({
+      name: { $regex: new RegExp(name, "i") },
+    });
+
+    return propertyDeveloper;
   }
 
   public async getProperty(propertyId: string) {
