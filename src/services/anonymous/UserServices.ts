@@ -1,4 +1,8 @@
-import { AddFavouriteDto } from "../../dto/anonymous/UserRequestDto";
+import {
+  AddAlternativeNumberDto,
+  AddFavouriteDto,
+} from "../../dto/anonymous/UserRequestDto";
+
 import { AdminError } from "../../dto/error/AdminError";
 import { AdminPropertiesOverviewService } from "../admin/property/AdminPropertiesOverviewService";
 import { AppErrorDto } from "../../dto/error/AppErrorDto";
@@ -8,6 +12,7 @@ import { Service } from "typedi";
 import { User } from "../../models/user/User";
 import { UserDto } from "../../dto/anonymous/UserDto";
 import { elemT } from "../../utils/UnionArray";
+
 @Service()
 export class UserServices {
   constructor(
@@ -32,6 +37,16 @@ export class UserServices {
 
     user = await user.populate("favouriteProperties").execPopulate();
 
+    return new UserDto(user);
+  }
+
+  public async AddAlternativeNumber(
+    addAlternativeDto: AddAlternativeNumberDto
+  ) {
+    let user = await this.findById(addAlternativeDto.userId);
+    user.alternativeNumber = addAlternativeDto.alternativeNumber;
+    user = await user.save();
+    user = await user.populate("favouriteProperties").execPopulate();
     return new UserDto(user);
   }
 
