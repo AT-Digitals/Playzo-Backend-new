@@ -5,6 +5,7 @@ import { elemT } from "../../utils/UnionArray";
 export class UserDto {
   email: string;
   phoneNumber: string;
+  alternativeNumber: string;
   name: string;
   isVerified: boolean;
   otp: string;
@@ -15,6 +16,7 @@ export class UserDto {
     this.id = user.id;
     this.email = user.email;
     this.phoneNumber = user.phoneNumber;
+    this.alternativeNumber = user.alternativeNumber;
     this.isVerified = user.isVerified;
     this.otp = user.otp;
     this.name = user.name;

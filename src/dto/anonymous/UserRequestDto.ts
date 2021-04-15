@@ -32,3 +32,11 @@ export class AddFavouriteDto {
   @Allow()
   toAdd: boolean;
 }
+
+export class AddAlternativeNumberDto {
+  @Allow()
+  userId: string;
+
+  @Allow()
+  alternativeNumber: string;
+}
