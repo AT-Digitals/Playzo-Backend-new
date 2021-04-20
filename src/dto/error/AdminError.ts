@@ -10,4 +10,5 @@ export enum AdminError {
   SPECIFICATION_CATEGORY_NOT_VALID = "Please provide one of the valid specification category",
   CAROUSEL_IMAGE_NOT_FOUND = "Cannot find a Carousel Image with given ID",
   PROPERTY_DEVELOPER_ID_DOES_NOT_EXIST = "Cannot find a property developer with the given ID",
+  PROPERTY_ALREADY_ADDED = "Property is already added to favourite",
 }

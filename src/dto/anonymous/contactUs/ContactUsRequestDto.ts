@@ -1,4 +1,4 @@
-import { IsDefined, IsEmail } from "class-validator";
+import { Allow, IsDefined, IsEmail } from "class-validator";
 
 import { ContactType } from "../../../models/contactUs/ContactUsModel";
 
@@ -17,4 +17,7 @@ export class ContactUsRequestDto {
 
   @IsDefined({ message: "phone is required" })
   phone: string;
+
+  @Allow()
+  propertyId: string;
 }

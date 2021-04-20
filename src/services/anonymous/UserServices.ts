@@ -26,6 +26,11 @@ export class UserServices {
     );
 
     if (addFavouriteRequestDto.toAdd) {
+      //check if property already added to favourite
+      if (user.favouriteProperties.includes(property.id)) {
+        throw new AppErrorDto(AdminError.PROPERTY_ALREADY_ADDED);
+      }
+
       user.favouriteProperties = [...user.favouriteProperties, property.id];
     } else {
       user.favouriteProperties = user.favouriteProperties.filter(

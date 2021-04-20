@@ -13,6 +13,7 @@ export const PropertyPriceSchema = new Schema({
 
 export const PropertyMediaSchema = new Schema({
   url: String,
+  imageUrl: String,
   type: {
     type: String,
     enum: [Mediatype.image, Mediatype.video],
