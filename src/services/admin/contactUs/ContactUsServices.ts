@@ -1,8 +1,8 @@
 import { AdminContactUsDto } from "../../../dto/admin/contactUs/AdminContactUsDto";
+import { AdminPropertiesOverviewService } from "../property/AdminPropertiesOverviewService";
 import { ContactType } from "../../../models/contactUs/ContactUsModel";
 import { ContactUs } from "../../../models/contactUs/ContactUs";
 import { Service } from "typedi";
-import { AdminPropertiesOverviewService } from "../property/AdminPropertiesOverviewService";
 
 @Service()
 export class ContactUsService {
