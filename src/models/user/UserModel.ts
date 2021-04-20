@@ -9,4 +9,5 @@ export interface UserModel extends Document {
   isVerified: boolean;
   otp: string;
   favouriteProperties: PropertyModel["id"][] | PropertyModel[];
+  assistedProperties: PropertyModel["id"][] | PropertyModel[];
 }

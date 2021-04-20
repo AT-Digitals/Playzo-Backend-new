@@ -8,4 +8,5 @@ export enum Mediatype {
 export interface PropertyMediaModel extends Document {
   type: Mediatype;
   url: string;
+  imageUrl: string;
 }

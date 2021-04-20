@@ -95,3 +95,13 @@ export class PropertyDto {
     );
   }
 }
+
+export class PropertyMinDetailDto {
+  city: string;
+  name: string;
+
+  constructor(property: PropertyModel) {
+    this.city = property.city;
+    this.name = property.name;
+  }
+}

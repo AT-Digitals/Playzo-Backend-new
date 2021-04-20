@@ -6,4 +6,8 @@ export interface AdminContactUsDto {
   place: string;
   phone: string;
   type: ContactType;
+  property: {
+    name: string;
+    city: string;
+  };
 }

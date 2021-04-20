@@ -28,9 +28,13 @@ export class FloorPlanDto {
 export class FloorPlanOverviewDto {
   category: string;
   variation: string;
+  floorPlans: FloorPlanDto[];
 
   constructor(floorPlan: PropertyFloorPlanModel) {
     this.category = floorPlan.category;
     this.variation = floorPlan.variation;
+    this.floorPlans = floorPlan.floorPlans.map(
+      (floor) => new FloorPlanDto(floor)
+    );
   }
 }

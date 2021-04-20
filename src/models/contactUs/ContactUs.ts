@@ -8,6 +8,11 @@ export const ContactedUserDetailSchema = new Schema({
   email: String,
   place: String,
   phone: String,
+  propertyId: {
+    type: Schema.Types.ObjectId,
+    ref: "properties",
+    index: true,
+  },
 });
 
 const ContactUsSchema = new Schema({
