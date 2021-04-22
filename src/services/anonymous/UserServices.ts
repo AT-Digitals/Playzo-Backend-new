@@ -45,6 +45,14 @@ export class UserServices {
     return new UserDto(user);
   }
 
+  public async addAvatar(userId: string, avatar: string) {
+    let user = await this.findById(userId);
+    user.avatar = avatar;
+    user = await user.save();
+    user = await user.populate("favouriteProperties").execPopulate();
+    return new UserDto(user);
+  }
+
   public async AddAlternativeNumber(
     addAlternativeDto: AddAlternativeNumberDto
   ) {

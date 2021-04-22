@@ -11,6 +11,7 @@ export class UserDto {
   otp: string;
   id: string;
   favouriteProperties: PropertyDto[];
+  avatar: string;
 
   constructor(user: UserModel) {
     this.id = user.id;
@@ -23,5 +24,6 @@ export class UserDto {
     this.favouriteProperties = elemT(user.favouriteProperties).map(
       (property: PropertyModel) => new PropertyDto(property)
     );
+    this.avatar = user.avatar;
   }
 }

@@ -10,4 +10,5 @@ export interface UserModel extends Document {
   otp: string;
   favouriteProperties: PropertyModel["id"][] | PropertyModel[];
   assistedProperties: PropertyModel["id"][] | PropertyModel[];
+  avatar: string;
 }
