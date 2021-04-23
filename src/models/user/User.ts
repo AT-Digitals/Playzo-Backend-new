@@ -10,6 +10,7 @@ const UserSchema = new Schema({
   name: String,
   otp: String,
   isVerified: Boolean,
+  avatar: String,
   favouriteProperties: [
     {
       type: Schema.Types.ObjectId,
