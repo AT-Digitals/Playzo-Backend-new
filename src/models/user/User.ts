@@ -3,6 +3,11 @@ import { Schema, model } from "mongoose";
 import MongoDatabase from "../../utils/MongoDatabase";
 import { UserModel } from "./UserModel";
 
+const UserDeviceSchema = new Schema({
+  os: String,
+  browser: String,
+});
+
 const UserSchema = new Schema({
   email: { type: String, required: true, unique: true },
   phoneNumber: { type: String, required: true, unique: true },
@@ -18,6 +23,10 @@ const UserSchema = new Schema({
       index: true,
     },
   ],
+  accountCreationTimeStamp: Date,
+  lastLoginTimeStamp: Date,
+  userLocation: String,
+  userDeviceInfo: UserDeviceSchema,
 });
 
 UserSchema.plugin(MongoDatabase.timeAuditPlugin);

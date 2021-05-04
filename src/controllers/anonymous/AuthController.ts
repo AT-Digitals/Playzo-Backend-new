@@ -21,7 +21,7 @@ export class AuthController {
 
   @Post("/login")
   public async login(@Body() loginRequestDto: LoginRequestDto) {
-    return this.userService.loginUser(loginRequestDto.phoneNumber);
+    return this.userService.loginUser(loginRequestDto);
   }
 
   @Post("/verify/:userId")

@@ -8,6 +8,9 @@ export class UserDto {
   name: string;
   id: string;
   favouriteProperties: AdminPropertyOverviewDto[] = [];
+  lastLoginTime: Date;
+  accountCreationTime: Date;
+  deviceInfo: string;
 
   constructor(user: UserModel) {
     this.phoneNumber = user.phoneNumber;
@@ -17,5 +20,8 @@ export class UserDto {
     this.favouriteProperties = elemT(user.favouriteProperties).map(
       (property) => new AdminPropertyOverviewDto(property)
     );
+    this.lastLoginTime = user.lastLoginTimeStamp;
+    this.accountCreationTime = user.accountCreationTimeStamp;
+    this.deviceInfo = `${user.userDeviceInfo.os} ${user.userDeviceInfo.browser}`;
   }
 }

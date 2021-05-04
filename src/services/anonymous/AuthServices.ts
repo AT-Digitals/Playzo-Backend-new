@@ -1,9 +1,13 @@
+import {
+  LoginRequestDto,
+  UserRequestDto,
+} from "../../dto/anonymous/UserRequestDto";
+
 import { AdminError } from "../../dto/error/AdminError";
 import { AppErrorDto } from "../../dto/error/AppErrorDto";
 import { Service } from "typedi";
 import { User } from "../../models/user/User";
 import { UserDto } from "../../dto/anonymous/UserDto";
-import { UserRequestDto } from "../../dto/anonymous/UserRequestDto";
 
 @Service()
 export class AuthService {
@@ -14,16 +18,31 @@ export class AuthService {
     if (existingUser) {
       throw new AppErrorDto(AdminError.USER_EXISTS);
     }
-    let user = new User({ ...userDto, isVerified: false });
+    let user = new User({
+      ...userDto,
+      isVerified: false,
+      accountCreationTimeStamp: new Date(),
+    });
 
     user = await user.save();
     user = await user.populate("favouriteProperties").execPopulate();
     return new UserDto(user);
   }
 
-  public async loginUser(phoneNumber: string) {
+  public async loginUser({
+    phoneNumber,
+    location,
+    deviceInfo,
+  }: LoginRequestDto) {
     let user = await User.findOne({ phoneNumber });
     if (user && user.isVerified) {
+      //update last login time stamp
+      //update user location & Device Info
+      user.lastLoginTimeStamp = new Date();
+      user.userLocation = location;
+      user.userDeviceInfo = deviceInfo;
+      user = await user.save();
+
       user = await user.populate("favouriteProperties").execPopulate();
       return new UserDto(user);
     } else {

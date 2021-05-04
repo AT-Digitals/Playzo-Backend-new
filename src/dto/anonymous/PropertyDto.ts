@@ -32,6 +32,7 @@ export class PropertyDto {
   location: PropertyLocationModel;
   propertyType: string;
   floorPlan?: FloorPlanOverviewDto[];
+  propertyStatus: string;
 
   constructor(property: PropertyModel) {
     this.id = property.id;
@@ -93,6 +94,7 @@ export class PropertyDto {
     this.floorPlan = property.floorPlan.map(
       (floor) => new FloorPlanOverviewDto(floor)
     );
+    this.propertyStatus = property.propertyStatus;
   }
 }
 

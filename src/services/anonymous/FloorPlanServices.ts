@@ -1,4 +1,5 @@
 import { AdminPropertiesOverviewService } from "../admin/property/AdminPropertiesOverviewService";
+import { CategoryType } from "../../models/property/PropertyFloorPlanModel";
 import { FloorPlanDto } from "../../dto/anonymous/FloorPlanDto";
 import { Service } from "typedi";
 
@@ -17,9 +18,13 @@ export class FloorPlanService {
       propertyId
     );
 
-    const floorPlan = property.floorPlan.find(
-      (floor) => floor.category === category && floor.variation === variation
-    );
+    const floorPlan = property.floorPlan.find((floor) => {
+      if (category === CategoryType.Plot) {
+        return floor.category === category;
+      } else {
+        return floor.category === category && floor.variation === variation;
+      }
+    });
 
     return floorPlan?.floorPlans.map((floor) => new FloorPlanDto(floor));
   }

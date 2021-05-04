@@ -17,6 +17,7 @@ export class AdminPropertyOverviewDto {
   usps: string[];
   price: AdminPropertyPriceDto;
   propertyType: string;
+  propertyStatus: string;
 
   constructor(property: PropertyModel) {
     this.id = property.id;
@@ -39,5 +40,6 @@ export class AdminPropertyOverviewDto {
       );
     }
     this.propertyType = property.propertyType;
+    this.propertyStatus = property.propertyStatus;
   }
 }
