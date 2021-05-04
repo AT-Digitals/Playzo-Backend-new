@@ -41,6 +41,8 @@ export class AdminPropertiesOverviewService {
     property.usps = propertyRequest.usps;
     property.price = propertyRequest.price;
     property.propertyDeveloper = propertyRequest.propertyDeveloper;
+    property.propertyType = propertyRequest.propertyType;
+    property.propertyStatus = propertyRequest.propertyStatus;
     property = await property.save();
     property = await property
       .populate("categories")

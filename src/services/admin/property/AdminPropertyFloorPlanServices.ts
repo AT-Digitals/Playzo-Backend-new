@@ -1,4 +1,5 @@
 import {
+  CategoryType,
   FloorPlan,
   PropertyFloorPlanModel,
 } from "../../../models/property/PropertyFloorPlanModel";
@@ -23,11 +24,16 @@ export class AdminPropertyFloorPlanService {
       floorPlanRequestDto.propertyId
     );
 
-    const floorPlan = property.floorPlan.find(
-      (floor) =>
-        floor.category === floorPlanRequestDto.category &&
-        floor.variation === floorPlanRequestDto.variation
-    );
+    const floorPlan = property.floorPlan.find((floor) => {
+      if (floorPlanRequestDto.category === CategoryType.Plot) {
+        return floor.category === floorPlanRequestDto.category;
+      } else {
+        return (
+          floor.category === floorPlanRequestDto.category &&
+          floor.variation === floorPlanRequestDto.variation
+        );
+      }
+    });
 
     const newFloorPlan: FloorPlan = {
       image: "",
@@ -70,9 +76,13 @@ export class AdminPropertyFloorPlanService {
       propertyId
     );
 
-    const floorPlans = property.floorPlan.find(
-      (floor) => floor.category === category && floor.variation === variation
-    );
+    const floorPlans = property.floorPlan.find((floor) => {
+      if (category === CategoryType.Plot) {
+        return floor.category === category;
+      } else {
+        return floor.category === category && floor.variation === variation;
+      }
+    });
 
     const floorPlan = floorPlans?.floorPlans.find(
       (floor) => floor.id === floorPlanId
@@ -101,9 +111,13 @@ export class AdminPropertyFloorPlanService {
       propertyId
     );
 
-    const floorPlans = property.floorPlan.find(
-      (floor) => floor.category === category && floor.variation === variation
-    );
+    const floorPlans = property.floorPlan.find((floor) => {
+      if (category === CategoryType.Plot) {
+        return floor.category === category;
+      } else {
+        return floor.category === category && floor.variation === variation;
+      }
+    });
 
     if (floorPlans) {
       floorPlans.floorPlans = floorPlans?.floorPlans.filter(
@@ -127,9 +141,13 @@ export class AdminPropertyFloorPlanService {
       propertyId
     );
 
-    const floorPlan = property.floorPlan.find(
-      (floor) => floor.category === category && floor.variation === variation
-    );
+    const floorPlan = property.floorPlan.find((floor) => {
+      if (category === CategoryType.Plot) {
+        return floor.category === category;
+      } else {
+        return floor.category === category && floor.variation === variation;
+      }
+    });
 
     return floorPlan?.floorPlans.map((floor) => new AdminFloorPlanDto(floor));
   }

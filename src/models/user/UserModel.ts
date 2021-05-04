@@ -1,6 +1,10 @@
 import { Document } from "mongoose";
 import { PropertyModel } from "../property/PropertyModel";
 
+export interface UserDeviceInfo {
+  os: string;
+  browser: string;
+}
 export interface UserModel extends Document {
   email: string;
   phoneNumber: string;
@@ -11,4 +15,8 @@ export interface UserModel extends Document {
   favouriteProperties: PropertyModel["id"][] | PropertyModel[];
   assistedProperties: PropertyModel["id"][] | PropertyModel[];
   avatar: string;
+  accountCreationTimeStamp: Date;
+  lastLoginTimeStamp: Date;
+  userLocation: string;
+  userDeviceInfo: UserDeviceInfo;
 }

@@ -1,4 +1,4 @@
-import { PropertyModel, PropertyType } from "./PropertyModel";
+import { PropertyModel, PropertyStatus, PropertyType } from "./PropertyModel";
 import { Schema, model } from "mongoose";
 
 import { CategoryType } from "./PropertyFloorPlanModel";
@@ -84,7 +84,18 @@ const PropertySchema = new Schema({
   location: PropertyLocationSchema,
   propertyType: {
     type: String,
-    enum: [PropertyType.Appartment, PropertyType.Villa],
+    enum: [PropertyType.Appartment, PropertyType.Villa, PropertyType.Plot],
+  },
+  propertyStatus: {
+    type: String,
+    enum: [
+      PropertyStatus["New Launch"],
+      PropertyStatus["Early Stage"],
+      PropertyStatus["Mid Stage"],
+      PropertyStatus["Near Possession"],
+      PropertyStatus["Ready To Move"],
+      PropertyStatus["Well Occupied"],
+    ],
   },
 });
 

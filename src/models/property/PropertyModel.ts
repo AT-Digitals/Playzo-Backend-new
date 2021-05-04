@@ -10,6 +10,16 @@ import { PropertySpecificationModal } from "./PropertySpecificationModal";
 export enum PropertyType {
   Appartment = "Appartment",
   Villa = "Villa",
+  Plot = "Plot",
+}
+
+export enum PropertyStatus {
+  "New Launch" = "New Launch",
+  "Early Stage" = "Early Stage",
+  "Mid Stage" = "Mid Stage",
+  "Near Possession" = "Near Possession",
+  "Ready To Move" = "Ready To Move",
+  "Well Occupied" = "Well Occupied",
 }
 
 export interface PropertyModel extends Document {
@@ -30,4 +40,5 @@ export interface PropertyModel extends Document {
   paymentTranches: string;
   location: PropertyLocationModel;
   propertyType: PropertyType;
+  propertyStatus: PropertyStatus;
 }

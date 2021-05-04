@@ -5,11 +5,14 @@ import {
   Validate,
   ValidateNested,
 } from "class-validator";
+import {
+  PropertyStatus,
+  PropertyType,
+} from "../../../models/property/PropertyModel";
 
 import { AdminPropertyPriceRequestDto } from "./AdminPropertyPriceRequestDto";
 import { IsValidCategory } from "../../../validators/CategoryValidator";
 import { IsValidPropertyDeveloper } from "../../../validators/PropertyDeveloperValidator";
-import { PropertyType } from "../../../models/property/PropertyModel";
 import { Type } from "class-transformer";
 
 export class AdminPropertyOverviewRequestDto {
@@ -49,4 +52,7 @@ export class AdminPropertyOverviewRequestDto {
 
   @IsDefined({ message: "Property Type is required" })
   propertyType: PropertyType;
+
+  @IsDefined({ message: "Property Status is required" })
+  propertyStatus: PropertyStatus;
 }
