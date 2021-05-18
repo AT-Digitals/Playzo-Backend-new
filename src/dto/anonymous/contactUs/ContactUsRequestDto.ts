@@ -20,4 +20,7 @@ export class ContactUsRequestDto {
 
   @Allow()
   propertyId: string;
+
+  @Allow()
+  userId: string;
 }

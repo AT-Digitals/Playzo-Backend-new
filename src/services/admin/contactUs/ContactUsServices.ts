@@ -1,6 +1,9 @@
-import { AdminContactUsDto } from "../../../dto/admin/contactUs/AdminContactUsDto";
+import {
+  AdminContactUsDto,
+  AdminContactUsPropInfoDto,
+} from "../../../dto/admin/contactUs/AdminContactUsDto";
+
 import { AdminPropertiesOverviewService } from "../property/AdminPropertiesOverviewService";
-import { ContactType } from "../../../models/contactUs/ContactUsModel";
 import { ContactUs } from "../../../models/contactUs/ContactUs";
 import { Service } from "typedi";
 
@@ -10,105 +13,44 @@ export class ContactUsService {
     private adminPropertyOverviewService: AdminPropertiesOverviewService
   ) {}
   public async getContact() {
-    const contacts = await ContactUs.find();
-    const agents = contacts.filter(
-      (contact) => contact.type === ContactType.Agent
-    );
-    const enquiries = contacts.filter(
-      (contact) => contact.type === ContactType.Enquiry
-    );
-    const sellers = contacts.filter(
-      (contact) => contact.type === ContactType.Seller
-    );
+    const contacts = await ContactUs.find().populate("user").exec();
+    const agentUser: AdminContactUsDto[] = [];
 
-    const agentUsers: AdminContactUsDto[] = [];
-    const enquiriesUsers: AdminContactUsDto[] = [];
-    const sellersUsers: AdminContactUsDto[] = [];
+    for (let contact of contacts) {
+      contact = contact as any;
+      const temp: AdminContactUsDto = {} as AdminContactUsDto;
+      (temp["type"] = contact.type), (temp["name"] = contact.user.name);
+      temp["email"] = contact.user.email;
+      temp["phone"] = contact.user.phoneNumber;
+      temp["place"] = contact.place;
+      temp["timeStamp"] = Date.parse(contact.timeStamp) / 1000;
+      temp["properties"] = [];
 
-    if (agents && agents.length >= 1) {
-      const list = agents[0].userDetails;
-
-      for (const user of list) {
-        const temp: AdminContactUsDto = {
-          type: ContactType.Agent,
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          place: user.place,
-        } as AdminContactUsDto;
-
-        if (user.propertyId) {
-          const property = await this.adminPropertyOverviewService.findByPropertyId(
-            user.propertyId
-          );
-          temp["property"] = {
-            name: property.name,
-            city: property.city,
-          };
-        }
-
-        agentUsers.push(temp);
+      for (const prop of contact.propertiesInfo) {
+        const temp1: AdminContactUsPropInfoDto = {} as AdminContactUsPropInfoDto;
+        const property = await this.adminPropertyOverviewService.findByPropertyId(
+          prop.property
+        );
+        temp1["property"] = {
+          name: property.name,
+          city: property.city,
+          subLocation: property.subLocation,
+        };
+        temp1["timeStamp"] = Date.parse(prop.timeStamp.toString()) / 1000;
+        temp1["date"] = prop.timeStamp;
+        temp["properties"] = [...temp["properties"], temp1];
       }
+
+      //sort properties in desending based on timeStamp
+      temp["properties"] = temp["properties"]
+        .sort((a: any, b: any) => a.timeStamp - b.timeStamp)
+        .reverse();
+
+      agentUser.push(temp);
     }
 
-    if (enquiries && enquiries.length >= 1) {
-      const list = enquiries[0].userDetails;
+    agentUser.sort((a: any, b: any) => a.timeStamp - b.timeStamp).reverse();
 
-      for (const user of list) {
-        const temp: AdminContactUsDto = {
-          type: ContactType.Enquiry,
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          place: user.place,
-        } as AdminContactUsDto;
-
-        if (user.propertyId) {
-          const property = await this.adminPropertyOverviewService.findByPropertyId(
-            user.propertyId
-          );
-          temp["property"] = {
-            name: property.name,
-            city: property.city,
-          };
-        }
-
-        enquiriesUsers.push(temp);
-      }
-    }
-
-    if (sellers && sellers.length >= 1) {
-      const list = sellers[0].userDetails;
-
-      for (const user of list) {
-        const temp: AdminContactUsDto = {
-          type: ContactType.Seller,
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          place: user.place,
-        } as AdminContactUsDto;
-
-        if (user.propertyId) {
-          const property = await this.adminPropertyOverviewService.findByPropertyId(
-            user.propertyId
-          );
-          temp["property"] = {
-            name: property.name,
-            city: property.city,
-          };
-        }
-
-        sellersUsers.push(temp);
-      }
-    }
-
-    const allUsers: AdminContactUsDto[] = [
-      ...agentUsers,
-      ...enquiriesUsers,
-      ...sellersUsers,
-    ];
-
-    return allUsers;
+    return agentUser;
   }
 }

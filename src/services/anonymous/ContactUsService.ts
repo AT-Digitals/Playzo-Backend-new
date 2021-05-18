@@ -1,11 +1,12 @@
 import {
-  ContactUsModel,
-  ContactedUserDetails,
+  ContactType,
+  PropertiesInfo,
 } from "../../models/contactUs/ContactUsModel";
+
 import { AdminPropertiesOverviewService } from "../admin/property/AdminPropertiesOverviewService";
 import { ContactUs } from "../../models/contactUs/ContactUs";
-import { ContactUsDto } from "../../dto/anonymous/contactUs/ContactUsDto";
 import { ContactUsRequestDto } from "../../dto/anonymous/contactUs/ContactUsRequestDto";
+import { PropertyModel } from "../../models/property/PropertyModel";
 import { Service } from "typedi";
 
 @Service()
@@ -13,46 +14,55 @@ export class ContactUsService {
   constructor(
     private adminPropertyOverviewService: AdminPropertiesOverviewService
   ) {}
+
   public async addContact(contactDto: ContactUsRequestDto) {
-    const data: ContactUsModel = {
+    //find Document with the given User Id
+    let contactUs = await ContactUs.findOne({
+      user: contactDto.userId,
       type: contactDto.type,
-      userDetails: [
-        {
-          name: contactDto.name,
-          email: contactDto.email,
+    });
+    let property: PropertyModel;
+
+    //find Property Info only if ContactType is Enquiry
+    if (contactDto.type === ContactType.Enquiry && contactDto.propertyId) {
+      property = await this.adminPropertyOverviewService.findByPropertyId(
+        contactDto.propertyId
+      );
+
+      const newProprtiesInfo: PropertiesInfo = {
+        property: property.id,
+        timeStamp: new Date(),
+      };
+
+      if (contactUs) {
+        contactUs.propertiesInfo = [
+          ...contactUs.propertiesInfo,
+          newProprtiesInfo,
+        ];
+        contactUs.place = contactDto.place;
+        contactUs.timeStamp = new Date().toUTCString();
+      } else {
+        contactUs = new ContactUs({
+          type: contactDto.type,
+          user: contactDto.userId,
+          propertiesInfo: newProprtiesInfo,
           place: contactDto.place,
-          phone: contactDto.phone,
-          propertyId: contactDto.propertyId,
-        },
-      ],
-    } as ContactUsModel;
-
-    let contact = await ContactUs.findOne({ type: contactDto.type });
-
-    if (contact) {
-      contact.userDetails = [...contact.userDetails, ...data.userDetails];
-    } else {
-      contact = new ContactUs({ ...data });
-    }
-    contact = await contact.save();
-
-    const contactedUsers: ContactedUserDetails[] = [];
-
-    for (const user of contact.userDetails) {
-      if (user.propertyId) {
-        const property = await this.adminPropertyOverviewService.findByPropertyId(
-          user.propertyId
-        );
-        user.propertyId = property;
+          timeStamp: new Date().toUTCString(),
+        });
       }
-
-      const temp: ContactedUserDetails = {} as ContactedUserDetails;
-      Object.assign(temp, user);
-      contactedUsers.push(temp);
+    } else {
+      //If Contact type is not enquiry
+      contactUs = new ContactUs({
+        type: contactDto.type,
+        user: contactDto.userId,
+        place: contactDto.place,
+        timeStamp: new Date().toUTCString(),
+      });
     }
 
-    contact.userDetails = contactedUsers;
+    contactUs = await contactUs.save();
+    contactUs = await contactUs.populate("user").execPopulate();
 
-    return new ContactUsDto(contact);
+    return contactUs.type;
   }
 }

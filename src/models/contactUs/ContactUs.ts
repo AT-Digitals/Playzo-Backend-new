@@ -3,16 +3,13 @@ import { Schema, model } from "mongoose";
 
 import MongoDatabase from "../../utils/MongoDatabase";
 
-export const ContactedUserDetailSchema = new Schema({
-  name: String,
-  email: String,
-  place: String,
-  phone: String,
-  propertyId: {
+export const PropertiesInfoSchema = new Schema({
+  property: {
     type: Schema.Types.ObjectId,
     ref: "properties",
     index: true,
   },
+  timeStamp: Date,
 });
 
 const ContactUsSchema = new Schema({
@@ -20,7 +17,14 @@ const ContactUsSchema = new Schema({
     type: String,
     enum: [ContactType.Agent, ContactType.Enquiry, ContactType.Seller],
   },
-  userDetails: [ContactedUserDetailSchema],
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "users",
+    index: true,
+  },
+  place: String,
+  propertiesInfo: [PropertiesInfoSchema],
+  timeStamp: String,
 });
 
 ContactUsSchema.plugin(MongoDatabase.timeAuditPlugin);
