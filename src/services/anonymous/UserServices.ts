@@ -34,6 +34,7 @@ export class UserServices {
       user.favouriteProperties = [...user.favouriteProperties, property.id];
     } else {
       user.favouriteProperties = user.favouriteProperties.filter(
+        // eslint-disable-next-line eqeqeq
         (id) => id != property.id
       );
     }
