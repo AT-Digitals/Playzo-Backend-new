@@ -18,8 +18,9 @@ export class SearchServices {
       properties = properties
         .filter((property) => {
           if (
+            property.propertyType &&
             property.propertyType.toLowerCase().trim() ===
-            type.toLowerCase().trim()
+              type.toLowerCase().trim()
           ) {
             return property;
           }
@@ -28,11 +29,12 @@ export class SearchServices {
         .filter(Boolean);
     }
 
-    if (city) {
+    if (city && city !== "") {
       //filter properties based on city
       properties = properties
         .filter((property) => {
           if (
+            property.city &&
             property.city.toLowerCase().trim() === city.toLowerCase().trim()
           ) {
             return property;
@@ -42,16 +44,21 @@ export class SearchServices {
         .filter(Boolean);
     }
 
-    if (query) {
+    if (query && query !== "") {
       //filter properties based on name or property developer or sub location or city  or rera numbr
       query = query.toLowerCase().trim();
       properties = properties
         .filter((property) => {
           if (
-            property.propertyDeveloper.name.toLowerCase().trim() === query ||
-            property.name.toLowerCase().trim() === query ||
-            property.subLocation.toLowerCase().trim() === query ||
-            property.reraNumber.toLowerCase().trim() === query
+            (property.propertyDeveloper.name &&
+              property.propertyDeveloper.name
+                .toLowerCase()
+                .trim()
+                .includes(query)) ||
+            property.name.toLowerCase().trim().includes(query) ||
+            property.subLocation.toLowerCase().trim().includes(query) ||
+            property.reraNumber.toLowerCase().trim() === query ||
+            property.city.toLowerCase().trim().includes(query)
           ) {
             return property;
           }
