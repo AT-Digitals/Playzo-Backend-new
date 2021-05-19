@@ -11,27 +11,54 @@ import { Service } from "typedi";
 @Service()
 export class SearchServices {
   public async getProperties(type: PropertyType, city: string, query: string) {
-    const propertyDeveloper = await this.getPropertyDeveloperByName(query);
-    const properties = await Property.find({
-      $or: [
-        { propertyType: type },
-        {
-          city,
-        },
-        {
-          reraNumber: query,
-        },
-        {
-          subLocation: query,
-        },
-        {
-          name: query,
-        },
-        {
-          propertyDeveloper,
-        },
-      ],
-    }).populate("propertyDeveloper");
+    let properties = await Property.find().populate("propertyDeveloper");
+
+    if (type) {
+      //filter properties based on Type
+      properties = properties
+        .filter((property) => {
+          if (
+            property.propertyType.toLowerCase().trim() ===
+            type.toLowerCase().trim()
+          ) {
+            return property;
+          }
+          return null;
+        })
+        .filter(Boolean);
+    }
+
+    if (city) {
+      //filter properties based on city
+      properties = properties
+        .filter((property) => {
+          if (
+            property.city.toLowerCase().trim() === city.toLowerCase().trim()
+          ) {
+            return property;
+          }
+          return null;
+        })
+        .filter(Boolean);
+    }
+
+    if (query) {
+      //filter properties based on name or property developer or sub location or city  or rera numbr
+      query = query.toLowerCase().trim();
+      properties = properties
+        .filter((property) => {
+          if (
+            property.propertyDeveloper.name.toLowerCase().trim() === query ||
+            property.name.toLowerCase().trim() === query ||
+            property.subLocation.toLowerCase().trim() === query ||
+            property.reraNumber.toLowerCase().trim() === query
+          ) {
+            return property;
+          }
+          return null;
+        })
+        .filter(Boolean);
+    }
 
     return properties.map((property) => new PropertyDto(property));
   }

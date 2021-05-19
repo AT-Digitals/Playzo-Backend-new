@@ -6,7 +6,6 @@ import {
 } from "../../../utils/UploadUtil";
 
 import { AdminHomePageServices } from "../../../services/admin/homePage/HomePageServices";
-import { HomePageCarouselModel } from "../../../models/homePage/HomePageCarouselModel";
 import { IsAdmin } from "../../../middleware/AuthValidator";
 
 @JsonController("/admins/homePage/carousel")
@@ -18,11 +17,7 @@ export class AdminHomePageCarouselController {
   public async addImages(@UploadedImages("medias") desktopFile: UploadedFiles) {
     const imageList = UploadUtils.getUploadedUrls(desktopFile);
 
-    const mediaList = imageList.map(
-      (url) => ({ url } as HomePageCarouselModel)
-    );
-
-    return this.AdminHomePageService.addImages(mediaList);
+    return this.AdminHomePageService.addImages(imageList);
   }
 
   @IsAdmin()

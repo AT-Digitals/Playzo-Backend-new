@@ -1,18 +1,17 @@
-import { Get, JsonController, Param } from "routing-controllers";
-import { PropertyType } from "../../models/property/PropertyModel";
-
+import { Body, JsonController, Post } from "routing-controllers";
+import { SearchRequestDto } from "../../dto/anonymous/SearchRequestDto";
 import { SearchServices } from "../../services/anonymous/SearchServices";
 
 @JsonController("/anonymous/search")
 export class SearchController {
   constructor(private searchServices: SearchServices) {}
 
-  @Get("/property/:type/:city/:query")
-  public async getProperty(
-    @Param("type") type: PropertyType,
-    @Param("city") city: string,
-    @Param("query") query: string
-  ) {
-    return this.searchServices.getProperties(type, city, query);
+  @Post("/property")
+  public async getProperty(@Body() searchRequestDto: SearchRequestDto) {
+    return this.searchServices.getProperties(
+      searchRequestDto.type,
+      searchRequestDto.city,
+      searchRequestDto.query
+    );
   }
 }

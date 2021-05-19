@@ -7,10 +7,16 @@ import { Service } from "typedi";
 
 @Service()
 export class AdminHomePageServices {
-  public async addImages(media: HomePageCarouselModel[]) {
-    const homePageCarousels = await HomePageCarousel.insertMany(media);
+  public async addImages(media: string[]) {
+    const allHomePageCarousels = await HomePageCarousel.find();
+    const newCarousel: HomePageCarouselModel = {
+      url: media[0],
+      index: allHomePageCarousels.length,
+    } as HomePageCarouselModel;
+    let homePageCarousel = new HomePageCarousel({ ...newCarousel });
+    homePageCarousel = await homePageCarousel.save();
 
-    return new AdminHomePageCarouselDto(homePageCarousels);
+    return homePageCarousel;
   }
   public async getAllImages() {
     const homePageCarousels = await HomePageCarousel.find();
