@@ -4,7 +4,7 @@ import { AdminRequestDto } from "../../../dto/admin/user/AdminRequestDto";
 import { AdminUsersService } from "../../../services/admin/adminUser/AdminUsersService";
 import { IsAdmin } from "../../../middleware/AuthValidator";
 
-@JsonController("/admins/users")
+@JsonController("/admins/adminUsers")
 export class AdminUsersController {
   constructor(private adminUsersService: AdminUsersService) {}
 
