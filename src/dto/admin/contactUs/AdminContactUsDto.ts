@@ -5,9 +5,10 @@ export interface AdminContactUsPropInfoDto {
     name: string;
     city: string;
     subLocation: string;
+    date: Date;
+    dateString: string;
+    timeStamp: number;
   };
-  timeStamp: number;
-  date: Date;
 }
 export interface AdminContactUsDto {
   name: string;

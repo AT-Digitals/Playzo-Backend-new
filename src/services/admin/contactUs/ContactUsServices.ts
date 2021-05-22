@@ -35,9 +35,11 @@ export class ContactUsService {
           name: property.name,
           city: property.city,
           subLocation: property.subLocation,
+          dateString: prop.timeStamp.toLocaleDateString(),
+          date: prop.timeStamp,
+          timeStamp: Date.parse(prop.timeStamp.toString()) / 1000,
         };
-        temp1["timeStamp"] = Date.parse(prop.timeStamp.toString()) / 1000;
-        temp1["date"] = prop.timeStamp;
+
         temp["properties"] = [...temp["properties"], temp1];
       }
 
