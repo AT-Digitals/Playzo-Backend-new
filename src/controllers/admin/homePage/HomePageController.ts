@@ -1,4 +1,12 @@
-import { Delete, Get, JsonController, Param, Post } from "routing-controllers";
+import {
+  Body,
+  Delete,
+  Get,
+  JsonController,
+  Param,
+  Post,
+  Put,
+} from "routing-controllers";
 import {
   UploadUtils,
   UploadedFiles,
@@ -7,6 +15,7 @@ import {
 
 import { AdminHomePageServices } from "../../../services/admin/homePage/HomePageServices";
 import { IsAdmin } from "../../../middleware/AuthValidator";
+import { HomePageCarouselOrderUpdateRequestDto } from "../../../dto/admin/homePage/HomePageCarouselRequestDto";
 
 @JsonController("/admins/homePage/carousel")
 export class AdminHomePageCarouselController {
@@ -24,6 +33,14 @@ export class AdminHomePageCarouselController {
   @Get("/images")
   public async getAllImagesFromAdmin() {
     return this.AdminHomePageService.getAllImages();
+  }
+
+  @IsAdmin()
+  @Put("/images/changeOrder")
+  public async changeCarouselOrder(
+    @Body() updateDto: HomePageCarouselOrderUpdateRequestDto
+  ) {
+    return this.AdminHomePageService.changeOrder(updateDto);
   }
 
   @IsAdmin()

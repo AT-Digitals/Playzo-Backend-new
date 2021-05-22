@@ -1,6 +1,7 @@
 import { CarouselDto } from "../../dto/anonymous/CarouelDto";
 import { Category } from "../../models/category/Category";
 import { HomePageCarousel } from "../../models/homePage/HomePageCarouselItem";
+import { HomePageCarouselModel } from "../../models/homePage/HomePageCarouselModel";
 import { Property } from "../../models/property/Property";
 import { PropertyDto } from "../../dto/anonymous/PropertyDto";
 import { PropertyModel } from "../../models/property/PropertyModel";
@@ -10,8 +11,13 @@ import { Service } from "typedi";
 export class HomePageServices {
   public async getAllImages() {
     const homePageCarousels = await HomePageCarousel.find();
+    const sortedCarousel: HomePageCarouselModel[] = [];
 
-    return new CarouselDto(homePageCarousels);
+    homePageCarousels.forEach((carousel) => {
+      sortedCarousel[carousel.index] = carousel;
+    });
+
+    return new CarouselDto(sortedCarousel);
   }
 
   public async getPropertiesOfCategory(categoryName: string) {
