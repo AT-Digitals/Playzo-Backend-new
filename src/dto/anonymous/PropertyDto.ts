@@ -14,6 +14,7 @@ export class PropertyDto {
   price: { from: number; to: number; perSqFt: number };
   category: string;
   possessionDate: Date;
+  possessionTimeStamp: number;
   numberOfUnits: number;
   usps: string[];
   amenities: string[];
@@ -77,6 +78,8 @@ export class PropertyDto {
       .map((category: CategoryModel) => category.displayName)
       .join(", ");
     this.possessionDate = property.possessionBy;
+    this.possessionTimeStamp =
+      Date.parse(property.possessionBy.toUTCString()) / 1000;
     this.media = property.media.map((mm) => new PropertyMediaDto(mm));
     if (property.propertyDeveloper) {
       this.propertyDeveloper = new PropertyDeveloperDto(
