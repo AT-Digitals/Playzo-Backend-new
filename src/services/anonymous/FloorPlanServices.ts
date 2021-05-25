@@ -12,14 +12,15 @@ export class FloorPlanService {
   public async getPropertyFloorPlan(
     propertyId: string,
     category: string,
-    variation: string
+    variation: string,
+    getOnlyWithCategory = false
   ) {
     const property = await this.adminPropertyOverviewService.findByPropertyId(
       propertyId
     );
 
     const floorPlan = property.floorPlan.find((floor) => {
-      if (category === CategoryType.Plot) {
+      if (category === CategoryType.Plot || getOnlyWithCategory) {
         return floor.category === category;
       } else {
         return floor.category === category && floor.variation === variation;
