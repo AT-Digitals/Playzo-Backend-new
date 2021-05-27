@@ -1,4 +1,5 @@
 import {
+  CategoryType,
   FloorPlan,
   PropertyFloorPlanModel,
 } from "../../models/property/PropertyFloorPlanModel";
@@ -36,5 +37,39 @@ export class FloorPlanOverviewDto {
     this.floorPlans = floorPlan.floorPlans.map(
       (floor) => new FloorPlanDto(floor)
     );
+  }
+}
+
+export class FloorPlanBTNShowInfoDto {
+  Appartment: {
+    "1 BHK": boolean;
+    "2 BHK": boolean;
+    "3 BHK": boolean;
+    "4 BHK": boolean;
+    "5 BHK+": boolean;
+  };
+  Villa: {
+    "1 BHK": boolean;
+    "2 BHK": boolean;
+    "3 BHK": boolean;
+    "4 BHK": boolean;
+    "5 BHK+": boolean;
+  };
+
+  constructor(floorPlan: PropertyFloorPlanModel[]) {
+    const Appartment: any = {},
+      Villa: any = {};
+
+    for (const floor of floorPlan) {
+      if (floor.category === CategoryType.Appartment) {
+        Appartment[floor.variation] =
+          floor.floorPlans.length >= 1 ? true : false;
+      } else if (floor.category === CategoryType.Villa) {
+        Villa[floor.variation] = floor.floorPlans.length >= 1 ? true : false;
+      }
+    }
+
+    this.Appartment = Appartment;
+    this.Villa = Villa;
   }
 }

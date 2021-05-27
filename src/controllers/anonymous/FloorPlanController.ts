@@ -17,17 +17,4 @@ export class AdminPropertyFloorPlanController {
       variation
     );
   }
-
-  @Get("/:propertyId/:category")
-  public async getFloorPlanOnlyWithCatgory(
-    @Param("propertyId") propertyId: string,
-    @Param("category") category: string
-  ) {
-    return this.floorPlanService.getPropertyFloorPlan(
-      propertyId,
-      category,
-      "",
-      true
-    );
-  }
 }

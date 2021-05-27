@@ -6,7 +6,7 @@ export class UserRequestDto {
   @IsDefined({
     message: "Phone number is required",
   })
-  @Length(10, 10, { message: "Phone number must be exactly 10 digits" })
+  @Length(10, 12, { message: "Phone number must not greater than 12 digits" })
   public phoneNumber: string;
 
   @IsEmail({}, { message: "Please provide a valid email" })

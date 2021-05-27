@@ -34,20 +34,6 @@ export class AdminPropertyFloorPlanController {
   }
 
   @IsAdmin()
-  @Get("/:propertyId/:category")
-  public async getFloorPlanOnlyWithCategory(
-    @Param("propertyId") propertyId: string,
-    @Param("category") category: string
-  ) {
-    return this.adminFloorPlanService.getPropertyFloorPlan(
-      propertyId,
-      category,
-      "",
-      true
-    );
-  }
-
-  @IsAdmin()
   @Post("/")
   public async addFloorPlan(
     @Body() floorPlanRequestDto: AdminPropertyFloorPlanRequestDto
