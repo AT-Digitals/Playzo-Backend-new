@@ -8,13 +8,16 @@ import { AppErrorDto } from "../../dto/error/AppErrorDto";
 import { Service } from "typedi";
 import { User } from "../../models/user/User";
 import { UserDto } from "../../dto/anonymous/UserDto";
+import axios from "axios";
 
 @Service()
 export class AuthService {
   public async createUser(userDto: UserRequestDto) {
-    const existingUser = await User.findOne({
-      $or: [{ phoneNumber: userDto.phoneNumber }, { email: userDto.email }],
-    });
+    const existingUser = await this.isUserExist(
+      userDto.phoneNumber,
+      userDto.email
+    );
+
     if (existingUser) {
       throw new AppErrorDto(AdminError.USER_EXISTS);
     }
@@ -27,6 +30,35 @@ export class AuthService {
     user = await user.save();
     user = await user.populate("favouriteProperties").execPopulate();
     return new UserDto(user);
+  }
+
+  public async sendOTP(mobile: string) {
+    const authKey = process.env.MSG91_AUTH_KEY;
+    const templateId = process.env.MSG91_TEMPLATE_ID;
+
+    const result = await axios.get(
+      `https://api.msg91.com/api/v5/otp?template_id=${templateId}&mobile=${mobile}&authkey=${authKey}`
+    );
+    return result.data;
+  }
+
+  public async verifyOTP(mobile: string, otp: string) {
+    const authKey = process.env.MSG91_AUTH_KEY;
+
+    const result = await axios.get(
+      `https://api.msg91.com/api/v5/otp/verify?authkey=${authKey}&mobile=${mobile}&otp=${otp}`
+    );
+
+    return result.data;
+  }
+
+  public async resendOTP(mobile: string) {
+    const authKey = process.env.MSG91_AUTH_KEY;
+    const result = await axios.get(
+      `https://api.msg91.com/api/v5/otp/retry?authkey=${authKey}&retrytype=text&mobile=${mobile}`
+    );
+
+    return result.data;
   }
 
   public async loginUser({
@@ -67,6 +99,16 @@ export class AuthService {
     user = await user.save();
     user = await user.populate("favouriteProperties").execPopulate();
     return new UserDto(user);
+  }
+
+  public async isUserExist(mobile: string, email: string) {
+    const existingUser = await User.findOne({
+      $or: [{ phoneNumber: mobile }, { email }],
+    });
+    if (existingUser) {
+      return true;
+    }
+    return false;
   }
 
   public async getUser(userId: string) {

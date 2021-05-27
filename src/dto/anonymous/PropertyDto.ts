@@ -1,10 +1,12 @@
+import { FloorPlanBTNShowInfoDto, FloorPlanOverviewDto } from "./FloorPlanDto";
+
 import { CategoryModel } from "../../models/category/CategoryModel";
-import { FloorPlanOverviewDto } from "./FloorPlanDto";
 import { PropertyDeveloperDto } from "./PropertyDeveloperDto";
 import { PropertyLocationModel } from "../../models/property/PropertyLocationModel";
 import { PropertyMediaDto } from "./PropertyMediaDto";
 import { PropertyModel } from "../../models/property/PropertyModel";
 import { PropertySpecifictionDto } from "./PropertySpecificationDto";
+
 export class PropertyDto {
   id: string;
   name: string;
@@ -33,6 +35,7 @@ export class PropertyDto {
   location: PropertyLocationModel;
   propertyType: string;
   floorPlan?: FloorPlanOverviewDto[];
+  floorPlanBTNInfo: FloorPlanBTNShowInfoDto;
   propertyStatus: string;
 
   constructor(property: PropertyModel) {
@@ -97,6 +100,7 @@ export class PropertyDto {
     this.floorPlan = property.floorPlan.map(
       (floor) => new FloorPlanOverviewDto(floor)
     );
+    this.floorPlanBTNInfo = new FloorPlanBTNShowInfoDto(property.floorPlan);
     this.propertyStatus = property.propertyStatus;
   }
 }
