@@ -19,7 +19,8 @@ export class ContactUsService {
     for (let contact of contacts) {
       contact = contact as any;
       const temp: AdminContactUsDto = {} as AdminContactUsDto;
-      (temp["type"] = contact.type), (temp["name"] = contact.user.name);
+      temp["type"] = contact.type;
+      temp["name"] = contact.user.name;
       temp["email"] = contact.user.email;
       temp["phone"] = contact.user.phoneNumber;
       temp["place"] = contact.place;
