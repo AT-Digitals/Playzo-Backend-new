@@ -20,7 +20,7 @@ export class UserRequestDto {
 }
 
 export class LoginRequestDto {
-  @Length(10, 10, { message: "Phone number must be exactly 10 digits" })
+  @Length(10, 12, { message: "Phone number must not greater than 12 digits" })
   public phoneNumber: string;
 
   @IsDefined({ message: "location is required" })

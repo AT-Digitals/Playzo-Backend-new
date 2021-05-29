@@ -9,7 +9,9 @@ export class UserDto {
   id: string;
   favouriteProperties: AdminPropertyOverviewDto[] = [];
   lastLoginTime: Date;
+  lastloginTimeString: string;
   accountCreationTime: Date;
+  accountCreationTimeString: string;
   deviceInfo: string;
 
   constructor(user: UserModel) {
@@ -21,7 +23,11 @@ export class UserDto {
       (property) => new AdminPropertyOverviewDto(property)
     );
     this.lastLoginTime = user.lastLoginTimeStamp;
+    this.lastloginTimeString = user.lastLoginTimeStamp.toLocaleDateString();
     this.accountCreationTime = user.accountCreationTimeStamp;
-    this.deviceInfo = `${user.userDeviceInfo.os} ${user.userDeviceInfo.browser}`;
+    this.accountCreationTimeString = user.accountCreationTimeStamp.toLocaleDateString();
+    if (user.userDeviceInfo) {
+      this.deviceInfo = `${user.userDeviceInfo.os} ${user.userDeviceInfo.browser}`;
+    }
   }
 }
