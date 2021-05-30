@@ -86,7 +86,7 @@ export class AuthService {
     const user = await User.findById(userId);
 
     if (!user) {
-      throw new AppErrorDto(AdminError.USER_EXISTS);
+      throw new AppErrorDto(AdminError.USER_NOT_EXISTS);
     }
 
     return user;
@@ -114,6 +114,18 @@ export class AuthService {
   public async getUser(userId: string) {
     let user = await this.findById(userId);
     user = await user.populate("favouriteProperties").execPopulate();
+    return new UserDto(user);
+  }
+
+  public async getUserWithPhone(phone: string) {
+    const user = await User.findOne({ phoneNumber: phone })
+      .populate("favouriteProperties")
+      .exec();
+
+    if (!user) {
+      throw new AppErrorDto(AdminError.USER_NOT_EXISTS);
+    }
+
     return new UserDto(user);
   }
 }
