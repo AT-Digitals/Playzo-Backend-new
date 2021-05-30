@@ -12,10 +12,9 @@ import {
   UploadedFiles,
   UploadedImages,
 } from "../../../utils/UploadUtil";
-
 import { AdminHomePageServices } from "../../../services/admin/homePage/HomePageServices";
-import { IsAdmin } from "../../../middleware/AuthValidator";
 import { HomePageCarouselOrderUpdateRequestDto } from "../../../dto/admin/homePage/HomePageCarouselRequestDto";
+import { IsAdmin } from "../../../middleware/AuthValidator";
 
 @JsonController("/admins/homePage/carousel")
 export class AdminHomePageCarouselController {
