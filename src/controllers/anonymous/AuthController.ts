@@ -14,6 +14,11 @@ export class AuthController {
     return this.userService.getUser(userId);
   }
 
+  @Get("/phone/:phone")
+  public async getUserWithPhoneNumber(@Param("phone") phone: string) {
+    return this.userService.getUserWithPhone(phone);
+  }
+
   @Get("/isUserExist/:mobile/:email")
   public async isUserExist(
     @Param("mobile") mobile: string,

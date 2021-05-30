@@ -2,6 +2,7 @@ export enum AdminError {
   FLOOR_PLAN_DOES_NOT_EXIST = "Floor Plan does not exist with given ID",
   USER_NOT_VERIFIED = "user not verified yet",
   USER_EXISTS = "user exists with the provided credentials",
+  USER_NOT_EXISTS = "user not exists with given id or phone number",
   ADMIN_EXISTS = "An admin exists with the provided credentials",
   CATEGORY_ID_DOES_NOT_EXIST = "Cannot find a category with the given ID",
   CATEGORY_NAME_ALREADY_EXISTS = "A category with the given name already exists",
