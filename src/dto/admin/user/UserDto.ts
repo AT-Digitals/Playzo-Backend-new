@@ -23,9 +23,13 @@ export class UserDto {
       (property) => new AdminPropertyOverviewDto(property)
     );
     this.lastLoginTime = user.lastLoginTimeStamp;
-    this.lastloginTimeString = user.lastLoginTimeStamp.toLocaleDateString();
+    this.lastloginTimeString = user.lastLoginTimeStamp
+      ? user.lastLoginTimeStamp.toLocaleDateString()
+      : new Date().toLocaleDateString();
     this.accountCreationTime = user.accountCreationTimeStamp;
-    this.accountCreationTimeString = user.accountCreationTimeStamp.toLocaleDateString();
+    this.accountCreationTimeString = user.accountCreationTimeStamp
+      ? user.accountCreationTimeStamp.toLocaleDateString()
+      : new Date().toLocaleDateString();
     if (user.userDeviceInfo) {
       this.deviceInfo = `${user.userDeviceInfo.os} ${user.userDeviceInfo.browser}`;
     }
