@@ -1,7 +1,9 @@
 import { Get, JsonController, Param } from "routing-controllers";
 import { FloorPlanService } from "../../services/anonymous/FloorPlanServices";
+import { Service } from "typedi";
 
 @JsonController("/anonymous/propertyFloorPlan")
+@Service()
 export class AdminPropertyFloorPlanController {
   constructor(private floorPlanService: FloorPlanService) {}
 

@@ -3,8 +3,8 @@ import { Action, Authorized } from "routing-controllers";
 import { AppError } from "../dto/error/AppError";
 import { AppErrorDto } from "../dto/error/AppErrorDto";
 import { AuthUtils } from "../utils/AuthUtils";
-import { AuthorizationChecker } from "routing-controllers/AuthorizationChecker";
-import { CurrentUserChecker } from "routing-controllers/CurrentUserChecker";
+import { AuthorizationChecker } from "routing-controllers/types/AuthorizationChecker";
+import { CurrentUserChecker } from "routing-controllers/types/CurrentUserChecker";
 import { HttpStatusCode } from "../dto/error/HttpStatusCode";
 import { UserType } from "../dto/auth/UserType";
 

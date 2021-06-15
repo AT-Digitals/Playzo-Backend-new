@@ -8,9 +8,11 @@ import {
   UploadedFile,
   UploadedImage,
 } from "../../utils/UploadUtil";
+import { Service } from "typedi";
 import { UserServices } from "../../services/anonymous/UserServices";
 
 @JsonController("/anonymous/user")
+@Service()
 export class UserController {
   constructor(private AnonymousUserServices: UserServices) {}
 

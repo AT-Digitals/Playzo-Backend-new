@@ -1,8 +1,10 @@
 import { Body, JsonController, Post } from "routing-controllers";
 import { SearchRequestDto } from "../../dto/anonymous/SearchRequestDto";
 import { SearchServices } from "../../services/anonymous/SearchServices";
+import { Service } from "typedi";
 
 @JsonController("/anonymous/search")
+@Service()
 export class SearchController {
   constructor(private searchServices: SearchServices) {}
 

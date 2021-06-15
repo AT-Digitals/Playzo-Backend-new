@@ -1,8 +1,9 @@
 import { Get, JsonController, Param } from "routing-controllers";
-
 import { HomePageServices } from "../../services/anonymous/HomePageServices";
+import { Service } from "typedi";
 
 @JsonController("/anonymous/homePage")
+@Service()
 export class HomePageController {
   constructor(private AnonymousHomePageServices: HomePageServices) {}
 

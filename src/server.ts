@@ -13,7 +13,6 @@ import { ErrorHandler } from "./middleware/ErrorHandler";
 import { HttpStatusCode } from "./dto/error/HttpStatusCode";
 import MongoDatabase from "./utils/MongoDatabase";
 import { MorganMiddleware } from "./middleware/MorganMiddleware";
-import bodyParser from "body-parser";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import csrf from "csurf";
@@ -21,6 +20,9 @@ import dotenv from "dotenv";
 import express from "express";
 import path from "path";
 import winston from "winston";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const bodyParser = require("body-parser");
 
 dotenv.config({ path: `${path.join(__dirname, "..", ".env")}` });
 

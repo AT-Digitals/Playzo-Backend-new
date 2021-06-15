@@ -2,8 +2,10 @@ import { Body, JsonController, Param, Post } from "routing-controllers";
 import { AdminPropertiesAmenitiesService } from "../../../services/admin/property/AdminPropertyAmenitiesService";
 import { AdminPropertyAmenitiesRequestDto } from "../../../dto/admin/property/AdminPropertyAmenitiesRequestDto";
 import { IsAdmin } from "../../../middleware/AuthValidator";
+import { Service } from "typedi";
 
 @JsonController("/admins/properties/:propertyId/amenities")
+@Service()
 export class AdminPropertyAmenitiesController {
   constructor(
     private adminPropertiesAmenitiesService: AdminPropertiesAmenitiesService

@@ -15,8 +15,10 @@ import {
 import { AdminHomePageServices } from "../../../services/admin/homePage/HomePageServices";
 import { HomePageCarouselOrderUpdateRequestDto } from "../../../dto/admin/homePage/HomePageCarouselRequestDto";
 import { IsAdmin } from "../../../middleware/AuthValidator";
+import { Service } from "typedi";
 
 @JsonController("/admins/homePage/carousel")
+@Service()
 export class AdminHomePageCarouselController {
   constructor(private AdminHomePageService: AdminHomePageServices) {}
 

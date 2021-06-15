@@ -10,8 +10,10 @@ import {
 import { AdminCategoriesService } from "../../../services/admin/category/AdminCategoriesService";
 import { AdminCategoryRequestDto } from "../../../dto/admin/category/AdminCategoryRequestDto";
 import { IsAdmin } from "../../../middleware/AuthValidator";
+import { Service } from "typedi";
 
 @JsonController("/admins/categories")
+@Service()
 export class AdminCategoriesController {
   constructor(private adminCategoriesService: AdminCategoriesService) {}
 
