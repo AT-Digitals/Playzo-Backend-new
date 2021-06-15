@@ -14,8 +14,10 @@ import {
 import { AdminPropertyFloorPlanRequestDto } from "../../../dto/admin/property/AdminPropertyFloorPlanRequetDto";
 import { AdminPropertyFloorPlanService } from "../../../services/admin/property/AdminPropertyFloorPlanServices";
 import { IsAdmin } from "../../../middleware/AuthValidator";
+import { Service } from "typedi";
 
 @JsonController("/admins/propertyFloorPlan")
+@Service()
 export class AdminPropertyFloorPlanController {
   constructor(private adminFloorPlanService: AdminPropertyFloorPlanService) {}
 

@@ -2,8 +2,10 @@ import { Body, Get, JsonController, Param, Post } from "routing-controllers";
 
 import { InnerPageServices } from "../../services/anonymous/InnerPageServices";
 import { PropertyRequestDto } from "../../dto/anonymous/PropertyRequestDto";
+import { Service } from "typedi";
 
 @JsonController("/anonymous/InnerPage")
+@Service()
 export class InnerPageController {
   constructor(private AnonymousInnerPageServices: InnerPageServices) {}
 

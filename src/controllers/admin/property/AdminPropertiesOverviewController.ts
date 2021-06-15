@@ -9,8 +9,10 @@ import {
 import { AdminPropertiesOverviewService } from "../../../services/admin/property/AdminPropertiesOverviewService";
 import { AdminPropertyOverviewRequestDto } from "../../../dto/admin/property/AdminPropertyOverviewRequestDto";
 import { IsAdmin } from "../../../middleware/AuthValidator";
+import { Service } from "typedi";
 
 @JsonController("/admins/properties")
+@Service()
 export class AdminPropertiesOverviewController {
   constructor(
     private adminPropertiesOverviewService: AdminPropertiesOverviewService

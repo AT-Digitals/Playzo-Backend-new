@@ -4,8 +4,10 @@ import {
   UserRequestDto,
 } from "../../dto/anonymous/UserRequestDto";
 import { AuthService } from "../../services/anonymous/AuthServices";
+import { Service } from "typedi";
 
 @JsonController("/anonymous/auth/users")
+@Service()
 export class AuthController {
   constructor(private userService: AuthService) {}
 

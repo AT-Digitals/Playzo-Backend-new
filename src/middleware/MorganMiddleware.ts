@@ -1,5 +1,5 @@
-import { IncomingMessage, ServerResponse } from "http";
-
+import { Request } from "express";
+import { ServerResponse } from "http";
 import chalk from "chalk";
 import morgan from "morgan";
 
@@ -26,10 +26,10 @@ const padRight = (str: string, len: number) => {
 
 const printResponse = (
   tokens: morgan.TokenIndexer,
-  req: IncomingMessage,
+  req: Request,
   res: ServerResponse
 ) => {
-  const status = +(tokens.status(req, res) || 0);
+  const status = +(tokens.status(req, res) ?? 0);
   return [
     "RESPONSE :",
     padRight(tokens.method(req, res) + " " + tokens.url(req, res), 30),

@@ -1,8 +1,9 @@
 import { Get, JsonController, Param } from "routing-controllers";
-
 import { PreDefinedSearchServices } from "../../services/anonymous/PreDefinedSearchServices";
+import { Service } from "typedi";
 
 @JsonController("/anonymous/preDefinedSearch")
+@Service()
 export class PreDefinedSearchController {
   constructor(
     private AnonymousPreDefinedSearchServices: PreDefinedSearchServices

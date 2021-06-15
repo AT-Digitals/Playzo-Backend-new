@@ -13,8 +13,10 @@ import {
 } from "../../../utils/UploadUtil";
 import { AdminPropertiesMediaService } from "../../../services/admin/property/AdminPropertiesMediaService";
 import { IsAdmin } from "../../../middleware/AuthValidator";
+import { Service } from "typedi";
 
 @JsonController("/admins/properties/:propertyId/media")
+@Service()
 export class AdminPropertyMediaController {
   constructor(
     private adminPropertiesMediaService: AdminPropertiesMediaService

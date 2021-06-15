@@ -17,8 +17,10 @@ import {
 } from "../../../utils/UploadUtil";
 import { AppErrorDto } from "../../../dto/error/AppErrorDto";
 import { AppError } from "../../../dto/error/AppError";
+import { Service } from "typedi";
 
 @JsonController("/admins/propertyDeveloper")
+@Service()
 export class AdminPropertiesOverviewController {
   constructor(
     private adminPropertyDeveloperService: AdminPropertyDeveloperService

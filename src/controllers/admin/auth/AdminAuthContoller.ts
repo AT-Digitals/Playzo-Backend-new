@@ -4,8 +4,10 @@ import { AdminAuthService } from "../../../services/admin/auth/AdminAuthService"
 import { AdminLoginDto } from "../../../dto/admin/auth/AdminLoginDto";
 import { AuthUtils } from "../../../utils/AuthUtils";
 import { Response } from "express";
+import { Service } from "typedi";
 
 @JsonController("/admins")
+@Service()
 export class AdminAuthController {
   constructor(private authService: AdminAuthService) {}
 

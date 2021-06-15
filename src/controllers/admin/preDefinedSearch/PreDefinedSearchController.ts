@@ -20,8 +20,10 @@ import { AppError } from "../../../dto/error/AppError";
 import { AppErrorDto } from "../../../dto/error/AppErrorDto";
 import { IsAdmin } from "../../../middleware/AuthValidator";
 import { PreDefinedSearchService } from "../../../services/admin/preDefinedSearch/PreDefinedSearchServices";
+import { Service } from "typedi";
 
 @JsonController("/admins/predefinedsearch")
+@Service()
 export class UsersController {
   constructor(private preDefinedSearchServices: PreDefinedSearchService) {}
 
