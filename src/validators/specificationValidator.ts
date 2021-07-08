@@ -8,7 +8,8 @@ import { PropertySpecificationModal } from "../models/property/PropertySpecifica
 
 @ValidatorConstraint({ name: "isValidSpecificationCategory", async: true })
 export class IsValidSpecificationCategory
-  implements ValidatorConstraintInterface {
+  implements ValidatorConstraintInterface
+{
   validate(category: keyof PropertySpecificationModal): boolean {
     const categories = [
       "Flooring",

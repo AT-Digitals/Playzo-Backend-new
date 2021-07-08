@@ -28,10 +28,12 @@ export class ContactUsService {
       temp["properties"] = [];
 
       for (const prop of contact.propertiesInfo) {
-        const temp1: AdminContactUsPropInfoDto = {} as AdminContactUsPropInfoDto;
-        const property = await this.adminPropertyOverviewService.findByPropertyId(
-          prop.property
-        );
+        const temp1: AdminContactUsPropInfoDto =
+          {} as AdminContactUsPropInfoDto;
+        const property =
+          await this.adminPropertyOverviewService.findByPropertyId(
+            prop.property
+          );
         temp1["property"] = {
           name: property.name,
           city: property.city,

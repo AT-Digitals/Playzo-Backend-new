@@ -1,9 +1,11 @@
 ## Dependencies
+
 - [Node](https://nodejs.org/en/download/)
 - [npm](https://nodejs.org/en/download/)
 - [MongoDB](https://www.mongodb.com/download-center/community)
 
 ## IDE
+
 - Use Visual Studio Code
 - Add the following VSCode plugins
   - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
@@ -19,11 +21,11 @@
 
 Setup environment variables:
 
-- Copy `.env.example` file and rename as `.env` 
+- Copy `.env.example` file and rename as `.env`
 - Update the `.env` file constants
-  
+
 Install dependencies:
-  
+
 ```bash
 $ npm install
 ```
