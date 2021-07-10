@@ -1,9 +1,18 @@
-import { Body, Get, JsonController, Param, Post } from "routing-controllers";
+import {
+  Body,
+  Get,
+  JsonController,
+  Param,
+  Post,
+  Res,
+} from "routing-controllers";
 import {
   LoginRequestDto,
   UserRequestDto,
 } from "../../dto/anonymous/UserRequestDto";
 import { AuthService } from "../../services/anonymous/AuthServices";
+import { AuthUtils } from "../../utils/AuthUtils";
+import { Response } from "express";
 import { Service } from "typedi";
 
 @JsonController("/anonymous/auth/users")
@@ -35,8 +44,13 @@ export class AuthController {
   }
 
   @Post("/login")
-  public async login(@Body() loginRequestDto: LoginRequestDto) {
-    return this.userService.loginUser(loginRequestDto);
+  public async login(
+    @Body() loginRequestDto: LoginRequestDto,
+    @Res() res: Response
+  ) {
+    const userDto = await this.userService.loginUser(loginRequestDto);
+    AuthUtils.saveAuthToken(res, userDto);
+    return userDto;
   }
 
   @Post("/sendOTP/:mobile")
