@@ -1,8 +1,11 @@
+import { AuthDto } from "../auth/AuthDto";
 import { PropertyDto } from "./PropertyDto";
 import { PropertyModel } from "../../models/property/PropertyModel";
 import { UserModel } from "../../models/user/UserModel";
+import { UserType } from "../auth/UserType";
 import { elemT } from "../../utils/UnionArray";
-export class UserDto {
+
+export class UserDto extends AuthDto {
   email: string;
   phoneNumber: string;
   alternativeNumber: string;
@@ -14,6 +17,7 @@ export class UserDto {
   avatar: string;
 
   constructor(user: UserModel) {
+    super(user.id, UserType.USER);
     this.id = user.id;
     this.email = user.email;
     this.phoneNumber = user.phoneNumber;
