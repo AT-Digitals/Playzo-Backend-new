@@ -11,6 +11,7 @@ export class CsrfHandler implements ExpressMiddlewareInterface {
     if (!res.headersSent) {
       res.cookie("CSRF-Token", req.csrfToken(), {
         domain: process.env.COOKIE_DOMAIN,
+        sameSite: EnvUtils.isProd() ? "none" : "lax",
         secure: EnvUtils.isProd(),
       });
     }
