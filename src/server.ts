@@ -40,6 +40,7 @@ const corsOption: CorsOptions = {
     "http://atdigitals.comn",
     /http:\/\/.*\.atdigitals\.com/,
     /http:\/\/localhost:*/,
+    /https:\/\/localhost:*/,
   ],
   credentials: true,
   optionsSuccessStatus: 200,
