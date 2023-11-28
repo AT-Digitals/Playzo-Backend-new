@@ -1,5 +1,5 @@
 {
-  "name": "fabo-api",
+  "name": "playzo-api",
   "version": "1.0.0",
   "description": "API for FABO website and admin panel",
   "main": "index.js",
