@@ -25,7 +25,7 @@ export default class MongoDatabase {
     const database = process.env.DB_DATABASE;
     const authDatabase = process.env.DB_AUTH_DATABASE;
     const protocol =
-      process.env.DB_USE_SRV === "true" ? "mongodb+srv" : "mongodb";
+      process.env.DB_USE_SRV === process.env.DB_USE_SRV ? "mongodb+srv" : "mongodb";
     return (
       `${protocol}://` +
       (user ? `${user}:${password}@` : "@") +

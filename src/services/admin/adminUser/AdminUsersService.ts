@@ -1,6 +1,6 @@
-import { AdminDto } from "../../../dto/admin/user/AdminDto";
+import { AdminDto } from "../../../dto/user/AdminDto";
 import { AdminError } from "../../../dto/error/AdminError";
-import { AdminRequestDto } from "../../../dto/admin/user/AdminRequestDto";
+import { AdminRequestDto } from "../../../dto/user/AdminRequestDto";
 import { AdminUser } from "../../../models/admin/AdminUser";
 import { AppErrorDto } from "../../../dto/error/AppErrorDto";
 import { Service } from "typedi";
@@ -9,7 +9,7 @@ import { Service } from "typedi";
 export class AdminUsersService {
   public async createAdmin(adminDto: AdminRequestDto) {
     const user = await AdminUser.findOne({
-      $or: [{ phoneNumber: adminDto.phoneNumber }, { email: adminDto.email }],
+      email: adminDto.email
     });
     if (user) {
       throw new AppErrorDto(AdminError.ADMIN_EXISTS);

@@ -1,6 +1,6 @@
 import { Body, Get, JsonController, Post } from "routing-controllers";
 
-import { AdminRequestDto } from "../../../dto/admin/user/AdminRequestDto";
+import { AdminRequestDto } from "../../../dto/user/AdminRequestDto";
 import { AdminUsersService } from "../../../services/admin/adminUser/AdminUsersService";
 import { IsAdmin } from "../../../middleware/AuthValidator";
 import { Service } from "typedi";
