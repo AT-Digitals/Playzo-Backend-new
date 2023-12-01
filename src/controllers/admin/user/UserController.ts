@@ -1,23 +1,30 @@
-// import { Get, JsonController, Param } from "routing-controllers";
+import { Body, Get, JsonController, Param, Post } from "routing-controllers";
 // import { IsAdmin } from "../../../middleware/AuthValidator";
-// import { Service } from "typedi";
+import { Service } from "typedi";
 
-// import { UsersService } from "../../../services/admin/user/UserServices";
+import { UserServices } from "../../../services/user/UserServices";
+import { UserRequestDto } from "../../../dto/user/UserRequestDto";
 
-// @JsonController("/admins/userSite/users")
-// @Service()
-// export class UsersController {
-//   constructor(private usersService: UsersService) {}
+@JsonController("/admins/userSite/users")
+@Service()
+export class UsersController {
+  constructor(private usersService: UserServices) {}
 
-//   @Get("/")
-//   @IsAdmin()
-//   public async getAllAdminUsers() {
-//     return this.usersService.getAllUsers();
-//   }
+  @Post("/")
+  // @IsAdmin()
+  public async createNewAdminUser(@Body() userRequestDto: UserRequestDto) {
+    return this.usersService.createUser(userRequestDto);
+  }
 
-//   @Get("/:userId")
-//   @IsAdmin()
-//   public async getUser(@Param("userId") userId: string) {
-//     return this.usersService.getUser(userId);
-//   }
-// }
+  @Get("/")
+  // @IsAdmin()
+  public async getAllAdminUsers() {
+    return this.usersService.getAllUsers();
+  }
+
+  @Get("/:userId")
+  // @IsAdmin()
+  public async getUser(@Param("userId") userId: string) {
+    return this.usersService.getUser(userId);
+  }
+}

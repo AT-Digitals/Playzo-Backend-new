@@ -5,7 +5,6 @@ import { useContainer, useExpressServer } from "routing-controllers";
 import { AuthValidator } from "./middleware/AuthValidator";
 import { Container } from "typedi";
 import { CorsOptions } from "cors";
-import { CsrfHandler } from "./middleware/CsrfHandler";
 import { DatabaseSeeder } from "./utils/DatabaseSeeder";
 import { DefaultHandler } from "./middleware/DefaultHandler";
 import { EnvUtils } from "./utils/EnvUtils";
@@ -15,11 +14,26 @@ import MongoDatabase from "./utils/MongoDatabase";
 import { MorganMiddleware } from "./middleware/MorganMiddleware";
 import compression from "compression";
 import cookieParser from "cookie-parser";
-import csrf from "csurf";
 import dotenv from "dotenv";
 import express from "express";
 import path from "path";
 import winston from "winston";
+
+// import { CsrfHandler } from "./middleware/CsrfHandler";
+
+
+
+
+
+
+
+
+
+// import csrf from "csurf";
+
+
+
+
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bodyParser = require("body-parser");
@@ -57,9 +71,9 @@ app.use(MorganMiddleware);
 
 // CSRF
 app.use(cookieParser(process.env.COOKIE_SIGN_KEY));
-app.use(
-  csrf({ cookie: { secure: EnvUtils.isProd(), signed: true, httpOnly: true } })
-);
+// app.use(
+//   csrf({ cookie: { secure: EnvUtils.isProd(), signed: true, httpOnly: true } })
+// );
 
 // Uploads
 const staticPath = path.join(__dirname, "..", "uploads");
@@ -69,7 +83,7 @@ app.use("/uploads", express.static(staticPath));
 useContainer(Container);
 useExpressServer(app, {
   cors: corsOption,
-  middlewares: [CsrfHandler, DefaultHandler, ErrorHandler],
+  middlewares: [DefaultHandler, ErrorHandler],
   controllers: [path.join(__dirname, "controllers", "**", "*.js")],
   authorizationChecker: AuthValidator.validate,
   currentUserChecker: AuthValidator.currentUser,

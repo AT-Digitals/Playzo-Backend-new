@@ -6,4 +6,6 @@ export interface UserModel extends Document {
   name: string;
   password: string;
   bookingHistory: BookingModel["id"][] | BookingModel[];
+  setPassword(password: string): Promise<void>;
+  validateUser(password: string): Promise<boolean>;
 }

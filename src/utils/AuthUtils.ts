@@ -34,6 +34,7 @@ export class AuthUtils {
     }
     let user = null;
     try {
+      console.log("token", token)
       user = jsonwebtoken.verify(token, process.env.SECRET_KEY) as AuthDto;
     } catch (error) {
       console.log("Error in decoding the token");

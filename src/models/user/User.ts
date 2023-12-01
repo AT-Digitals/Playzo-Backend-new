@@ -16,6 +16,8 @@ const UserSchema = new Schema({
   ]
 });
 
+UserSchema.methods.setPassword = MongoDatabase.setPassword;
+UserSchema.methods.validateUser = MongoDatabase.validateUser;
 UserSchema.plugin(MongoDatabase.timeAuditPlugin);
 
 export const User = model<UserModel>("users", UserSchema);

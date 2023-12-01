@@ -21,7 +21,9 @@ const bookingSchema = new Schema({
       dateOfBookin:Date,
       cancelDate:Date,
       bookingAmount: String,
-      bookingtype:PaymentType
+      bookingtype:PaymentType,
+      startTime: String,
+      endTime: String,
 
 });
 

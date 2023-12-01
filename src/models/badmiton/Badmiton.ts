@@ -13,7 +13,9 @@ const BadmitonSchema = new Schema({
     duration: Number,
     isAnnual: Boolean,
     court: Number,
-    notificationSent: Boolean
+    notificationSent: Boolean,
+    startTime: String,
+      endTime: String,
 });
 
 BadmitonSchema.plugin(MongoDatabase.timeAuditPlugin);

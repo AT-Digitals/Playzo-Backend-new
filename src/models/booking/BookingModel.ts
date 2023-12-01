@@ -6,8 +6,10 @@ import { UserModel } from "../user/UserModel";
 export interface BookingModel extends Document {
     type: BookingType,
       user: UserModel["id"][] | UserModel[];
-      dateOfBookin: Date,
+      dateOfBooking: Date,
       cancelDate: Date,
       bookingAmount: number,
-      bookingtype: PaymentType
+      bookingType: PaymentType,
+      startTime: string,
+      endTime: string,
 }

@@ -7,5 +7,7 @@ export interface BadmitonModel extends Document {
       duration: number,
       isAnnual: boolean,
       court: number,
-      notificationSent: boolean
+      notificationSent: boolean,
+      startTime: string,
+      endTime: string,
 }
