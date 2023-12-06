@@ -10,9 +10,13 @@ export class BookingDto {
   type:BookingType;
   user: UserDto[];
   dateOfBooking: Date;
-  cancelDate: Date;
+  cancelDate?: Date;
   bookingAmount: number;
   bookingType:PaymentType;
+  deleted: boolean;
+  startTime: number;
+      endTime: number;
+
   constructor(booking: BookingModel) {
     this.id = booking.id;
     this.type = booking.type;
@@ -23,5 +27,8 @@ export class BookingDto {
       this.cancelDate = booking.cancelDate;
       this.bookingAmount = booking.bookingAmount;
       this.bookingType = booking.bookingType;
+      this.startTime = booking.startTime;
+      this.endTime = booking.endTime;
+      this.deleted = booking.deleted;
   }
 }

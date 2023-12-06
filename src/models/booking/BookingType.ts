@@ -1,5 +1,5 @@
 export enum BookingType {
-    turf,
-    boardGame,
-    playstaion
+    Turf = "turf",
+    BoardGame= "boardGame",
+    Playstaion="playstaion"
   }

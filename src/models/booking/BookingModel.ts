@@ -7,9 +7,10 @@ export interface BookingModel extends Document {
     type: BookingType,
       user: UserModel["id"][] | UserModel[];
       dateOfBooking: Date,
-      cancelDate: Date,
+      cancelDate?: Date,
       bookingAmount: number,
       bookingType: PaymentType,
-      startTime: string,
-      endTime: string,
+      startTime: number,
+      endTime: number,
+      deleted: boolean
 }

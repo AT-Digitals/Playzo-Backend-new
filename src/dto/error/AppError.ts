@@ -6,4 +6,5 @@ export enum AppError {
   NOT_FOUND = "Requested resource not found",
   FAILED_CSRF = "Invalid Request. Please login from site",
   UPLOAD_INVALID_FILE_TYPE = "Invalid file type provided.",
+  ALREADY_BOOKED = "Booking closed",
 }

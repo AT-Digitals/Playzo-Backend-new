@@ -9,7 +9,7 @@ const bookingSchema = new Schema({
     type: {
         type: String,
         enum: [],
-        default: BookingType.turf,
+        default: BookingType.Turf,
       },
       user: [
         {
@@ -18,12 +18,16 @@ const bookingSchema = new Schema({
           index: true,
         },
       ],
-      dateOfBookin:Date,
+      dateOfBooking:Date,
       cancelDate:Date,
       bookingAmount: String,
-      bookingtype:PaymentType,
-      startTime: String,
-      endTime: String,
+      bookingtype:{
+        type: String,
+        enum: [],
+        default: PaymentType.Cash,
+      },
+      startTime: Number,
+      endTime: Number,
 
 });
 
