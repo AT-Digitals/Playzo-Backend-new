@@ -3,8 +3,6 @@ import { BookingRequestDto } from "../../dto/Booking/BookingRequestDto";
 import { Body, Delete, Get, JsonController, Param, Post, Put } from "routing-controllers";
 import BookingService from "../../services/booking/BookingService";
 import { Booking } from "../../models/booking/Booking";
-import { BookingType } from "../../models/booking/BookingType";
-import { BookingFilterRequestDto } from "../../dto/Booking/BookingFilterRequestDto";
 
 @JsonController("/bookings")
 @Service()
