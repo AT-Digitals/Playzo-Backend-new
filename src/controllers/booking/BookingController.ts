@@ -4,35 +4,25 @@ import { Body, Delete, Get, JsonController, Param, Post, Put } from "routing-con
 import BookingService from "../../services/booking/BookingService";
 import { Booking } from "../../models/booking/Booking";
 import { BookingType } from "../../models/booking/BookingType";
+import { BookingFilterRequestDto } from "../../dto/Booking/BookingFilterRequestDto";
 
 @JsonController("/bookings")
 @Service()
-export class AdminCategoriesController {
+export class BookingController {
   constructor(private bookingService: BookingService) {}
 
   @Post()
   async create(
     @Body() request: BookingRequestDto
   ) {
-    console.log("dddddddddd");
     const booking = await this.bookingService.create(request);
     return new Booking(booking);
   }
 
-  @Get()
+  @Get("/:bookingId")
   public async findById(@Param("bookingId") bookingId: string) {
-    const booking = await this.bookingService.findById(bookingId);
+    const booking =  this.bookingService.findById(bookingId);
     return new Booking(booking);
-  }
-
-  @Get("/filterBookings")
-  public async filterBookings(@Param("dateOfBooking") dateOfBooking: Date, @Param("startTime") startTime: number, @Param("endTime") endTime?: number ) {
-    return this.bookingService.filterBookings(dateOfBooking,startTime,endTime);
-  }
-
-  @Get("/filterwithBookingType")
-  public async filterwithBookingType(@Param("dateOfBooking") dateOfBooking: Date,@Param("bookingType") bookingType: BookingType, @Param("startTime") startTime: number, @Param("endTime") endTime?: number ) {
-    return this.bookingService.filterwithBookingType(dateOfBooking,bookingType,startTime,endTime);
   }
 
   @Get("/getAll")
