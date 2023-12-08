@@ -1,6 +1,7 @@
 import { AppError } from "../../dto/error/AppError";
 import { AppErrorDto } from "../../dto/error/AppErrorDto";
 import { Booking } from "../../models/booking/Booking";
+import { BookingDateFilterRequestDto } from "../../dto/Booking/BookingDateFilterRequestDto";
 import { BookingDto } from "../../dto/Booking/BookingDto";
 import { BookingFilterRequestDto } from "../../dto/Booking/BookingFilterRequestDto";
 import { BookingModel } from "../../models/booking/BookingModel";
@@ -98,6 +99,14 @@ export default class BookingService {
     return bookings.map((booking) => new BookingDto(booking));
   }
 
+  public async filterDateBookings(request:BookingDateFilterRequestDto) {
+    const endDate = DateUtils.add(new Date(request.endDate),1,"day");
+     const bookings = await Booking.find( {
+        dateOfBooking: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
+    });
+     
+    return bookings.map((booking) => new BookingDto(booking));
+  }
 
   async updateById(id: string, request: BookingRequestDto) {
     let booking = await Booking.findOne({id});
