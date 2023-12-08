@@ -33,13 +33,13 @@ export default class BookingService {
         throw new AppErrorDto(AppError.ALREADY_BOOKED);
       }else{
         let booking = new Booking(request);
-        booking.dateOfBooking = new Date();
+        booking.dateOfBooking = new Date(request.dateOfBooking);
         booking = await booking.save();
         return booking;
       }
     }else{
         let booking = new Booking(request);
-        booking.dateOfBooking = new Date();
+        booking.dateOfBooking = new Date(request.dateOfBooking);
         booking = await booking.save();
         return booking;
     }
