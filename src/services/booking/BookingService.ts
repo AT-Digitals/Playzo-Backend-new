@@ -6,7 +6,6 @@ import { BookingDto } from "../../dto/Booking/BookingDto";
 import { BookingFilterRequestDto } from "../../dto/Booking/BookingFilterRequestDto";
 import { BookingModel } from "../../models/booking/BookingModel";
 import { BookingRequestDto } from "../../dto/Booking/BookingRequestDto";
-import { BookingType } from "../../models/booking/BookingType";
 import DateUtils from "../../utils/DateUtils";
 import { Service } from "typedi";
 
@@ -14,36 +13,25 @@ import { Service } from "typedi";
 export default class BookingService {
 
   async create(request: BookingRequestDto) {
+ 
    const startDate = DateUtils.add(new Date(request.dateOfBooking),0,"day");
    const endDate = DateUtils.add(new Date(startDate),1,"day");
-      const boardGame = await Booking.find({
+   enum bookingLength {
+    "boardGame" = 5,
+    "turf" =2,
+    "playstaion" =2
+  }
+      const bookingList = await Booking.find({
         startTime: request.startTime,
         endTime:request.endTime,
         dateOfBooking: {"$gte":new Date(startDate),"$lt":new Date(endDate) },
-        type: BookingType.BoardGame
+        type: request.type
       });
-      const turf  = await Booking.find({
-        startTime: request.startTime,
-        endTime:request.endTime,
-        dateOfBooking: {"$gte":new Date(startDate),"$lt":new Date(endDate) },
-        type: BookingType.Turf
-      });
-      const playStation  = await Booking.find({
-        startTime: request.startTime,
-        endTime:request.endTime,
-        dateOfBooking: {"$gte":new Date(startDate),"$lt":new Date(endDate) },
-        type: BookingType.Playstaion
-      });
-      if (request.type === BookingType.BoardGame && boardGame.length === 5) {
+      const type = request.type as string;
+
+      if (bookingList.length >= bookingLength[type as keyof typeof bookingLength]) {
         throw new AppErrorDto(AppError.ALREADY_BOOKED);
       }
-      else if (request.type === BookingType.Turf && turf.length === 2) {
-        throw new AppErrorDto(AppError.ALREADY_BOOKED);
-      }
-    else if (request.type === BookingType.Playstaion && playStation.length === 2) {
-        throw new AppErrorDto(AppError.ALREADY_BOOKED);
-      }
-      
       else{
         let booking = new Booking(request);
         booking.dateOfBooking = new Date(request.dateOfBooking);
