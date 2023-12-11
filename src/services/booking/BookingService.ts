@@ -14,38 +14,42 @@ import { Service } from "typedi";
 export default class BookingService {
 
   async create(request: BookingRequestDto) {
-   const bookingList = await this.getAllBookings();
    const startDate = DateUtils.add(new Date(request.dateOfBooking),0,"day");
    const endDate = DateUtils.add(new Date(startDate),1,"day");
-   if(bookingList.length>0){
-    const Bookings = await Booking.find({
+      const boardGame = await Booking.find({
         startTime: request.startTime,
         endTime:request.endTime,
         dateOfBooking: {"$gte":new Date(startDate),"$lt":new Date(endDate) },
+        type: BookingType.BoardGame
       });
-      const boardGame = Bookings.filter((book) => book.type === BookingType.BoardGame);
-      const turf  = Bookings.filter((book) => book.type === BookingType.Turf);
-      const playStation  = Bookings.filter((book) => book.type === BookingType.Playstaion);
-      if (Bookings.length > 0 && boardGame.length === 5) {
+      const turf  = await Booking.find({
+        startTime: request.startTime,
+        endTime:request.endTime,
+        dateOfBooking: {"$gte":new Date(startDate),"$lt":new Date(endDate) },
+        type: BookingType.Turf
+      });
+      const playStation  = await Booking.find({
+        startTime: request.startTime,
+        endTime:request.endTime,
+        dateOfBooking: {"$gte":new Date(startDate),"$lt":new Date(endDate) },
+        type: BookingType.Playstaion
+      });
+      if (request.type === BookingType.BoardGame && boardGame.length === 5) {
         throw new AppErrorDto(AppError.ALREADY_BOOKED);
       }
-      else if (Bookings.length > 0 && turf.length === 2) {
+      else if (request.type === BookingType.Turf && turf.length === 2) {
         throw new AppErrorDto(AppError.ALREADY_BOOKED);
       }
-      else if (Bookings.length > 0 && playStation.length === 2) {
+    else if (request.type === BookingType.Playstaion && playStation.length === 2) {
         throw new AppErrorDto(AppError.ALREADY_BOOKED);
-      }else{
+      }
+      
+      else{
         let booking = new Booking(request);
         booking.dateOfBooking = new Date(request.dateOfBooking);
         booking = await booking.save();
         return booking;
       }
-    }else{
-        let booking = new Booking(request);
-        booking.dateOfBooking = new Date(request.dateOfBooking);
-        booking = await booking.save();
-        return booking;
-    }
     
   }
 
