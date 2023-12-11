@@ -3,6 +3,7 @@ import { BookingRequestDto } from "../../dto/Booking/BookingRequestDto";
 import { Body, Delete, Get, JsonController, Param, Post, Put } from "routing-controllers";
 import BookingService from "../../services/booking/BookingService";
 import { Booking } from "../../models/booking/Booking";
+import { BookingDto } from "../../dto/Booking/BookingDto";
 
 @JsonController("/bookings")
 @Service()
@@ -14,7 +15,7 @@ export class BookingController {
     @Body() request: BookingRequestDto
   ) {
     const booking = await this.bookingService.create(request);
-    return new Booking(booking);
+    return new BookingDto(booking);
   }
 
   @Get("/:bookingId")
