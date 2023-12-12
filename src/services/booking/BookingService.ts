@@ -88,7 +88,13 @@ export default class BookingService {
         {endTime: request.endTime},
         {type:request.type}
           
-          ] }
+          ] },
+          { "$and": 
+          [ 
+           {dateOfBooking: {"$gte":new Date(startDate),"$lt":new Date(endDate) }},
+         {type:request.type}
+           
+           ] }
           
           ] });
      

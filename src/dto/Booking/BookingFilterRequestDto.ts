@@ -12,10 +12,10 @@ export class BookingFilterRequestDto {
     type?: BookingType;
   
     @IsDefined({ message: "Booking Date is required" })
-    dateOfBooking: Date;
+    dateOfBooking: string;
 
-    @IsDefined({ message: "starttime is required" })
-    startTime: number;
+    @IsOptional()
+    startTime?: number;
     
     @IsOptional()
     endTime?: number;

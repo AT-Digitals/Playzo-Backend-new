@@ -1,5 +1,5 @@
 import { Service } from "typedi";
-import { Body, Get, JsonController } from "routing-controllers";
+import { Body, Get, JsonController, QueryParams } from "routing-controllers";
 import BookingService from "../../services/booking/BookingService";
 import { BookingFilterRequestDto } from "../../dto/Booking/BookingFilterRequestDto";
 import { BookingDateFilterRequestDto } from "../../dto/Booking/BookingDateFilterRequestDto";
@@ -10,7 +10,7 @@ export class BookingFilterController {
   constructor(private bookingService: BookingService) {}
 
   @Get("/filterBookings")
-  public async filterBookings(@Body() request: BookingFilterRequestDto) {
+  public async filterBookings(@QueryParams() request: BookingFilterRequestDto ) {
     return this.bookingService.filterBookings(request);
   }
 
