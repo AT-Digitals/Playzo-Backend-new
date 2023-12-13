@@ -56,16 +56,6 @@ export default class BookingService {
     const startDate = DateUtils.add(new Date(request.dateOfBooking),0,"day");
     const endDate = DateUtils.add(new Date(startDate),1,"day");
     let bookings:BookingModel[] =[];
-    if(request.dateOfBooking && request.type){
-      bookings =  await Booking.find( 
-        {
-          
-          dateOfBooking: {"$gte":new Date(startDate),"$lt":new Date(endDate) },
-          type: request.type
-        }
-      );
-        
-    }
 
     if(request.dateOfBooking && request.startTime){
       bookings =  await Booking.find( 
@@ -107,17 +97,24 @@ export default class BookingService {
       );
         
     }  
-if(request.type){
-      const type = request.type as string;
 
-      if (bookings.length >= bookingLength[type as keyof typeof bookingLength]) {
+if(request.type && request.dateOfBooking){
 
-    return bookings.map((booking) => new BookingDto(booking));
+const bookingsList =  await Booking.aggregate([
+  {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",dateOfBooking:"$dateOfBooking",type:request.type},count:{$sum:1}}},
+ 
+]); 
+bookingsList.filter((book)=>{
+console.log(book['count']);
+const type = request.type as string;
+  if (book['count'] >= bookingLength[type as keyof typeof bookingLength]) {
+  console.log(book);
+}else{
+  return [];
 
-      }else{
-    return [];
+    }
+}) ;
 
-      }
     }else{
       return bookings.map((booking) => new BookingDto(booking));
     }

@@ -1,6 +1,5 @@
 import {
     IsDefined,
-    IsEnum,
     IsOptional,
 } from "class-validator";
 
