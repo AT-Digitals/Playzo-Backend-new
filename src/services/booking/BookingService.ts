@@ -101,7 +101,7 @@ export default class BookingService {
 if(request.type && request.dateOfBooking){
 
 const bookingsList =  await Booking.aggregate([
-  {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",dateOfBooking:"$dateOfBooking",type:request.type},count:{$sum:1}}},
+  {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",dateOfBooking:request.dateOfBooking,type:request.type},count:{$sum:1}}},
  
 ]); 
 const bookList:any = [];
