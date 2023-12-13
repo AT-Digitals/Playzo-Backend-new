@@ -104,16 +104,19 @@ const bookingsList =  await Booking.aggregate([
   {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",dateOfBooking:"$dateOfBooking",type:request.type},count:{$sum:1}}},
  
 ]); 
-bookingsList.filter((book)=>{
-console.log(book['count']);
+const bookList:any = [];
+bookingsList.filter(async (book)=>{
 const type = request.type as string;
-  if (book['count'] >= bookingLength[type as keyof typeof bookingLength]) {
-  console.log(book);
-}else{
-  return [];
+  if (book["count"] >= bookingLength[type as keyof typeof bookingLength]) {
+  bookList.push({startTime:book._id.startTime,
+       endTime: book._id.endTime,
+         dateOfBooking: book._id.dateOfBooking,
+        type: book._id.type});
+}
 
-    }
 }) ;
+return bookList;
+
 
     }else{
       return bookings.map((booking) => new BookingDto(booking));
