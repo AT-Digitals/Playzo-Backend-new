@@ -101,7 +101,9 @@ export default class BookingService {
 if(request.type && request.dateOfBooking){
 
 const bookingsList =  await Booking.aggregate([
-  {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",dateOfBooking:request.dateOfBooking,type:request.type},count:{$sum:1}}},
+  { $match:{ dateOfBooking:{"$gte":new Date(startDate),"$lt":new Date(endDate) }}},
+  { $match:{ type:request.type}},
+  {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",dateOfBooking:"$dateOfBooking",type:"$type"},count:{$sum:1}}},
  
 ]); 
 const bookList:any = [];
@@ -116,8 +118,6 @@ const type = request.type as string;
 
 }) ;
 return bookList;
-
-
     }else{
       return bookings.map((booking) => new BookingDto(booking));
     }
