@@ -8,6 +8,7 @@ import { BookingModel } from "../../models/booking/BookingModel";
 import { BookingRequestDto } from "../../dto/Booking/BookingRequestDto";
 import DateUtils from "../../utils/DateUtils";
 import { Service } from "typedi";
+import { bookingLength } from "../../enum/BookingLength";
 
 @Service()
 export default class BookingService {
@@ -16,11 +17,7 @@ export default class BookingService {
  
    const startDate = DateUtils.add(new Date(request.dateOfBooking),0,"day");
    const endDate = DateUtils.add(new Date(startDate),1,"day");
-   enum bookingLength {
-    "boardGame" = 5,
-    "turf" =2,
-    "playstaion" =2
-  }
+
       const bookingList = await Booking.find({
         startTime: request.startTime,
         endTime:request.endTime,
@@ -59,46 +56,71 @@ export default class BookingService {
     const startDate = DateUtils.add(new Date(request.dateOfBooking),0,"day");
     const endDate = DateUtils.add(new Date(startDate),1,"day");
     let bookings:BookingModel[] =[];
-    bookings = await Booking.find( { "$or": 
-    [ 
-      { "$and": 
-      [
-       { dateOfBooking: {"$gte":new Date(startDate),"$lt":new Date(endDate) }},
-        {startTime: request.startTime},
-       { type:request.type}
-        ] },
-        { "$and": 
-        [
-          {dateOfBooking: {"$gte":new Date(startDate),"$lt":new Date(endDate) }},
-          {startTime: request.startTime},
-          ] },
-      
-      { "$and": 
-         [
-          {dateOfBooking: {"$gte":new Date(startDate),"$lt":new Date(endDate) }},
-          {startTime: request.startTime},
-          {endTime: request.endTime}
-           ] },
-
-
-      { "$and": 
-         [ 
-          {dateOfBooking: {"$gte":new Date(startDate),"$lt":new Date(endDate) }},
-        {startTime: request.startTime},
-        {endTime: request.endTime},
-        {type:request.type}
+    if(request.dateOfBooking && request.type){
+      bookings =  await Booking.find( 
+        {
           
-          ] },
-          { "$and": 
-          [ 
-           {dateOfBooking: {"$gte":new Date(startDate),"$lt":new Date(endDate) }},
-         {type:request.type}
-           
-           ] }
-          
-          ] });
-     
+          dateOfBooking: {"$gte":new Date(startDate),"$lt":new Date(endDate) },
+          type: request.type
+        }
+      );
+        
+    }
+
+    if(request.dateOfBooking && request.startTime){
+      bookings =  await Booking.find( 
+        {
+          startTime: request.startTime,
+          dateOfBooking: {"$gte":new Date(startDate),"$lt":new Date(endDate) },
+        }
+      );
+        
+    }
+
+     if(request.dateOfBooking && request.startTime && request.type){
+      bookings =  await Booking.find( 
+        {
+          startTime: request.startTime,
+          dateOfBooking: {"$gte":new Date(startDate),"$lt":new Date(endDate) },
+          type: request.type
+        }
+      );
+    }
+    if(request.dateOfBooking && request.startTime && request.endTime){
+      bookings =  await Booking.find( 
+        {
+          endTime: request.endTime,
+          startTime: request.startTime,
+          dateOfBooking: {"$gte":new Date(startDate),"$lt":new Date(endDate) },
+        }
+      );
+        
+    }
+    if(request.dateOfBooking && request.startTime && request.endTime && request.type){
+      bookings =  await Booking.find( 
+        {
+          endTime: request.endTime,
+          startTime: request.startTime,
+          dateOfBooking: {"$gte":new Date(startDate),"$lt":new Date(endDate) },
+          type: request.type
+        }
+      );
+        
+    }  
+if(request.type){
+      const type = request.type as string;
+
+      if (bookings.length >= bookingLength[type as keyof typeof bookingLength]) {
+
     return bookings.map((booking) => new BookingDto(booking));
+
+      }else{
+    return [];
+
+      }
+    }else{
+      return bookings.map((booking) => new BookingDto(booking));
+    }
   }
 
   public async filterDateBookings(request:BookingDateFilterRequestDto) {
