@@ -1,9 +1,10 @@
 import { Service } from "typedi";
 import { BookingRequestDto } from "../../dto/Booking/BookingRequestDto";
-import { Body, Delete, Get, JsonController, Param, Post, Put } from "routing-controllers";
+import { Body, CurrentUser, Delete, Get, JsonController, Param, Post, Put } from "routing-controllers";
 import BookingService from "../../services/booking/BookingService";
 import { Booking } from "../../models/booking/Booking";
 import { BookingDto } from "../../dto/Booking/BookingDto";
+import { AuthDto } from "../../dto/auth/AuthDto";
 
 @JsonController("/bookings")
 @Service()
@@ -12,9 +13,10 @@ export class BookingController {
 
   @Post()
   async create(
+    @CurrentUser() user: AuthDto,
     @Body() request: BookingRequestDto
   ) {
-    const booking = await this.bookingService.create(request);
+    const booking = await this.bookingService.create(request,user.id);
     return new BookingDto(booking);
   }
 

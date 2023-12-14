@@ -1,14 +1,11 @@
 import { BookingModel } from "../../models/booking/BookingModel";
 import { BookingType } from "../../models/booking/BookingType";
 import { PaymentType } from "../../models/booking/PaymentType";
-import { UserDto } from "../user/UserDto";
-import { UserModel } from "../../models/user/UserModel";
-import { elemT } from "../../utils/UnionArray";
 
 export class BookingDto {
   id: string;
   type:BookingType;
-  user: UserDto[];
+  user: string;
   dateOfBooking: Date;
   cancelDate?: Date;
   bookingAmount: number;
@@ -20,9 +17,7 @@ export class BookingDto {
   constructor(booking: BookingModel) {
     this.id = booking.id;
     this.type = booking.type;
-    this.user = elemT(booking.user).map(
-        (user: UserModel) => new UserDto(user)
-      );
+    this.user = booking.user;
       this.dateOfBooking = booking.dateOfBooking;
       this.cancelDate = booking.cancelDate;
       this.bookingAmount = booking.bookingAmount;

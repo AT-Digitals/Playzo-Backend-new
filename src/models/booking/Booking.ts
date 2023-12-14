@@ -11,13 +11,7 @@ const bookingSchema = new Schema({
         enum: [],
         default: BookingType.Turf,
       },
-      user: [
-        {
-          type: Schema.Types.ObjectId,
-          ref: "users",
-          index: true,
-        },
-      ],
+      user: String,
       dateOfBooking:Date,
       cancelDate:Date,
       bookingAmount: String,

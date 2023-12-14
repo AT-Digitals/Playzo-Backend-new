@@ -7,13 +7,14 @@ import { BookingFilterRequestDto } from "../../dto/Booking/BookingFilterRequestD
 import { BookingModel } from "../../models/booking/BookingModel";
 import { BookingRequestDto } from "../../dto/Booking/BookingRequestDto";
 import DateUtils from "../../utils/DateUtils";
+import { Schema } from "mongoose";
 import { Service } from "typedi";
 import { bookingLength } from "../../enum/BookingLength";
 
 @Service()
 export default class BookingService {
 
-  async create(request: BookingRequestDto) {
+  async create(request: BookingRequestDto, id:string) {
  
    const startDate = DateUtils.add(new Date(request.dateOfBooking),0,"day");
    const endDate = DateUtils.add(new Date(startDate),1,"day");
@@ -30,7 +31,9 @@ export default class BookingService {
         throw new AppErrorDto(AppError.ALREADY_BOOKED);
       }
       else{
+        console.log("id",id)
         let booking = new Booking(request);
+        booking.user = id;
         booking.dateOfBooking = new Date(request.dateOfBooking);
         booking = await booking.save();
         return booking;
