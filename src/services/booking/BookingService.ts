@@ -7,7 +7,6 @@ import { BookingFilterRequestDto } from "../../dto/Booking/BookingFilterRequestD
 import { BookingModel } from "../../models/booking/BookingModel";
 import { BookingRequestDto } from "../../dto/Booking/BookingRequestDto";
 import DateUtils from "../../utils/DateUtils";
-import { Schema } from "mongoose";
 import { Service } from "typedi";
 import { bookingLength } from "../../enum/BookingLength";
 
