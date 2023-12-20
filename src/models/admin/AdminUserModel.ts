@@ -1,6 +1,6 @@
-import { Document } from "mongoose";
+import { AuditTimeModel } from "../common/auditTimeModel";
 
-export interface AdminUserModel extends Document {
+export interface AdminUserModel extends AuditTimeModel {
   email: string;
   name: string;
   password: string;

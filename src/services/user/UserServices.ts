@@ -7,6 +7,7 @@ import { Service } from "typedi";
 import { User } from "../../models/user/User";
 import { UserDto } from "../../dto/user/UserDto";
 import { UserRequestDto } from "../../dto/user/UserRequestDto";
+
 @Service()
 export class UserServices {
   public async createUser(UserDto: UserRequestDto) {

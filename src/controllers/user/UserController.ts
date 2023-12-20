@@ -21,7 +21,7 @@ export class UserController {
   constructor(private userService: UserServices,private authService: AdminAuthService) {}
 
   @Get("/me")
-//   @Authorized()
+  // @Authorized()
   public async getLoggedInUser(@CurrentUser() authDto: AuthDto) {
     return this.userService.getUser(authDto.id);
   }

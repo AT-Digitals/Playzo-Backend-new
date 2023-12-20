@@ -17,6 +17,7 @@ export class AuthUtils {
       authDto.getTokenObject(),
       process.env.SECRET_KEY
     );
+    console.log("token", token);
     res.cookie(this.COOKIE_NAME, token, {
       httpOnly: true,
       secure: EnvUtils.isProd(),
@@ -34,7 +35,6 @@ export class AuthUtils {
     }
     let user = null;
     try {
-      console.log("token", token)
       user = jsonwebtoken.verify(token, process.env.SECRET_KEY) as AuthDto;
     } catch (error) {
       console.log("Error in decoding the token");

@@ -47,7 +47,7 @@ export default class MongoDatabase {
     this: AuditTimeModel,
     next: HookNextFunction
   ): void {
-    this.timeUpdated = new Date();
+    this.updatedAt = new Date();
     next();
   }
 

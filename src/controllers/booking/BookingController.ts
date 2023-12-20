@@ -26,9 +26,10 @@ export class BookingController {
     return new Booking(booking);
   }
 
-  @Get("/getAll")
+  @Get()
   public async getAllBookings() {
-    return this.bookingService.getAllBookings();
+     const bookings = this.bookingService.getAllBookings();
+     return bookings;
   }
 
   @Put()
