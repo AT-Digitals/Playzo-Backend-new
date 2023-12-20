@@ -21,7 +21,7 @@ export class BookingDto {
       this.dateOfBooking = booking.dateOfBooking;
       this.cancelDate = booking.cancelDate;
       this.bookingAmount = booking.bookingAmount;
-      this.bookingType = booking.bookingType;
+      this.bookingType = booking.bookingtype;
       this.startTime = booking.startTime;
       this.endTime = booking.endTime;
       this.deleted = booking.deleted;

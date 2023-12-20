@@ -8,7 +8,7 @@ export interface BookingModel extends Document {
       dateOfBooking: Date,
       cancelDate?: Date,
       bookingAmount: number,
-      bookingType: PaymentType,
+      bookingtype: PaymentType,
       startTime: number,
       endTime: number,
       deleted: boolean

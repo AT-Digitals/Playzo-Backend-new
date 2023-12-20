@@ -50,7 +50,7 @@ export default class BookingService {
   }
 
   public async getAllBookings() {
-    const bookings = await Booking.find();
+    const bookings = await Booking.find({});
     return bookings.map((booking) => new BookingDto(booking));
   }
 
@@ -140,7 +140,7 @@ return bookList;
     booking.type = request.type;
     booking.cancelDate = request.cancelDate;
     booking.bookingAmount = request.bookingAmount;
-    booking.bookingType = request.bookingType;
+    booking.bookingtype = request.bookingtype;
     booking.deleted = false;
     booking = await booking.save();
     }

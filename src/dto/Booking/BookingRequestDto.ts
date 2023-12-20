@@ -19,7 +19,7 @@ export class BookingRequestDto {
     bookingAmount: number;
   
     @IsEnum(PaymentType, { message: "Please provide a valid Payment Type" })
-    bookingType: PaymentType;
+    bookingtype: PaymentType;
 
     @IsDefined({ message: "starttime is required" })
     startTime: number;
