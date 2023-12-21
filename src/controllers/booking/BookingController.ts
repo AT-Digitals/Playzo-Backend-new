@@ -4,7 +4,7 @@ import { Body, CurrentUser, Delete, Get, JsonController, Param, Post, Put } from
 import BookingService from "../../services/booking/BookingService";
 import { Booking } from "../../models/booking/Booking";
 import { BookingDto } from "../../dto/Booking/BookingDto";
-import { AuthDto } from "../../dto/auth/AuthDto";
+import AuthDto from "../../dto/auth/AuthDto";
 
 @JsonController("/bookings")
 @Service()

@@ -2,7 +2,7 @@ import "reflect-metadata";
 
 import { useContainer, useExpressServer } from "routing-controllers";
 
-import { AuthValidator } from "./middleware/AuthValidator";
+import AuthValidator from "./middleware/AuthValidator";
 import { Container } from "typedi";
 import { CorsOptions } from "cors";
 import { DatabaseSeeder } from "./utils/DatabaseSeeder";

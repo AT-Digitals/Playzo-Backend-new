@@ -7,13 +7,14 @@ import {
   Res,
 } from "routing-controllers";
 
-import { AuthDto } from "../../dto/auth/AuthDto";
 import { AuthUtils } from "../../utils/AuthUtils";
 import { Response } from "express";
 import { Service } from "typedi";
 import { UserServices } from "../../services/user/UserServices";
-import { AdminLoginDto } from "../../dto/auth/AdminLoginDto";
 import { AdminAuthService } from "../../services/admin/auth/AdminAuthService";
+import AuthDto from "../../dto/auth/AuthDto";
+import UserLoginRequestDto from "../../dto/auth/UserLoginRequestDto";
+import { AdminDto } from "../../dto/user/AdminDto";
 
 @JsonController("")
 @Service()
@@ -27,10 +28,13 @@ export class UserController {
   }
 
   @Post("/login")
-  public async login(@Body() loginDto: AdminLoginDto, @Res() res: Response) {
-    const authDto = await this.authService.login(loginDto);
-    AuthUtils.saveAuthToken(res, authDto);
-    return res.send(authDto);
+  public async login(
+    @Res() res: Response,
+    @Body() request: UserLoginRequestDto
+  ) {
+    const user = new AdminDto(await this.authService.login(request));
+    AuthUtils.saveAuthToken(res, user);
+    return res.send(user);
   }
   
   @Post("/auth/logout")

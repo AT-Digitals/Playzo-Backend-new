@@ -1,23 +1,29 @@
-import { AdminDto } from "../../../dto/user/AdminDto";
-import { AdminLoginDto } from "../../../dto/auth/AdminLoginDto";
 import { AdminUser } from "../../../models/admin/AdminUser";
-import { AppError } from "../../../dto/error/AppError";
 import { AppErrorDto } from "../../../dto/error/AppErrorDto";
-import { HttpStatusCode } from "../../../dto/error/HttpStatusCode";
 import { Service } from "typedi";
+import UserError from "../../../dto/error/UserError";
+import UserLoginRequestDto from "../../../dto/auth/UserLoginRequestDto";
 
 @Service()
 export class AdminAuthService {
-  public async login(loginDto: AdminLoginDto) {
-    const admin = await AdminUser.findOne({
-      email: loginDto.email,
-    });
-    if (!admin || !(await admin.validateUser(loginDto.password))) {
-      throw new AppErrorDto(
-        AppError.AUTHENTICATION_ERORR,
-        HttpStatusCode.UNAUTHORIZED
-      );
+
+  private async findUserByEmail(email: string) {
+    const user = await AdminUser.findOne({ email });
+    if (!user) {
+      throw new AppErrorDto(UserError.USER_EMAIL_NOT_FOUND);
     }
-    return new AdminDto(admin);
+    return user;
+  }
+  public async login(data: UserLoginRequestDto) {
+    const user = await this.findUserByEmail(data.email);
+    if (!user) {
+      throw new AppErrorDto(UserError.USER_NOT_FOUND);
+    }
+
+    if (!(await user.validateUser(data.password))) {
+      throw new AppErrorDto(UserError.AUTHENTICATION_FAILED);
+    }
+
+    return user;
   }
 }

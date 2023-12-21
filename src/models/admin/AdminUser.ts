@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 
-import { AdminUserModel } from "./AdminUserModel";
+import AdminUserModel from "./AdminUserModel";
 import MongoDatabase from "../../utils/MongoDatabase";
 
 const AdminUserSchema = new Schema({
