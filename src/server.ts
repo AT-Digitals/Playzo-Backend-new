@@ -10,6 +10,7 @@ import { DefaultHandler } from "./middleware/DefaultHandler";
 import { EnvUtils } from "./utils/EnvUtils";
 import { ErrorHandler } from "./middleware/ErrorHandler";
 import { HttpStatusCode } from "./dto/error/HttpStatusCode";
+import JwtMiddleware from "./middleware/JwtMiddleware";
 import MongoDatabase from "./utils/MongoDatabase";
 import { MorganMiddleware } from "./middleware/MorganMiddleware";
 import compression from "compression";
@@ -71,6 +72,8 @@ app.use(MorganMiddleware);
 
 // CSRF
 app.use(cookieParser(process.env.COOKIE_SIGN_KEY));
+app.use(JwtMiddleware);
+
 // app.use(
 //   csrf({ cookie: { secure: EnvUtils.isProd(), signed: true, httpOnly: true } })
 // );

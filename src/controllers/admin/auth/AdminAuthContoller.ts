@@ -19,7 +19,7 @@ export class AdminAuthController {
   ) {
     const user = new AdminDto(await this.authService.login(request));
    const token= AuthUtils.saveAuthToken(res, user);
-    user["token"]=token;
+    user["token"] = token??"";
     return res.send(user);
   }
 

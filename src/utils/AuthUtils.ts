@@ -15,7 +15,8 @@ export class AuthUtils {
     }
     const token = jsonwebtoken.sign(
       authDto.getTokenObject(),
-      process.env.SECRET_KEY
+      process.env.SECRET_KEY,
+      { expiresIn: process.env.EXPIRE_TOKEN_TIME }
     );
     console.log("token", token);
     res.cookie(this.COOKIE_NAME, token, {
