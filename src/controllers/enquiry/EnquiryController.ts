@@ -1,8 +1,8 @@
-import { Service } from "typedi";
 import { Body, Delete, Get, JsonController, Param, Post } from "routing-controllers";
-import EnquiryService from "../../services/enquiry/EnquiryService";
-import { EnquiryRequestDto } from "../../dto/enquiry/EnquiryRequestDto";
 import { EnquiryDto } from "../../dto/enquiry/EnquiryDto";
+import { EnquiryRequestDto } from "../../dto/enquiry/EnquiryRequestDto";
+import EnquiryService from "../../services/enquiry/EnquiryService";
+import { Service } from "typedi";
 
 @JsonController("/enquiries")
 @Service()

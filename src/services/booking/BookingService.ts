@@ -30,7 +30,6 @@ export default class BookingService {
         throw new AppErrorDto(AppError.ALREADY_BOOKED);
       }
       else{
-        console.log("id",id)
         let booking = new Booking(request);
         booking.user = id;
         booking.dateOfBooking = new Date(request.dateOfBooking);

@@ -22,19 +22,7 @@ import winston from "winston";
 
 // import { CsrfHandler } from "./middleware/CsrfHandler";
 
-
-
-
-
-
-
-
-
 // import csrf from "csurf";
-
-
-
-
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bodyParser = require("body-parser");
@@ -47,16 +35,7 @@ winston.transports.Console.level = EnvUtils.isProd() ? "warn" : "debug";
 const { PORT = 3000 } = process.env;
 
 const corsOption: CorsOptions = {
-  origin: [
-    "https://faboproperties.com",
-    /https:\/\/.*\.faboproperties\.com/,
-    "http://faboproperties.com",
-    /http:\/\/.*\.faboproperties\.com/,
-    "http://atdigitals.comn",
-    /http:\/\/.*\.atdigitals\.com/,
-    /http:\/\/localhost:*/,
-    /https:\/\/localhost:*/,
-  ],
+  origin: "*",
   credentials: true,
   optionsSuccessStatus: 200,
 };

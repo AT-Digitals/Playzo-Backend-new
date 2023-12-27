@@ -6,15 +6,14 @@ import {
   Post,
   Res,
 } from "routing-controllers";
-
+import { AdminAuthService } from "../../services/admin/auth/AdminAuthService";
+import { AdminDto } from "../../dto/user/AdminDto";
+import AuthDto from "../../dto/auth/AuthDto";
 import { AuthUtils } from "../../utils/AuthUtils";
 import { Response } from "express";
 import { Service } from "typedi";
-import { UserServices } from "../../services/user/UserServices";
-import { AdminAuthService } from "../../services/admin/auth/AdminAuthService";
-import AuthDto from "../../dto/auth/AuthDto";
 import UserLoginRequestDto from "../../dto/auth/UserLoginRequestDto";
-import { AdminDto } from "../../dto/user/AdminDto";
+import { UserServices } from "../../services/user/UserServices";
 
 @JsonController("")
 @Service()

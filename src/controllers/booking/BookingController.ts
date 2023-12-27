@@ -1,10 +1,10 @@
-import { Service } from "typedi";
-import { BookingRequestDto } from "../../dto/Booking/BookingRequestDto";
 import { Body, CurrentUser, Delete, Get, JsonController, Param, Post, Put } from "routing-controllers";
-import BookingService from "../../services/booking/BookingService";
+import AuthDto from "../../dto/auth/AuthDto";
 import { Booking } from "../../models/booking/Booking";
 import { BookingDto } from "../../dto/Booking/BookingDto";
-import AuthDto from "../../dto/auth/AuthDto";
+import { BookingRequestDto } from "../../dto/Booking/BookingRequestDto";
+import BookingService from "../../services/booking/BookingService";
+import { Service } from "typedi";
 
 @JsonController("/bookings")
 @Service()

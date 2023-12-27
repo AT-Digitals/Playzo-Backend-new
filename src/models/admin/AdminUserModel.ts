@@ -7,4 +7,5 @@ export default interface AdminUserModel extends AuditTimeModel {
 
   setPassword(password: string): Promise<void>;
   validateUser(password: string): Promise<boolean>;
+// eslint-disable-next-line semi
 }

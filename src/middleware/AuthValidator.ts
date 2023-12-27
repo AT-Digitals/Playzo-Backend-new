@@ -37,4 +37,3 @@ export default class AuthValidator {
 
 export const IsAdmin = () => Authorized(UserType.ADMIN);
 export const IsUser = () => Authorized([UserType.ADMIN, UserType.USER]);
-

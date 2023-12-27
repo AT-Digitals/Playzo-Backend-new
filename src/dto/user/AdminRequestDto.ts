@@ -6,7 +6,6 @@ import {
 
 export class AdminRequestDto {
   
-
   @IsEmail({}, { message: "Please provide a valid email" })
   email: string;
 
