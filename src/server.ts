@@ -2,7 +2,6 @@ import "reflect-metadata";
 
 import { useContainer, useExpressServer } from "routing-controllers";
 
-import AuthValidator from "./middleware/AuthValidator";
 import { Container } from "typedi";
 import { CorsOptions } from "cors";
 import { DatabaseSeeder } from "./utils/DatabaseSeeder";
@@ -19,6 +18,24 @@ import dotenv from "dotenv";
 import express from "express";
 import path from "path";
 import winston from "winston";
+
+// import AuthValidator from "./middleware/AuthValidator";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // import { CsrfHandler } from "./middleware/CsrfHandler";
 
@@ -67,8 +84,8 @@ useExpressServer(app, {
   cors: corsOption,
   middlewares: [DefaultHandler, ErrorHandler],
   controllers: [path.join(__dirname, "controllers", "**", "*.js")],
-  authorizationChecker: AuthValidator.validate,
-  currentUserChecker: AuthValidator.currentUser,
+  // authorizationChecker: AuthValidator.validate,
+  // currentUserChecker: AuthValidator.currentUser,
   defaultErrorHandler: false,
   defaults: {
     undefinedResultCode: HttpStatusCode.NO_CONTENT,

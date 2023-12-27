@@ -29,4 +29,7 @@ export class BookingRequestDto {
 
     @IsDefined({ message: "Booking Date is required" })
     dateOfBooking: string;
+    
+    @IsDefined({ message: "Booking Date is required" })
+    user:string;
   }

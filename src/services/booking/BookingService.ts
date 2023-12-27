@@ -13,7 +13,7 @@ import { bookingLength } from "../../enum/BookingLength";
 @Service()
 export default class BookingService {
 
-  async create(request: BookingRequestDto, id:string) {
+  async create(request: BookingRequestDto) {
  
    const startDate = DateUtils.add(new Date(request.dateOfBooking),0,"day");
    const endDate = DateUtils.add(new Date(startDate),1,"day");
@@ -31,7 +31,7 @@ export default class BookingService {
       }
       else{
         let booking = new Booking(request);
-        booking.user = id;
+        booking.user = request.user;
         booking.dateOfBooking = new Date(request.dateOfBooking);
         booking = await booking.save();
         return booking;

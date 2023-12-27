@@ -13,10 +13,10 @@ export class BookingController {
 
   @Post()
   async create(
-    @CurrentUser() user: AuthDto,
+    // @CurrentUser() user: AuthDto,
     @Body() request: BookingRequestDto
   ) {
-    const booking = await this.bookingService.create(request,user.id);
+    const booking = await this.bookingService.create(request);
     return new BookingDto(booking);
   }
 
