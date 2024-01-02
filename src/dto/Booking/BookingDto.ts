@@ -13,6 +13,7 @@ export class BookingDto {
   deleted: boolean;
   startTime: number;
       endTime: number;
+      bookingId?:string;
 
   constructor(booking: BookingModel) {
     this.id = booking.id;
@@ -25,5 +26,6 @@ export class BookingDto {
       this.startTime = booking.startTime;
       this.endTime = booking.endTime;
       this.deleted = booking.deleted;
+      this.bookingId = booking.bookingId;
   }
 }

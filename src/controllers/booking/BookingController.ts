@@ -1,5 +1,4 @@
-import { Body, CurrentUser, Delete, Get, JsonController, Param, Post, Put } from "routing-controllers";
-import AuthDto from "../../dto/auth/AuthDto";
+import { Body, Delete, Get, JsonController, Param, Post, Put } from "routing-controllers";
 import { Booking } from "../../models/booking/Booking";
 import { BookingDto } from "../../dto/Booking/BookingDto";
 import { BookingRequestDto } from "../../dto/Booking/BookingRequestDto";
@@ -16,6 +15,7 @@ export class BookingController {
     // @CurrentUser() user: AuthDto,
     @Body() request: BookingRequestDto
   ) {
+    console.log("con",request);
     const booking = await this.bookingService.create(request);
     return new BookingDto(booking);
   }

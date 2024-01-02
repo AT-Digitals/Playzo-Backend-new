@@ -19,6 +19,14 @@ import express from "express";
 import path from "path";
 import winston from "winston";
 
+// import Razorpay from 'razorpay';
+
+
+
+
+
+
+
 // import AuthValidator from "./middleware/AuthValidator";
 
 
@@ -73,6 +81,24 @@ app.use(JwtMiddleware);
 // app.use(
 //   csrf({ cookie: { secure: EnvUtils.isProd(), signed: true, httpOnly: true } })
 // );
+
+// const instance = new Razorpay({
+//   key_id: "rzp_test_mHxfzyhsCG5tZ0",
+//   key_secret: "TPX6eMdNAuxM86xdHdtDFvjp",
+// });
+
+// app.post("/create/orderId",(req,res)=>{
+//   console.log("create oredr request",req.body);
+//   const options = {
+//     amount: req.body.amount,
+//     currency:"INR",
+//     receipt:"rcp1"
+//   };
+//   instance.orders.create(options, function(_err,order){
+//     console.log(order);
+//     res.send(order);
+//   });
+// });
 
 // Uploads
 const staticPath = path.join(__dirname, "..", "uploads");

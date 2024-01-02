@@ -3,6 +3,7 @@
     "target": "es6",
     "module": "commonjs",
     "lib": ["dom", "es2017"],
+    "skipLibCheck": true,
     "sourceMap": true,
     "outDir": "dist",
     "strict": true,
@@ -22,5 +23,8 @@
     "strictPropertyInitialization": false,
     "jsx": "react-jsx"
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "rules": {
+    "no-unused-vars": "off"
+  }
 }

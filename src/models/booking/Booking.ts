@@ -22,6 +22,7 @@ const bookingSchema = new Schema({
       },
       startTime: Number,
       endTime: Number,
+      bookingId:String
 
 });
 

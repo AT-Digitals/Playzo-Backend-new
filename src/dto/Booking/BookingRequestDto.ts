@@ -2,6 +2,7 @@ import {
     Allow,
     IsDefined,
     IsEnum,
+    IsOptional,
 } from "class-validator";
 
 import { BookingType } from "../../models/booking/BookingType";
@@ -13,8 +14,9 @@ export class BookingRequestDto {
     type: BookingType;
   
     // @IsDefined({ message: "Date is required" })
+    @IsOptional()
     cancelDate?: Date;
-  
+    
     @Allow()
     bookingAmount: number;
   
@@ -32,4 +34,6 @@ export class BookingRequestDto {
     
     @IsDefined({ message: "Booking Date is required" })
     user:string;
+    @IsOptional()
+    bookingId?: string;
   }

@@ -11,5 +11,7 @@ export interface BookingModel extends Document {
       bookingtype: PaymentType,
       startTime: number,
       endTime: number,
-      deleted: boolean
+      deleted: boolean,
+      bookingId?:string
+
 }
