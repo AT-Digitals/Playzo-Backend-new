@@ -1,20 +1,30 @@
 import { Body, JsonController, Post, Res } from "routing-controllers";
-
 import { AdminAuthService } from "../../../services/admin/auth/AdminAuthService";
-import { AdminLoginDto } from "../../../dto/admin/auth/AdminLoginDto";
+import { AdminDto } from "../../../dto/user/AdminDto";
 import { AuthUtils } from "../../../utils/AuthUtils";
 import { Response } from "express";
 import { Service } from "typedi";
+import UserLoginRequestDto from "../../../dto/auth/UserLoginRequestDto";
 
 @JsonController("/admins")
 @Service()
 export class AdminAuthController {
   constructor(private authService: AdminAuthService) {}
-
+  
   @Post("/login")
-  public async login(@Body() loginDto: AdminLoginDto, @Res() res: Response) {
-    const authDto = await this.authService.login(loginDto);
-    AuthUtils.saveAuthToken(res, authDto);
-    return res.send(authDto);
+  public async login(
+    @Res() res: Response,
+    @Body() request: UserLoginRequestDto
+  ) {
+    const user = new AdminDto(await this.authService.login(request));
+   const token= AuthUtils.saveAuthToken(res, user);
+    user["token"] = token??"";
+    return res.send(user);
+  }
+
+  @Post("/auth/logout")
+  public async logoutUser(@Res() res: Response) {
+    AuthUtils.logoutUser(res);
+    return res.send("");
   }
 }

@@ -1,29 +1,41 @@
 import {
-  Authorized,
+  Body,
   CurrentUser,
   Get,
   JsonController,
   Post,
   Res,
 } from "routing-controllers";
-
-import { AuthDto } from "../../dto/auth/AuthDto";
+import { AdminAuthService } from "../../services/admin/auth/AdminAuthService";
+import { AdminDto } from "../../dto/user/AdminDto";
+import AuthDto from "../../dto/auth/AuthDto";
 import { AuthUtils } from "../../utils/AuthUtils";
 import { Response } from "express";
 import { Service } from "typedi";
-import { UserService } from "../../services/user/UserService";
+import UserLoginRequestDto from "../../dto/auth/UserLoginRequestDto";
+import { UserServices } from "../../services/user/UserServices";
 
 @JsonController("")
 @Service()
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserServices,private authService: AdminAuthService) {}
 
   @Get("/me")
-  @Authorized()
-  public async getLoggedInUser(@CurrentUser() userDto: AuthDto) {
-    return this.userService.getUser(userDto);
+  // @Authorized()
+  public async getLoggedInUser(@CurrentUser() authDto: AuthDto) {
+    return this.userService.getUser(authDto.id);
   }
 
+  @Post("/login")
+  public async login(
+    @Res() res: Response,
+    @Body() request: UserLoginRequestDto
+  ) {
+    const user = new AdminDto(await this.authService.login(request));
+    AuthUtils.saveAuthToken(res, user);
+    return res.send(user);
+  }
+  
   @Post("/auth/logout")
   public async logoutUser(@Res() res: Response) {
     AuthUtils.logoutUser(res);

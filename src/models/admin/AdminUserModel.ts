@@ -1,12 +1,11 @@
-import { Document } from "mongoose";
+import { AuditTimeModel } from "../common/auditTimeModel";
 
-export interface AdminUserModel extends Document {
+export default interface AdminUserModel extends AuditTimeModel {
   email: string;
-  phoneNumber: string;
   name: string;
-  profilePic: string;
   password: string;
-  role: string;
+
   setPassword(password: string): Promise<void>;
   validateUser(password: string): Promise<boolean>;
+// eslint-disable-next-line semi
 }

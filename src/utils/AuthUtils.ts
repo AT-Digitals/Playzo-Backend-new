@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import { AppError } from "../dto/error/AppError";
 import { AppErrorDto } from "../dto/error/AppErrorDto";
-import { AuthDto } from "../dto/auth/AuthDto";
+import AuthDto from "../dto/auth/AuthDto";
 import { EnvUtils } from "./EnvUtils";
 import jsonwebtoken from "jsonwebtoken";
 
@@ -15,16 +15,19 @@ export class AuthUtils {
     }
     const token = jsonwebtoken.sign(
       authDto.getTokenObject(),
-      process.env.SECRET_KEY
+      process.env.SECRET_KEY,
+      { expiresIn: process.env.EXPIRE_TOKEN_TIME }
     );
+    console.log("token", token);
     res.cookie(this.COOKIE_NAME, token, {
       httpOnly: true,
       secure: EnvUtils.isProd(),
       signed: true,
     });
+    return token;
   }
 
-  public static getAuthUser(req: Request) {
+  public static getAuthUser(req: Request): AuthDto | null {
     const token = req.signedCookies[this.COOKIE_NAME];
     if (!token) {
       return null;
@@ -32,15 +35,14 @@ export class AuthUtils {
     if (!process.env.SECRET_KEY) {
       throw new AppErrorDto(AppError.INTERNAL_ERROR);
     }
-    let user = null;
     try {
-      user = jsonwebtoken.verify(token, process.env.SECRET_KEY) as AuthDto;
+      const user = jsonwebtoken.verify(token, process.env.SECRET_KEY);
+      return AuthDto.from(user);
     } catch (error) {
       console.log("Error in decoding the token");
       console.log(error);
       return null;
     }
-    return user;
   }
 
   public static logoutUser(res: Response) {
@@ -51,4 +53,5 @@ export class AuthUtils {
       maxAge: 0,
     });
   }
+
 }
