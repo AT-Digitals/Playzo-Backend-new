@@ -10,6 +10,11 @@ import DateUtils from "../../utils/DateUtils";
 import { Service } from "typedi";
 import { bookingLength } from "../../enum/BookingLength";
 
+// import twilio from "twilio";
+
+// const accountSid = "AC218186c205d28b50087564e88e42af25";
+// const authToken = "af3c8b3946a478552fc1986072517b7e";
+// const client = twilio(accountSid, authToken);
 @Service()
 export default class BookingService {
 
@@ -38,9 +43,17 @@ export default class BookingService {
         booking.bookingId = request.bookingId;
         }
         booking = await booking.save();
+   
+      // await client.messages
+      // .create({
+      //    from: "whatsapp:+14155238886",
+      //    body: "Hello there!",
+      //    to: "whatsapp:+919384735800"
+      //  })
+      // .then(message => console.log(message.sid));
         return booking;
       }
-    
+      // "whatsapp:+12059734320",
   }
 
   async findById(id: string) {

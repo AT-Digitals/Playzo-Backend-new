@@ -10,10 +10,9 @@ export default class PaymentService {
 
   async create(request: PaymentRequestDto) {
     try {
-      console.log("dndfhv")
       const instance = new Razorpay({
-        key_id: "rzp_test_mHxfzyhsCG5tZ0"??"",
-        key_secret: "TPX6eMdNAuxM86xdHdtDFvjp",
+        key_id: process.env.KEY_ID??"",
+        key_secret: process.env.KEY_SECRET,
       });
   
       const options = {
@@ -44,8 +43,8 @@ export default class PaymentService {
       let finalOrder: Orders.RazorpayOrder | any = {};
       console.log("dndfhv");
       const instance = new Razorpay({
-        key_id: "rzp_test_mHxfzyhsCG5tZ0",
-        key_secret: "TPX6eMdNAuxM86xdHdtDFvjp",
+        key_id: process.env.KEY_ID??"",
+        key_secret: process.env.KEY_SECRET,
       });
   
       const options = {
@@ -105,8 +104,8 @@ async verifyPayment(req:VerifyRequestDto) {
       try {
         //first validate the payment Id then call razorpay API
         const instance = new Razorpay({
-          key_id: "rzp_test_mHxfzyhsCG5tZ0"??"",
-          key_secret: "TPX6eMdNAuxM86xdHdtDFvjp",
+          key_id: process.env.KEY_ID??"",
+        key_secret: process.env.KEY_SECRET,
         });
         // const options = {
         //     payment_id: req.paymentId,
