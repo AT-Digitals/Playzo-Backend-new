@@ -10,17 +10,18 @@ export class DatabaseSeeder {
     const adminCount = await AdminUser.countDocuments({});
     if (adminCount === 0) {
       const email = process.env.DEFAULT_ADMIN_EMAIL;
-      const phoneNumber = process.env.DEFAULT_ADMIN_PHONE;
+      const phone = parseInt(process.env.DEFAULT_ADMIN_PHONE??"");
       const name = "Admin";
       const password = process.env.DEFAULT_ADMIN_PASSWORD;
 
-      if (!(email && phoneNumber && password)) {
+      if (!(email && phone && password)) {
         console.error("Please provide default admin credentials in env");
         return;
       }
       const defaultAdmin: AdminRequestDto = {
         email,
         name,
+        phone,
         password,
       };
       console.log("defaultAdmin");

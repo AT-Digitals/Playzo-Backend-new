@@ -7,4 +7,5 @@ export class AdminLoginDto {
 
   @IsDefined({ message: "Password is required" })
   password: string;
+
 }

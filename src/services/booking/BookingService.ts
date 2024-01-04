@@ -66,7 +66,10 @@ export default class BookingService {
   }
 
   public async getAllBookings() {
-    const bookings = await Booking.find({});
+    const bookings = await Booking.find({}).populate("user","name email phone userType").exec();
+    // .populate("user")
+    // .exec();
+    console.log("bookin",bookings);
     return bookings.map((booking) => new BookingDto(booking));
   }
 

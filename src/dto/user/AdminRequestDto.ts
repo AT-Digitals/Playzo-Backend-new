@@ -15,5 +15,8 @@ export class AdminRequestDto {
 
   @IsDefined({ message: "Name is required" })
   name: string;
+  
+  @IsDefined({ message: "Phone number is required" })
+  phone: number;
  
 }

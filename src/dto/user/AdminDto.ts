@@ -6,10 +6,13 @@ export class AdminDto extends AuthDto {
   email: string;
   name: string;
   token?:string;
+  phone: number;
 
   constructor(admin: AdminUserModel) {
     super(admin.id, UserType.ADMIN);
     this.email = admin.email;
     this.name = admin.name;
+    this.phone = admin.phone;
+    this.userType = UserType.ADMIN;
   }
 }

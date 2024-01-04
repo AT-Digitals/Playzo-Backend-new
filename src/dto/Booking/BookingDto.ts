@@ -18,7 +18,8 @@ export class BookingDto {
   constructor(booking: BookingModel) {
     this.id = booking.id;
     this.type = booking.type;
-    this.user = booking.user;
+    this.user = 
+    JSON.stringify(booking.user);
       this.dateOfBooking = booking.dateOfBooking;
       this.cancelDate = booking.cancelDate;
       this.bookingAmount = booking.bookingAmount;
