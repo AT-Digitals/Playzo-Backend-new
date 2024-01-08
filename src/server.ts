@@ -3,7 +3,7 @@ import "reflect-metadata";
 import { useContainer, useExpressServer } from "routing-controllers";
 
 import { Container } from "typedi";
-import { CorsOptions } from "cors";
+import cors from "cors";
 import { DatabaseSeeder } from "./utils/DatabaseSeeder";
 import { DefaultHandler } from "./middleware/DefaultHandler";
 import { EnvUtils } from "./utils/EnvUtils";
@@ -21,29 +21,7 @@ import winston from "winston";
 
 // import Razorpay from 'razorpay';
 
-
-
-
-
-
-
 // import AuthValidator from "./middleware/AuthValidator";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import { CsrfHandler } from "./middleware/CsrfHandler";
 
@@ -59,10 +37,11 @@ winston.transports.Console.level = EnvUtils.isProd() ? "warn" : "debug";
 
 const { PORT = 3000 } = process.env;
 
-const corsOption: CorsOptions = {
+const corsOption = {
   origin: "*",
-  credentials: true,
-  optionsSuccessStatus: 200,
+  optionsSuccessStatus: 204,
+  allowedHeaders: ["Content-Type", "Authorization"],
+  methods: ["POST", "GET", "PUT"]
 };
 
 const app = express();
@@ -70,6 +49,9 @@ const app = express();
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+//cors
+app.use(cors(corsOption));
 
 // Morgan configuration
 app.use(MorganMiddleware);
@@ -107,7 +89,6 @@ app.use("/uploads", express.static(staticPath));
 
 useContainer(Container);
 useExpressServer(app, {
-  cors: corsOption,
   middlewares: [DefaultHandler, ErrorHandler],
   controllers: [path.join(__dirname, "controllers", "**", "*.js")],
   // authorizationChecker: AuthValidator.validate,
