@@ -7,6 +7,7 @@ import { BookingFilterRequestDto } from "../../dto/Booking/BookingFilterRequestD
 import { BookingModel } from "../../models/booking/BookingModel";
 import { BookingRequestDto } from "../../dto/Booking/BookingRequestDto";
 import DateUtils from "../../utils/DateUtils";
+import PaginationRequestDto from "../../dto/PaginationRequestDto";
 import { Service } from "typedi";
 import { bookingLength } from "../../enum/BookingLength";
 
@@ -65,10 +66,13 @@ export default class BookingService {
 
   }
 
-  public async getAllBookings() {
-    const bookings = await Booking.find({}).populate("user","name email phone userType").exec();
-    // .populate("user")
-    // .exec();
+  public async getAllBookings(query:PaginationRequestDto) {
+    let bookings: BookingModel[] = [];
+    if(query.page && query.limit){
+       bookings = await Booking.find({}).skip((+query.page - 1) * 10).limit(query.limit).populate("user","name email phone userType").exec();
+    }else{
+      bookings = await Booking.find({}).populate("user","name email phone userType").exec();
+    }
     console.log("bookin",bookings);
     return bookings.map((booking) => new BookingDto(booking));
   }
