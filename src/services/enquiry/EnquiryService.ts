@@ -2,7 +2,9 @@ import { AppError } from "../../dto/error/AppError";
 import { AppErrorDto } from "../../dto/error/AppErrorDto";
 import { Enquiry } from "../../models/enquiry/Enquiry";
 import { EnquiryDto } from "../../dto/enquiry/EnquiryDto";
+import { EnquiryModel } from "../../models/enquiry/EnquiryModel";
 import { EnquiryRequestDto } from "../../dto/enquiry/EnquiryRequestDto";
+import PaginationRequestDto from "../../dto/PaginationRequestDto";
 import { Service } from "typedi";
 
 @Service()
@@ -26,6 +28,14 @@ export default class EnquiryService {
 
   public async getAllenquiries() {
     const enquiries = await Enquiry.find({});
+    return enquiries.map((enquiry) => new EnquiryDto(enquiry));
+  }
+
+  public async getEnquiryFilter(query:PaginationRequestDto) {
+    let enquiries: EnquiryModel[] = [];
+    if(query && query.page && query.limit){
+      enquiries = await Enquiry.find({}).skip((+query.page - 1) * query.limit).limit(query.limit);
+    }
     return enquiries.map((enquiry) => new EnquiryDto(enquiry));
   }
 

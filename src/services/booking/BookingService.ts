@@ -66,12 +66,16 @@ export default class BookingService {
 
   }
 
+  public async getAll() {
+    
+    const bookings = await Booking.find({}).populate("user","name email phone userType").exec();
+    return bookings.map((booking) => new BookingDto(booking));
+  }
+
   public async getAllBookings(query:PaginationRequestDto) {
     let bookings: BookingModel[] = [];
-    if(query.page && query.limit){
+    if(query && query.page && query.limit){
        bookings = await Booking.find({}).skip((+query.page - 1) * query.limit).limit(query.limit).populate("user","name email phone userType").exec();
-    }else{
-      bookings = await Booking.find({}).populate("user","name email phone userType").exec();
     }
     return bookings.map((booking) => new BookingDto(booking));
   }
