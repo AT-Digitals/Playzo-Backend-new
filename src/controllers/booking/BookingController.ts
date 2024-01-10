@@ -5,7 +5,6 @@ import { BookingRequestDto } from "../../dto/Booking/BookingRequestDto";
 import BookingService from "../../services/booking/BookingService";
 import { Service } from "typedi";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
-import FilterUtils from "../../utils/FilterUtils";
 
 @JsonController("/bookings")
 @Service()

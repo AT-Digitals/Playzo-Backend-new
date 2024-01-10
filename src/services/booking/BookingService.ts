@@ -69,11 +69,10 @@ export default class BookingService {
   public async getAllBookings(query:PaginationRequestDto) {
     let bookings: BookingModel[] = [];
     if(query.page && query.limit){
-       bookings = await Booking.find({}).skip((+query.page - 1) * 10).limit(query.limit).populate("user","name email phone userType").exec();
+       bookings = await Booking.find({}).skip((+query.page - 1) * query.limit).limit(query.limit).populate("user","name email phone userType").exec();
     }else{
       bookings = await Booking.find({}).populate("user","name email phone userType").exec();
     }
-    console.log("bookin",bookings);
     return bookings.map((booking) => new BookingDto(booking));
   }
 
