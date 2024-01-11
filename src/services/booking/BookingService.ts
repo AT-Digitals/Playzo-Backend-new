@@ -10,6 +10,7 @@ import DateUtils from "../../utils/DateUtils";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
 import { Service } from "typedi";
 import { bookingLength } from "../../enum/BookingLength";
+import moment from "moment";
 
 // import twilio from "twilio";
 
@@ -20,17 +21,17 @@ import { bookingLength } from "../../enum/BookingLength";
 export default class BookingService {
 
   async create(request: BookingRequestDto) {
-    console.log("request",request);
- 
-   const startDate = DateUtils.add(new Date(request.dateOfBooking),0,"day");
-   const endDate = DateUtils.add(new Date(startDate),1,"day");
-
-      const bookingList = await Booking.find({
-        startTime: request.startTime,
-        endTime:request.endTime,
-        dateOfBooking: {"$gte":new Date(startDate),"$lt":new Date(endDate) },
-        type: request.type
-      });
+   const endDate = DateUtils.add(new Date(request.endDate),1,"day");
+      const bookingList = await Booking.find(
+      {
+        $and: [
+          { 
+            endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
+          },
+          {  type: request.type },
+        ],
+      }
+      );
       const type = request.type as string;
 
       if (bookingList.length >= bookingLength[type as keyof typeof bookingLength]) {
@@ -39,12 +40,19 @@ export default class BookingService {
       else{
         let booking = new Booking(request);
         booking.user = request.user;
-        booking.dateOfBooking = new Date(request.dateOfBooking);
+        booking.dateOfBooking = new Date();
+        booking.court = request.type + "court"+ (bookingList.length>0?bookingList.length+1:1);
         if(request.bookingId!==""){
         booking.bookingId = request.bookingId;
         }
+ const diffDuration = moment.duration(moment(request.endDate).diff(moment(request.startDate)));
+if(diffDuration.years() > 0){
+  booking.isAnnual = true;
+}else{
+  booking.isAnnual = false;
+}
+booking.duration = moment(request.endDate).diff(moment(request.startDate),"days")+"days";
         booking = await booking.save();
-   
       // await client.messages
       // .create({
       //    from: "whatsapp:+14155238886",
@@ -154,7 +162,10 @@ return bookList;
   public async filterDateBookings(request:BookingDateFilterRequestDto) {
     const endDate = DateUtils.add(new Date(request.endDate),1,"day");
      const bookings = await Booking.find( {
-        dateOfBooking: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
+        endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
+        startTime:request.startTime,
+        endTime: request.endTime
+
     });
      
     return bookings.map((booking) => new BookingDto(booking));

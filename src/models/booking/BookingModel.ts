@@ -3,7 +3,7 @@ import { Document } from "mongoose";
 import { PaymentType } from "./PaymentType";
 
 export interface BookingModel extends Document {
-    type: BookingType,
+      type: BookingType,
       user: string;
       dateOfBooking: Date,
       cancelDate?: Date,
@@ -11,7 +11,12 @@ export interface BookingModel extends Document {
       bookingtype: PaymentType,
       startTime: number,
       endTime: number,
-      deleted: boolean,
-      bookingId?:string
+      bookingId?:string,
+      startDate:Date,
+      endDate:Date,
+      duration:string,
+      court: string,
+      isAnnual: boolean,
+      deleted: boolean
 
 }

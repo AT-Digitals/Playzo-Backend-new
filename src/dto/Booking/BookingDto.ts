@@ -10,10 +10,15 @@ export class BookingDto {
   cancelDate?: Date;
   bookingAmount: number;
   bookingType:PaymentType;
-  deleted: boolean;
   startTime: number;
-      endTime: number;
-      bookingId?:string;
+  endTime: number;
+  bookingId?:string;
+  startDate: Date;
+  endDate:Date;
+  duration:string;
+  court: string;
+  isAnnual: boolean;
+  deleted: boolean;
 
   constructor(booking: BookingModel) {
     this.id = booking.id;
@@ -28,5 +33,10 @@ export class BookingDto {
       this.endTime = booking.endTime;
       this.deleted = booking.deleted;
       this.bookingId = booking.bookingId;
+      this.startDate = booking.startDate;
+      this.endDate = booking.endDate;
+      this.duration = booking.duration;
+      this.court = booking.court;
+      this.isAnnual = booking.isAnnual;
   }
 }

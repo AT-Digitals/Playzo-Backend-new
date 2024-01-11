@@ -28,12 +28,16 @@ export class BookingRequestDto {
 
     @IsDefined({ message: "endtime is required" })
     endTime: number;
-
-    @IsDefined({ message: "Booking Date is required" })
-    dateOfBooking: string;
     
     @IsDefined({ message: "Booking Date is required" })
     user:string;
+
     @IsOptional()
     bookingId?: string;
+
+    @IsDefined({ message: "Start Date is required" })
+    startDate: string;
+
+    @IsDefined({ message: "End Date is required" })
+    endDate:Date;
   }

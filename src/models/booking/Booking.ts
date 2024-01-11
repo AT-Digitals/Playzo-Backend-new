@@ -15,17 +15,24 @@ const bookingSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "admins"
     },
-      dateOfBooking:Date,
-      cancelDate:Date,
-      bookingAmount: String,
+     
       bookingtype:{
         type: String,
         enum: [],
         default: PaymentType.Cash,
       },
+      bookingAmount: String,
+      dateOfBooking:Date,
+      startDate:Date,
+      endDate:Date,
       startTime: Number,
       endTime: Number,
-      bookingId:String
+      bookingId:String,
+      cancelDate:Date,
+      duration:String,
+      court: String,
+      isAnnual: Boolean,
+      deleted: Boolean
 
 });
 
