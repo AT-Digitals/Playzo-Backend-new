@@ -5,7 +5,7 @@ import AmountService from "../../services/amount/AmountService";
 import { AmountRequestDto } from "../../dto/amount/AmountRequestDto";
 import { AmountDto } from "../../dto/amount/AmountDto";
 
-@JsonController("/bookings")
+@JsonController("/amount")
 @Service()
 export class AmountController {
   constructor(private amountService: AmountService) {}

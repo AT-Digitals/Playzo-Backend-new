@@ -8,7 +8,11 @@ export class BookingDto {
   user: string;
   dateOfBooking: Date;
   cancelDate?: Date;
-  bookingAmount: number;
+  bookingAmount?: {
+    online: number, 
+    cash: number,
+    total: number 
+  };
   bookingType:PaymentType;
   startTime: number;
   endTime: number;

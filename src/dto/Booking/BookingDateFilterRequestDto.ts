@@ -1,19 +1,30 @@
 import {
-    IsDefined
+    IsDefined,
+    IsOptional
 } from "class-validator";
 
-export class BookingDateFilterRequestDto {
+import { BookingType } from "../../models/booking/BookingType";
+import PaginationRequestDto from "../PaginationRequestDto";
+import { PaymentType } from "../../models/booking/PaymentType";
+
+export class BookingDateFilterRequestDto extends PaginationRequestDto {
   
-    @IsDefined({ message: "Booking start Date is required" })
-    startDate: Date;
+    @IsOptional()
+    startDate?: Date;
 
-    @IsDefined({ message: "Booking end Date is required" })
-    endDate: Date;
+    @IsOptional()
+    endDate?: Date;
 
-    @IsDefined({ message: "Booking start Time is required" })
-    startTime: number;
+    @IsOptional()
+    startTime?: number;
+    @IsOptional() @IsDefined({ message: "Booking end Time is required" })
+    endTime?: number;
 
-    @IsDefined({ message: "Booking end Time is required" })
-    endTime: number;
+    @IsOptional()
+    // @IsEnum(BookingType, { message: "Please provide a valid Booking Type" })
+    type?: BookingType;
+
+    @IsOptional()
+    bookingType?: PaymentType;
    
   }

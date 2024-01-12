@@ -8,6 +8,7 @@ import { BookingModel } from "../../models/booking/BookingModel";
 import { BookingRequestDto } from "../../dto/Booking/BookingRequestDto";
 import DateUtils from "../../utils/DateUtils";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
+import { PaymentType } from "../../models/booking/PaymentType";
 import { Service } from "typedi";
 import { bookingLength } from "../../enum/BookingLength";
 import moment from "moment";
@@ -58,6 +59,20 @@ if(diffDuration.years() > 0){
   booking.isAnnual = false;
 }
 booking.duration = moment(request.endDate).diff(moment(request.startDate),"days")+"days";
+if(request.bookingtype === PaymentType.Cash){
+
+  booking.bookingAmount = {
+        online : 0, 
+        cash: 3000,
+        total: 3000
+  };
+}else{
+  booking.bookingAmount = {
+    online : 3000, 
+    cash: 0,
+    total: 3000
+};
+}
         booking = await booking.save();
       // await client.messages
       // .create({
@@ -166,14 +181,138 @@ return bookList;
   }
 
   public async filterDateBookings(request:BookingDateFilterRequestDto) {
-    const endDate = DateUtils.add(new Date(request.endDate),1,"day");
-     const bookings = await Booking.find( {
+    console.log("req",request.type);
+    let bookings:BookingModel[] =[];
+
+ if(request.startDate && request.endDate){
+     const endDate = DateUtils.add(new Date(request.endDate),1,"day");
+      if(request?.limit && request.page){
+      bookings = await Booking.find( {
         endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
-        startTime:request.startTime,
-        endTime: request.endTime
+
+    }).skip((+(request.page) - 1) * (request.limit)).limit((request.limit)).populate("user","name email phone userType").exec();
+  }else{
+    bookings = await Booking.find( {
+      endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
+
+  });
+  }
+  }
+
+    if(request.startDate && request.endDate && request.type){
+      const endDate = DateUtils.add(new Date(request.endDate),1,"day");
+      if(request?.limit && request.page){
+      bookings = await Booking.find( {
+        type: request.type,
+        endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
+
+    }).skip((+(request.page) - 1) * (request.limit)).limit((request.limit)).populate("user","name email phone userType").exec();}
+    else{
+      bookings = await Booking.find( {
+        type: request.type,
+        endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
 
     });
-     
+    }
+    }
+    if(request.bookingType){
+      if(request?.limit && request.page){
+      bookings = await Booking.find( {
+        bookingType: request.bookingType,
+
+    }).skip((+(request.page) - 1) * (request.limit)).limit((request.limit)).populate("user","name email phone userType").exec();
+  }else{
+    bookings = await Booking.find( {
+      bookingType: request.bookingType,
+
+  });
+  }
+  }
+  if(request.startDate && request.endDate && request.bookingType){
+    const endDate = DateUtils.add(new Date(request.endDate),1,"day");
+    if(request?.limit && request.page){
+    bookings = await Booking.find( {
+      bookingType: request.bookingType,
+      endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
+
+  }).skip((+(request.page) - 1) * (request.limit)).limit((request.limit)).populate("user","name email phone userType").exec();
+}
+else{
+  bookings = await Booking.find( {
+    bookingType: request.bookingType,
+    endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
+
+});
+}
+  }
+  if(request.startDate && request.endDate && request.type && request.bookingType){
+    const endDate = DateUtils.add(new Date(request.endDate),1,"day");
+    if(request?.limit && request.page){
+    bookings = await Booking.find( {
+      type: request.type,
+      bookingType: request.bookingType,
+      endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
+
+  }).skip((+(request.page) - 1) * (request.limit)).limit((request.limit)).populate("user","name email phone userType").exec();}
+  else{
+    bookings = await Booking.find( {
+      type: request.type,
+      bookingType: request.bookingType,
+      endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
+
+  }); 
+  }
+  }
+
+  if(request.type && request.bookingType){
+    if(request?.limit && request.page){
+    bookings = await Booking.find( {
+      type: request.type,
+      bookingType: request.bookingType,
+
+  }).skip((+(request.page) - 1) * (request.limit)).limit((request.limit)).populate("user","name email phone userType").exec();}
+  else{
+    bookings = await Booking.find( {
+      type: request.type,
+      bookingType: request.bookingType,
+
+  });
+  }
+
+  }
+  if(request.bookingType){
+    console.log("ajjj",request.bookingType)
+    if(request.limit && request.page){
+    bookings = await Booking.find( {
+      bookingType: request.bookingType
+  }).skip((+request.page - 1) * request.limit).limit(request.limit).populate("user","name email phone userType").exec();
+  console.log("ajj1",bookings)
+}
+  else{
+    bookings = await Booking.find( {
+      bookingType: request.bookingType
+
+  });
+  console.log("ajj2",bookings)
+  }
+
+  }
+  if(request.type){
+    if(request?.limit && request.page){
+    bookings = await Booking.find( {
+      type: request.type,
+
+  }).skip((+(request.page) - 1) * (request.limit)).limit((request.limit)).populate("user","name email phone userType").exec();}
+  else{
+    bookings = await Booking.find( {
+      type: request.type,
+
+  });
+  }
+
+  }
+
+  console.log("bookings",bookings);
     return bookings.map((booking) => new BookingDto(booking));
   }
 
@@ -182,7 +321,14 @@ return bookList;
     if(booking){
     booking.type = request.type;
     booking.cancelDate = request.cancelDate;
-    booking.bookingAmount = request.bookingAmount;
+    if(request.bookingAmount){
+    booking.bookingAmount =
+    {
+        online : request.bookingAmount.online, 
+        cash: request.bookingAmount.cash,
+        total: request.bookingAmount.online + request.bookingAmount.cash
+    }
+    }
     booking.bookingtype = request.bookingtype;
     booking.deleted = false;
     booking = await booking.save();

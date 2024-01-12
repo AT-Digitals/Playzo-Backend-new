@@ -1,5 +1,4 @@
 import {
-    Allow,
     IsDefined,
     IsEnum,
     IsOptional,
@@ -17,8 +16,12 @@ export class BookingRequestDto {
     @IsOptional()
     cancelDate?: Date;
     
-    @Allow()
-    bookingAmount: number;
+    @IsOptional()
+    bookingAmount?: {
+        online : number, 
+        cash: number,
+        total: number 
+      };
   
     @IsEnum(PaymentType, { message: "Please provide a valid Payment Type" })
     bookingtype: PaymentType;

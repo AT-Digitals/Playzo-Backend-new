@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 
+import { BookingAmount } from "./BookingAmount";
 import { BookingModel } from "./BookingModel";
 import { BookingType } from "./BookingType";
 import MongoDatabase from "../../utils/MongoDatabase";
@@ -21,7 +22,7 @@ const bookingSchema = new Schema({
         enum: [],
         default: PaymentType.Cash,
       },
-      bookingAmount: String,
+      bookingAmount: BookingAmount,
       dateOfBooking:Date,
       startDate:Date,
       endDate:Date,

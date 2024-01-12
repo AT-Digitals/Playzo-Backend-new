@@ -1,4 +1,4 @@
-import { Body, Get, JsonController, QueryParams } from "routing-controllers";
+import { Get, JsonController, QueryParams } from "routing-controllers";
 import { BookingDateFilterRequestDto } from "../../dto/Booking/BookingDateFilterRequestDto";
 import { BookingFilterRequestDto } from "../../dto/Booking/BookingFilterRequestDto";
 import BookingService from "../../services/booking/BookingService";
@@ -22,7 +22,8 @@ export class BookingFilterController {
   }
 
   @Get("/filterDateBookings")
-  public async filterDateBookings(@Body() request: BookingDateFilterRequestDto) {
+  public async filterDateBookings(@QueryParams() request: BookingDateFilterRequestDto) {
+   console.log("cont")
     return this.bookingService.filterDateBookings(request);
   }
 }
