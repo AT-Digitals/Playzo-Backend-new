@@ -16,7 +16,7 @@ export class BookingDto {
   startDate: Date;
   endDate:Date;
   duration:string;
-  court: string;
+  court?: string;
   isAnnual: boolean;
   deleted: boolean;
 

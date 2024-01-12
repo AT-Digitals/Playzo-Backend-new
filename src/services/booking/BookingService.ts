@@ -28,6 +28,8 @@ export default class BookingService {
           { 
             endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
           },
+          {endTime: request.endTime},
+          {startTime: request.startTime},
           {  type: request.type },
         ],
       }
@@ -41,11 +43,15 @@ export default class BookingService {
         let booking = new Booking(request);
         booking.user = request.user;
         booking.dateOfBooking = new Date();
+        if(request.court){
+          booking.court = request.court;
+        }else{
         booking.court = request.type + "court"+ (bookingList.length>0?bookingList.length+1:1);
+        }
         if(request.bookingId!==""){
         booking.bookingId = request.bookingId;
         }
- const diffDuration = moment.duration(moment(request.endDate).diff(moment(request.startDate)));
+        const diffDuration = moment.duration(moment(request.endDate).diff(moment(request.startDate)));
 if(diffDuration.years() > 0){
   booking.isAnnual = true;
 }else{

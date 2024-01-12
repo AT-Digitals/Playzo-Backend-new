@@ -40,4 +40,7 @@ export class BookingRequestDto {
 
     @IsDefined({ message: "End Date is required" })
     endDate:Date;
+
+    @IsOptional()
+    court?:string;
   }
