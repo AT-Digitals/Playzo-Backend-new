@@ -17,6 +17,7 @@ export class BookingDateFilterRequestDto extends PaginationRequestDto {
 
     @IsOptional()
     startTime?: number;
+    
     @IsOptional() @IsDefined({ message: "Booking end Time is required" })
     endTime?: number;
 
@@ -25,6 +26,6 @@ export class BookingDateFilterRequestDto extends PaginationRequestDto {
     type?: BookingType;
 
     @IsOptional()
-    bookingType?: PaymentType;
+    bookingtype?: PaymentType;
    
   }

@@ -13,7 +13,7 @@ export class BookingDto {
     cash: number,
     total: number 
   };
-  bookingType:PaymentType;
+  bookingtype:PaymentType;
   startTime: number;
   endTime: number;
   bookingId?:string;
@@ -32,7 +32,7 @@ export class BookingDto {
       this.dateOfBooking = booking.dateOfBooking;
       this.cancelDate = booking.cancelDate;
       this.bookingAmount = booking.bookingAmount;
-      this.bookingType = booking.bookingtype;
+      this.bookingtype = booking.bookingtype;
       this.startTime = booking.startTime;
       this.endTime = booking.endTime;
       this.deleted = booking.deleted;

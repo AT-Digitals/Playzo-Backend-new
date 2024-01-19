@@ -23,7 +23,16 @@ export class BookingFilterController {
 
   @Get("/filterDateBookings")
   public async filterDateBookings(@QueryParams() request: BookingDateFilterRequestDto) {
-   console.log("cont")
     return this.bookingService.filterDateBookings(request);
+  }
+
+  @Get("/filterPage")
+  public async filterPage(@QueryParams() request: BookingDateFilterRequestDto) {
+    return this.bookingService.getAllTours(request);
+  }
+
+  @Get("/filterBook")
+  public async filterBook(@QueryParams() request: BookingDateFilterRequestDto) {
+    return this.bookingService.getAllFilter(request);
   }
 }
