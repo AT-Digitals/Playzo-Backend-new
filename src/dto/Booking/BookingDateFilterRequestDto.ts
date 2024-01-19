@@ -14,6 +14,9 @@ export class BookingDateFilterRequestDto extends PaginationRequestDto {
 
     @IsOptional()
     endDate?: Date;
+    
+    @IsOptional()
+    timeCreated?:Date;
 
     @IsOptional()
     startTime?: number;
