@@ -5,7 +5,7 @@ import PaginationRequestDto from "../../dto/PaginationRequestDto";
 import EnquiryService from "../../services/enquiry/EnquiryService";
 import { BookingDateFilterRequestDto } from "../../dto/Booking/BookingDateFilterRequestDto";
 
-@JsonController("/enquiryFilter")
+@JsonController("/admin/enquiryFilter")
 @Service()
 export class EnquiryFilterController {
   constructor(private enquiryService: EnquiryService) {}

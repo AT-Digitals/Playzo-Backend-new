@@ -15,7 +15,7 @@ import { Service } from "typedi";
 import UserLoginRequestDto from "../../dto/auth/UserLoginRequestDto";
 import { UserServices } from "../../services/user/UserServices";
 
-@JsonController("")
+@JsonController("/admin")
 @Service()
 export class UserController {
   constructor(private userService: UserServices,private authService: AdminAuthService) {}

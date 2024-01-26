@@ -5,7 +5,7 @@ import { PaymentRequestDto } from "../../dto/payment/PaymentRequestDto";
 import PaymentService from "../../services/payment/PaymentService";
 import { VerifyRequestDto } from "../../dto/payment/VerifyRequestDto";
 
-@JsonController("/payments")
+@JsonController("/admin/payments")
 @Service()
 export class PaymentController {
   constructor(private paymentService: PaymentService) {}

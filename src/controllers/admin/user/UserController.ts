@@ -4,7 +4,7 @@ import { Service } from "typedi";
 import { UserRequestDto } from "../../../dto/user/UserRequestDto";
 import { UserServices } from "../../../services/user/UserServices";
 
-@JsonController("/admins/userSite/users")
+@JsonController("/admin/admins/userSite/users")
 @Service()
 export class UsersController {
   constructor(private usersService: UserServices) {}

@@ -4,7 +4,7 @@ import BookingService from "../../services/booking/BookingService";
 import { Service } from "typedi";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
 
-@JsonController("/bookingFilter")
+@JsonController("/admin/bookingFilter")
 @Service()
 export class BookingFilterController {
   constructor(private bookingService: BookingService) {}

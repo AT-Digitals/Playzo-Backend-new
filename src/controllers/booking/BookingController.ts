@@ -5,7 +5,7 @@ import { BookingRequestDto } from "../../dto/Booking/BookingRequestDto";
 import BookingService from "../../services/booking/BookingService";
 import { Service } from "typedi";
 
-@JsonController("/bookings")
+@JsonController("/admin/bookings")
 @Service()
 export class BookingController {
   constructor(private bookingService: BookingService) {}

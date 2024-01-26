@@ -6,7 +6,7 @@ import { Response } from "express";
 import { Service } from "typedi";
 import UserLoginRequestDto from "../../../dto/auth/UserLoginRequestDto";
 
-@JsonController("/admins")
+@JsonController("/admin/admins")
 @Service()
 export class AdminAuthController {
   constructor(private authService: AdminAuthService) {}

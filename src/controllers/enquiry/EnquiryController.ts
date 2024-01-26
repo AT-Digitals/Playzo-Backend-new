@@ -4,7 +4,7 @@ import { EnquiryRequestDto } from "../../dto/enquiry/EnquiryRequestDto";
 import EnquiryService from "../../services/enquiry/EnquiryService";
 import { Service } from "typedi";
 
-@JsonController("/enquiries")
+@JsonController("/admin/enquiries")
 @Service()
 export class EnquiryController {
   constructor(private enquiryService: EnquiryService) {}
