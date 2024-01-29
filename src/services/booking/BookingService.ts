@@ -1,6 +1,7 @@
 import { AppError } from "../../dto/error/AppError";
 import { AppErrorDto } from "../../dto/error/AppErrorDto";
 import { Booking } from "../../models/booking/Booking";
+import { BookingDateFilterRequestDto } from "../../dto/Booking/BookingDateFilterRequestDto";
 import { BookingDto } from "../../dto/Booking/BookingDto";
 import { BookingModel } from "../../models/booking/BookingModel";
 import { BookingRequestDto } from "../../dto/Booking/BookingRequestDto";
@@ -207,5 +208,181 @@ if(req && req.page && req.limit){
   bookings = await Booking.find( {"$and": [newFilter]}).skip((+req.page - 1) * req.limit).limit(req.limit).populate("user","name email phone userType").exec();
 }
 return bookings.map((booking) => new BookingDto(booking));
+  }
+
+  public async filterBookings(request:BookingDateFilterRequestDto) {
+const bookList:any = [];
+
+if(request.startDate && request.endDate){
+    const endDate = DateUtils.add(new Date(request.endDate),1,"day");
+
+
+const bookingsList =  await Booking.aggregate([
+
+{ $and: [
+          
+  {startDate: {
+      $gte: new Date(request.startDate)
+    }},
+  {endDate: {
+      $lte: new Date(endDate)
+    }},
+   
+    {  type: request.type },
+  ],},
+  // { $match:{ dateOfBooking:{"$gte":new Date(request.startDate),"$lt":new Date(endDate) }}},
+  // { $match:{ type:request.type}},
+  {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",startDate:"$startDate",endDate:"$endDate",type:"$type"},count:{$sum:1}}},
+
+]); 
+bookingsList.filter(async (book)=>{
+const type = request.type as string;
+  if (book["count"] >= bookingLength[type as keyof typeof bookingLength]) {
+  bookList.push({startTime:book._id.startTime,
+       endTime: book._id.endTime,
+       startDate: book._id.startDate,
+       endDate: book._id.endDate,
+        type: book._id.type});
+}
+
+}) ;
+}
+return bookList;
+  }
+
+  public async filterDateBookings(request:BookingDateFilterRequestDto) {
+    console.log("req",request.type);
+    let bookings:BookingModel[] =[];
+
+ if(request.startDate && request.endDate){
+     const endDate = DateUtils.add(new Date(request.endDate),1,"day");
+      if(request?.limit && request.page){
+      bookings = await Booking.find( {
+        endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
+
+    }).skip((+(request.page) - 1) * (request.limit)).limit((request.limit)).populate("user","name email phone userType").exec();
+  }else{
+    bookings = await Booking.find( {
+      endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
+
+  });
+  }
+  }
+
+    if(request.startDate && request.endDate && request.type){
+      const endDate = DateUtils.add(new Date(request.endDate),1,"day");
+      if(request?.limit && request.page){
+      bookings = await Booking.find( {
+        type: request.type,
+        endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
+
+    }).skip((+(request.page) - 1) * (request.limit)).limit((request.limit)).populate("user","name email phone userType").exec();}
+    else{
+      bookings = await Booking.find( {
+        type: request.type,
+        endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
+
+    });
+    }
+    }
+    if(request.bookingtype){
+      if(request?.limit && request.page){
+      bookings = await Booking.find( {
+        bookingtype: request.bookingtype,
+
+    }).skip((+(request.page) - 1) * (request.limit)).limit((request.limit)).populate("user","name email phone userType").exec();
+  }else{
+    bookings = await Booking.find( {
+      bookingtype: request.bookingtype,
+
+  });
+  }
+  }
+  if(request.startDate && request.endDate && request.bookingtype){
+    const endDate = DateUtils.add(new Date(request.endDate),1,"day");
+    if(request?.limit && request.page){
+    bookings = await Booking.find( {
+      bookingtype: request.bookingtype,
+      endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
+
+  }).skip((+(request.page) - 1) * (request.limit)).limit((request.limit)).populate("user","name email phone userType").exec();
+}
+else{
+  bookings = await Booking.find( {
+    bookingtype: request.bookingtype,
+    endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
+
+});
+}
+  }
+  if(request.startDate && request.endDate && request.type && request.bookingtype){
+    const endDate = DateUtils.add(new Date(request.endDate),1,"day");
+    if(request?.limit && request.page){
+    bookings = await Booking.find( {
+      type: request.type,
+      bookingtype: request.bookingtype,
+      endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
+
+  }).skip((+(request.page) - 1) * (request.limit)).limit((request.limit)).populate("user","name email phone userType").exec();}
+  else{
+    bookings = await Booking.find( {
+      type: request.type,
+      bookingtype: request.bookingtype,
+      endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
+
+  }); 
+  }
+  }
+
+  if(request.type && request.bookingtype){
+    if(request?.limit && request.page){
+    bookings = await Booking.find( {
+      type: request.type,
+      bookingtype: request.bookingtype,
+
+  }).skip((+(request.page) - 1) * (request.limit)).limit((request.limit)).populate("user","name email phone userType").exec();}
+  else{
+    bookings = await Booking.find( {
+      type: request.type,
+      bookingtype: request.bookingtype,
+
+  });
+  }
+
+  }
+  if(request.bookingtype){
+    console.log("ajjj",request.bookingtype)
+    if(request.limit && request.page){
+    bookings = await Booking.find( {
+      bookingtype: request.bookingtype
+  }).skip((+request.page - 1) * request.limit).limit(request.limit).populate("user","name email phone userType").exec();
+  console.log("ajj1",bookings)
+}
+  else{
+    bookings = await Booking.find( {
+      bookingtype: request.bookingtype
+
+  });
+  console.log("ajj2",bookings)
+  }
+
+  }
+  if(request.type){
+    if(request?.limit && request.page){
+    bookings = await Booking.find( {
+      type: request.type,
+
+  }).skip((+(request.page) - 1) * (request.limit)).limit((request.limit)).populate("user","name email phone userType").exec();}
+  else{
+    bookings = await Booking.find( {
+      type: request.type,
+
+  });
+  }
+
+  }
+
+  console.log("bookings",bookings);
+    return bookings.map((booking) => new BookingDto(booking));
   }
 }
