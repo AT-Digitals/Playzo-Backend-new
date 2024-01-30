@@ -3,7 +3,6 @@ import { BookingDateFilterRequestDto } from "../../dto/Booking/BookingDateFilter
 import BookingService from "../../services/booking/BookingService";
 import { Service } from "typedi";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
-import { BookingFilterRequestDto } from "../../dto/Booking/BookingFilterRequestDto";
 
 @JsonController("/admin/bookingFilter")
 @Service()

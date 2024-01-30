@@ -3,13 +3,13 @@ import { AppErrorDto } from "../../dto/error/AppErrorDto";
 import { Booking } from "../../models/booking/Booking";
 import { BookingDateFilterRequestDto } from "../../dto/Booking/BookingDateFilterRequestDto";
 import { BookingDto } from "../../dto/Booking/BookingDto";
+import { BookingLength } from "../../enum/BookingLength";
 import { BookingModel } from "../../models/booking/BookingModel";
 import { BookingRequestDto } from "../../dto/Booking/BookingRequestDto";
 import DateUtils from "../../utils/DateUtils";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
 import { PaymentType } from "../../models/booking/PaymentType";
 import { Service } from "typedi";
-import { bookingLength } from "../../enum/BookingLength";
 import moment from "moment";
 
 // import twilio from "twilio";
@@ -43,9 +43,10 @@ export default class BookingService {
         ],
       }
       );
-      const type = request.type as string;
+      // const type = request.type as string;
+      // BookingLength[type as keyof typeof BookingLength]
 
-      if (bookingList.length >= bookingLength[type as keyof typeof bookingLength]) {
+      if (bookingList.length >= BookingLength[request.type]) {
         throw new AppErrorDto(AppError.ALREADY_BOOKED);
       }
       else{
@@ -210,41 +211,33 @@ if(req && req.page && req.limit){
 return bookings.map((booking) => new BookingDto(booking));
   }
 
-  public async filterBookings(request:BookingDateFilterRequestDto) {
+public async filterBookings(request:BookingDateFilterRequestDto) {
 const bookList:any = [];
-
-if(request.startDate && request.endDate){
+if(request.startDate && request.endDate && request.type){
     const endDate = DateUtils.add(new Date(request.endDate),1,"day");
-
-
 const bookingsList =  await Booking.aggregate([
 
-{ $and: [
-          
-  {startDate: {
-      $gte: new Date(request.startDate)
-    }},
-  {endDate: {
-      $lte: new Date(endDate)
-    }},
-   
-    {  type: request.type },
-  ],},
-  // { $match:{ dateOfBooking:{"$gte":new Date(request.startDate),"$lt":new Date(endDate) }}},
-  // { $match:{ type:request.type}},
-  {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",startDate:"$startDate",endDate:"$endDate",type:"$type"},count:{$sum:1}}},
+  { $match:{ type:request.type}},
+  { $match: {startDate: {
+    $gte: new Date(request.startDate)
+  }}},
+  { $match:{endDate: {
+    $lte: new Date(endDate)
+  }}},
+  
+  {"$group" : {_id:{startDate:"$startDate",endDate:"$endDate",startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},
 
 ]); 
 bookingsList.filter(async (book)=>{
-const type = request.type as string;
-  if (book["count"] >= bookingLength[type as keyof typeof bookingLength]) {
+if (request.type !== undefined) {
+  if (book["count"] >= BookingLength[request.type]) {
   bookList.push({startTime:book._id.startTime,
        endTime: book._id.endTime,
        startDate: book._id.startDate,
        endDate: book._id.endDate,
         type: book._id.type});
 }
-
+}
 }) ;
 }
 return bookList;

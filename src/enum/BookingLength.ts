@@ -1,8 +1,9 @@
-export enum bookingLength {
-    "boardGame" = 5,
-    "turf" =2,
-    "playstaion" =2,
-    "cricketNet" =1,
-    "ballMachine" =1,
-    "badminton" =2
-  }
+  export const BookingLength = {
+    cricketNet : 1,
+    ballMachine : 1,
+    turf : 1,
+    playstation : 2,
+    badminton : 2,
+    boardGame : 5,
+
+};
