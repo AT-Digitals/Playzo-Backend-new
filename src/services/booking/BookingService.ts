@@ -225,7 +225,7 @@ const bookingsList =  await Booking.aggregate([
     $lte: new Date(endDate)
   }}},
   
-  {"$group" : {_id:{startDate:"$startDate",endDate:"$endDate",startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},
+  {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},
 
 ]); 
 bookingsList.filter(async (book)=>{
