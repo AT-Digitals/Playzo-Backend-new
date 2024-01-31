@@ -1,10 +1,9 @@
+import { BookingType } from "../booking/BookingType";
 import { Document } from "mongoose";
-import { PaymentType } from "../booking/PaymentType";
 
 export interface AmountModel extends Document {
-      bookingId: string;
       bookingAmount: number,
-      bookingtype: PaymentType,
+      bookingtype: BookingType,
       deleted: boolean
 
 }

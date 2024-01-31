@@ -1,20 +1,16 @@
 import {
     Allow,
-    IsDefined,
     IsEnum,
 } from "class-validator";
 
-import { PaymentType } from "../../models/booking/PaymentType";
+import { BookingType } from "../../models/booking/BookingType";
 
 export class AmountRequestDto {
     
     @Allow()
     bookingAmount: number;
   
-    @IsEnum(PaymentType, { message: "Please provide a valid Payment Type" })
-    bookingtype: PaymentType;
-    
-    @IsDefined({ message: "Booking Date is required" })
-    bookingId:string;
+    @IsEnum(BookingType, { message: "Please provide a valid Payment Type" })
+    bookingtype: BookingType;
 
   }

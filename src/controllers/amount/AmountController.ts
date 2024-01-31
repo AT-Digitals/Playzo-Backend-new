@@ -25,9 +25,9 @@ export class AmountController {
   }
 
   @Get()
-  public async getAllBookings() {
-     const bookings = this.amountService.getAll();
-     return bookings;
+  public async getAllAmounts() {
+     const amounts = this.amountService.getAll();
+     return amounts;
   }
 
   @Put()

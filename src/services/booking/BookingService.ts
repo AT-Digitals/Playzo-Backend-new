@@ -1,6 +1,8 @@
+import { Amount } from "../../models/amount/Amount";
 import { AppError } from "../../dto/error/AppError";
 import { AppErrorDto } from "../../dto/error/AppErrorDto";
 import { Booking } from "../../models/booking/Booking";
+import { BookingAmountRequestDto } from "../../dto/Booking/BookingAmountRequestDto";
 import { BookingDateFilterRequestDto } from "../../dto/Booking/BookingDateFilterRequestDto";
 import { BookingDto } from "../../dto/Booking/BookingDto";
 import { BookingLength } from "../../enum/BookingLength";
@@ -67,19 +69,35 @@ if(diffDuration.years() > 0){
 }else{
   booking.isAnnual = false;
 }
-booking.duration = moment(request.endDate).diff(moment(request.startDate),"days")+"days";
+booking.duration = moment(endDate).diff(moment(request.startDate),"days")+"days";
+//Amount Calculations
+const duration = moment.duration(moment(request.endTime).diff(moment(request.startTime)));
+const hours = parseInt(duration.asHours().toString());
+const minutes = parseInt(duration.asMinutes().toString()) % 60;
+const totalmm = parseInt(booking.duration) * minutes;
+const mm = totalmm % 60;
+const hh = Math.floor(totalmm / 60);
+const GetAmount = await Amount.find({bookingtype : request.type});
+const amountValue = parseInt(GetAmount[0].bookingAmount.toString());
+const finalMinutes = mm > 0 ? (amountValue/2) : 0;
+const totalHH = hours*parseInt(booking.duration);
+const finalHour = (totalHH + hh) * amountValue ;
+
+const totalCash = finalMinutes+finalHour;
+const onlineAmount = totalCash*(30/100);
+
 if(request.bookingtype === PaymentType.Cash){
 
   booking.bookingAmount = {
         online : 0, 
-        cash: 3000,
-        total: 3000
+        cash: totalCash,
+        total: totalCash
   };
 }else{
   booking.bookingAmount = {
-    online : 3000, 
+    online : onlineAmount, 
     cash: 0,
-    total: 3000
+    total: onlineAmount
 };
 }
         booking = await booking.save();
@@ -133,13 +151,29 @@ if(request.bookingtype === PaymentType.Cash){
     if(request.bookingAmount){
     booking.bookingAmount =
     {
-        online : request.bookingAmount.online, 
+        online : 0, 
         cash: request.bookingAmount.cash,
-        total: request.bookingAmount.online + request.bookingAmount.cash
+        total: parseInt(request.bookingAmount.cash.toString()) + 0
     }
     }
     booking.bookingtype = request.bookingtype;
     booking.deleted = false;
+    booking = await booking.save();
+    }
+    return booking;
+  }
+
+  async updateAmount(id: string, request: BookingAmountRequestDto) {
+    let booking = await Booking.findOne({id});
+    if(booking){
+    if(request.bookingAmount){
+    booking.bookingAmount =
+    {
+        online :request.bookingAmount.online, 
+        cash: request.bookingAmount.cash,
+        total: parseInt(request.bookingAmount.cash.toString()) + parseInt(request.bookingAmount.online.toString())
+    }
+    }
     booking = await booking.save();
     }
     return booking;

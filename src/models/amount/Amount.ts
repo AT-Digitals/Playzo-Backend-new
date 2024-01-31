@@ -1,20 +1,15 @@
 import { Schema, model } from "mongoose";
 
 import { AmountModel } from "./AmountModel";
+import { BookingType } from "../booking/BookingType";
 import MongoDatabase from "../../utils/MongoDatabase";
-import { PaymentType } from "../booking/PaymentType";
 
 const amountSchema = new Schema({
 
-      bookingId: {
-        type: Schema.Types.ObjectId,
-        ref: "bookings"
-    },
-     
       bookingtype:{
         type: String,
         enum: [],
-        default: PaymentType.Cash,
+        default: BookingType.Turf,
       },
       bookingAmount: String,
       deleted: Boolean
