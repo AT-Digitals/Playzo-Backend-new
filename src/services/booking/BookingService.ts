@@ -14,11 +14,6 @@ import { PaymentType } from "../../models/booking/PaymentType";
 import { Service } from "typedi";
 import moment from "moment";
 
-// import twilio from "twilio";
-
-// const accountSid = "AC218186c205d28b50087564e88e42af25";
-// const authToken = "af3c8b3946a478552fc1986072517b7e";
-// const client = twilio(accountSid, authToken);
 @Service()
 export default class BookingService {
 
@@ -28,84 +23,70 @@ export default class BookingService {
       const bookingList = await Booking.find(
       {
         $and: [
-          
-        {startDate: {
-            $gte: new Date(request.startDate)
-          }},
-        {endDate: {
-            $lte: new Date(endDate)
-          }},
           {startTime: {
-            $gte: request.startTime
+            $lte: request.endTime
           }},
         {endTime: {
-            $lte: request.endTime
+            $gte: request.startTime
           }},
           {  type: request.type },
         ],
       }
       );
-      // const type = request.type as string;
-      // BookingLength[type as keyof typeof BookingLength]
 
       if (bookingList.length >= BookingLength[request.type]) {
         throw new AppErrorDto(AppError.ALREADY_BOOKED);
       }
-      else{
+      else {
         let booking = new Booking(request);
         booking.user = request.user;
         booking.dateOfBooking = new Date();
         if(request.court){
+          //check if that court is already booked or not, by iterating bookungList array. If it is already booked then throw error
           booking.court = request.court;
         }else{
-        booking.court = request.type + "court"+ (bookingList.length>0?bookingList.length+1:1);
+          booking.court = `${(bookingList.length>0?bookingList.length+1:1)}`;
         }
         if(request.bookingId!==""){
         booking.bookingId = request.bookingId;
         }
         const diffDuration = moment.duration(moment(request.endDate).diff(moment(request.startDate)));
-if(diffDuration.years() > 0){
-  booking.isAnnual = true;
-}else{
-  booking.isAnnual = false;
-}
-booking.duration = moment(endDate).diff(moment(request.startDate),"days")+"days";
-//Amount Calculations
-const duration = moment.duration(moment(request.endTime).diff(moment(request.startTime)));
-const hours = parseInt(duration.asHours().toString());
-const minutes = parseInt(duration.asMinutes().toString()) % 60;
-const totalmm = parseInt(booking.duration) * minutes;
-const mm = totalmm % 60;
-const hh = Math.floor(totalmm / 60);
-const GetAmount = await Amount.find({bookingtype : request.type});
-const amountValue = parseInt(GetAmount[0].bookingAmount.toString());
-const finalMinutes = mm > 0 ? (amountValue/2) : 0;
-const totalHH = hours*parseInt(booking.duration);
-const finalHour = (totalHH + hh) * amountValue ;
+        if(diffDuration.years() > 0){
+          booking.isAnnual = true;
+        }else{
+          booking.isAnnual = false;
+        }
+        booking.duration = moment(endDate).diff(moment(request.startDate),"days")+"days";
+        //Amount Calculations
+        const duration = moment.duration(moment(request.endTime).diff(moment(request.startTime)));
+        const hours = parseInt(duration.asHours().toString());
+        const minutes = parseInt(duration.asMinutes().toString()) % 60;
+        const totalmm = parseInt(booking.duration) * minutes;
+        const mm = totalmm % 60;
+        const hh = Math.floor(totalmm / 60);
+        const GetAmount = await Amount.find({bookingtype : request.type});
+        const amountValue = parseInt(GetAmount[0].bookingAmount.toString());
+        const finalMinutes = mm > 0 ? (amountValue/2) : 0;
+        const totalHH = hours*parseInt(booking.duration);
+        const finalHour = (totalHH + hh) * amountValue ;
 
-const totalCash = finalMinutes+finalHour;
-const onlineAmount = totalCash*(30/100);
+        const totalCash = finalMinutes+finalHour;
+        const onlineAmount = totalCash*(30/100);
 
-if(request.bookingtype === PaymentType.Cash){
-
-  booking.bookingAmount = {
-        online : 0, 
-        cash: totalCash,
-        total: totalCash
-  };
-}else{
-  booking.bookingAmount = {
-    online : onlineAmount, 
-    cash: 0,
-    total: onlineAmount
-};
-}
+        if(request.bookingtype === PaymentType.Cash){
+          booking.bookingAmount = {
+                online : 0, 
+                cash: totalCash,
+                total: totalCash
+          };
+        }else{
+          booking.bookingAmount = {
+            online : onlineAmount, 
+            cash: 0,
+            total: onlineAmount
+          };
+        }
         booking = await booking.save();
-          //  { 
-  //   endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
-  // },
-   // {endTime: request.endTime},
-          // {startTime: request.startTime},
           
       // await client.messages
       // .create({
@@ -142,7 +123,6 @@ if(request.bookingtype === PaymentType.Cash){
     return bookings.map((booking) => new BookingDto(booking));
   }
 
-
   async updateById(id: string, request: BookingRequestDto) {
     let booking = await Booking.findOne({id});
     if(booking){
@@ -154,7 +134,7 @@ if(request.bookingtype === PaymentType.Cash){
         online : 0, 
         cash: request.bookingAmount.cash,
         total: parseInt(request.bookingAmount.cash.toString()) + 0
-    }
+    };
     }
     booking.bookingtype = request.bookingtype;
     booking.deleted = false;
@@ -172,7 +152,7 @@ if(request.bookingtype === PaymentType.Cash){
         online :request.bookingAmount.online, 
         cash: request.bookingAmount.cash,
         total: parseInt(request.bookingAmount.cash.toString()) + parseInt(request.bookingAmount.online.toString())
-    }
+    };
     }
     booking = await booking.save();
     }
@@ -378,19 +358,19 @@ else{
 
   }
   if(request.bookingtype){
-    console.log("ajjj",request.bookingtype)
+    console.log("ajjj",request.bookingtype);
     if(request.limit && request.page){
     bookings = await Booking.find( {
       bookingtype: request.bookingtype
   }).skip((+request.page - 1) * request.limit).limit(request.limit).populate("user","name email phone userType").exec();
-  console.log("ajj1",bookings)
+  console.log("ajj1",bookings);
 }
   else{
     bookings = await Booking.find( {
       bookingtype: request.bookingtype
 
   });
-  console.log("ajj2",bookings)
+  console.log("ajj2",bookings);
   }
 
   }
