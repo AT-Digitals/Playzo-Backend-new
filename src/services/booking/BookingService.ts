@@ -108,7 +108,7 @@ export default class BookingService {
   }
 
   async findById(id: string) {
-    const booking = await Booking.findOne({ id });
+    const booking = await Booking.findOne({ _id:id });
     if (!booking) {
       throw new AppErrorDto(AppError.NOT_FOUND);
     }
@@ -151,8 +151,7 @@ export default class BookingService {
   }
 
   async updateAmount(id: string, request: BookingAmountRequestDto) {
-    let booking = await Booking.findOne({id});
-    if(booking){
+    let booking = await this.findById(id);
     if(request.bookingAmount){
     booking.bookingAmount =
     {
@@ -162,7 +161,6 @@ export default class BookingService {
     };
     }
     booking = await booking.save();
-    }
     return booking;
   }
 

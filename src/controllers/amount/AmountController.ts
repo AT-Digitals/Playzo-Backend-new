@@ -1,5 +1,5 @@
 import { Body, Delete, Get, JsonController, Param, Post, Put } from "routing-controllers";
-import { Amount } from "../../models/amount/Amount";
+
 import { Service } from "typedi";
 import AmountService from "../../services/amount/AmountService";
 import { AmountRequestDto } from "../../dto/amount/AmountRequestDto";
@@ -20,8 +20,8 @@ export class AmountController {
 
   @Get("/:amountId")
   public async findById(@Param("amountId") amountId: string) {
-    const amount =  this.amountService.findById(amountId);
-    return new Amount(amount);
+    const amount =  await this.amountService.findById(amountId);
+    return new AmountDto(amount);
   }
 
   @Get()
@@ -30,18 +30,19 @@ export class AmountController {
      return amounts;
   }
 
-  @Put()
+  @Put("/:amountId")
   public async updateById(
     @Param("amountId") amountId: string,
     @Body() newPrice: AmountRequestDto
   ) {
+    console.log("amount")
     const amount = await this.amountService.updateById(amountId, newPrice);
-    return new Amount(amount);
+    return new AmountDto(amount);
   }
 
   @Delete()
   public async deleteById(@Param("amountId") amountId: string) {
     const amount = await this.amountService.deleteById(amountId);
-    return new Amount(amount);
+    return new AmountDto(amount);
   }
 }

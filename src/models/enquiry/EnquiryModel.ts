@@ -5,5 +5,6 @@ export interface EnquiryModel extends Document {
   userEmail: string,
   phoneNumber: number, 
   enquiryMessage?: string,
-  deleted: boolean;
+  dateOfEnquiry:Date,
+  deleted: boolean
 }

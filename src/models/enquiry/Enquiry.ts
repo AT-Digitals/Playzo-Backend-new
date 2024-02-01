@@ -8,6 +8,7 @@ const enquirySchema = new Schema({
   userEmail: String,
   phoneNumber: Number, 
   enquiryMessage: String,
+  dateOfEnquiry:Date,
   deleted: false
 
 });

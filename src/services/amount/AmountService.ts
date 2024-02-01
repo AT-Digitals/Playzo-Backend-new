@@ -18,7 +18,7 @@ export default class AmountService {
   }
 
   async findById(id: string) {
-    const amount = await Amount.findOne({ id });
+    const amount = await Amount.findOne({_id:id});
     if (!amount) {
       throw new AppErrorDto(AppError.NOT_FOUND);
     }
@@ -33,22 +33,27 @@ export default class AmountService {
   }
 
   async updateById(id: string, request: AmountRequestDto) {
-    let amount = await Amount.findOne({id});
-    if(amount){
+    console.log()
+    let amount = await this.findById(id);
+    if (!amount) {
+      throw new AppErrorDto(AppError.NOT_FOUND);
+    }
     amount.bookingAmount = request.bookingAmount;
     amount.bookingtype = request.bookingtype;
+    amount.court = request.court;
     amount.deleted = false;
     amount = await amount.save();
-    }
+    console.log("amount")
     return amount;
   }
 
   async deleteById(id: string) {
-    let amount = await Amount.findOne({id});
-    if(amount){
+    let amount = await this.findById(id);
+    if (!amount) {
+      throw new AppErrorDto(AppError.NOT_FOUND);
+    }
     amount.deleted = true;
     amount = await amount.save();
-    }
     return amount;
   }
 }

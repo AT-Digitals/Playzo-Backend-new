@@ -22,8 +22,8 @@ export class BookingController {
 
   @Get("/:bookingId")
   public async findById(@Param("bookingId") bookingId: string) {
-    const booking =  this.bookingService.findById(bookingId);
-    return new Booking(booking);
+    const booking =  await this.bookingService.findById(bookingId);
+    return new BookingDto(booking);
   }
 
   @Get()
@@ -32,7 +32,7 @@ export class BookingController {
      return bookings;
   }
 
-  @Put()
+  @Put("/:bookingId")
   public async updateById(
     @Param("bookingId") bookingId: string,
     @Body() newPrice: BookingRequestDto
