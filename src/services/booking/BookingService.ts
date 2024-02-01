@@ -41,9 +41,16 @@ export default class BookingService {
         let booking = new Booking(request);
         booking.user = request.user;
         booking.dateOfBooking = new Date();
-        if(request.court){
+        if(request.court!==undefined){
+          bookingList.map((bookingData)=>{
+            if(bookingData.court === request.court){
+              throw new AppErrorDto("Court already booked"); 
+            }else{
+              booking.court = request.court;
+
+            }
+          });
           //check if that court is already booked or not, by iterating bookungList array. If it is already booked then throw error
-          booking.court = request.court;
         }else{
           booking.court = `${(bookingList.length>0?bookingList.length+1:1)}`;
         }
