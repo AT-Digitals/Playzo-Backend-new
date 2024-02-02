@@ -20,19 +20,42 @@ export default class BookingService {
   async create(request: BookingRequestDto) {
    const endDate = DateUtils.add(new Date(request.endDate),1,"day");
 
-      const bookingList = await Booking.find(
-      {
-        $and: [
-          {startTime: {
-            $lte: request.endTime
-          }},
-        {endTime: {
-            $gte: request.startTime
-          }},
-          {  type: request.type },
-        ],
-      }
-      );
+      // const bookingList = await Booking.find(
+      // {
+      //   $and: [
+      //     {startTime: {
+      //       $lte: request.endTime
+      //     }},
+      //   {endTime: {
+      //       $gte: request.startTime
+      //     }},
+      //     {  type: request.type },
+      //   ],
+      // }
+      // );
+
+      const result = await Booking.find(
+        {
+          $and: [
+            {startDate: {
+              $gte: new Date(request.startDate)
+            }},
+          {endDate: {
+            $lte: new Date(endDate)
+            }},
+            {  type: request.type },
+          ],
+        }
+        );
+
+//   bookingList.map((list)=>{
+//   if(list.startTime <= request.startTime && list.endTime >= request.endTime){
+
+//   }
+
+// });
+
+const bookingList = result.filter((list) => (request.startTime <= list.startTime && request.endTime >= list.endTime)||(request.startTime >= list.startTime && request.endTime <= list.endTime)||(request.startTime >= list.startTime && request.endTime >= list.endTime)||(request.startTime <= list.startTime && request.endTime <= list.endTime));
 
       if (bookingList.length >= BookingLength[request.type]) {
         throw new AppErrorDto(AppError.ALREADY_BOOKED);
@@ -41,19 +64,34 @@ export default class BookingService {
         let booking = new Booking(request);
         booking.user = request.user;
         booking.dateOfBooking = new Date();
-        if(request.court!==undefined){
-          bookingList.map((bookingData)=>{
+     
+        const courtList =  await bookingList.map((bookingData)=>{
             if(bookingData.court === request.court){
-              throw new AppErrorDto("Court already booked"); 
-            }else{
-              booking.court = request.court;
-
+              throw new AppErrorDto("This Court already booked. Please choose another Court"); 
             }
+            return bookingData;
           });
+        if(request.court!==undefined){
+          booking.court = request.court;
           //check if that court is already booked or not, by iterating bookungList array. If it is already booked then throw error
+        }else{
+          const finalCourt= courtList.filter((countCourt)=>{
+return countCourt.court&& parseInt(countCourt.court)<=BookingLength[request.type];
+          });
+          if(finalCourt.length > 0){
+            finalCourt.map((courtData)=>{ 
+              for(let i =1;i<=BookingLength[request.type];i++){
+if(courtData.court && parseInt(courtData.court)!==i){
+  booking.court = i.toString();
+
+}
+              }
+          });
+        
         }else{
           booking.court = `${(bookingList.length>0?bookingList.length+1:1)}`;
         }
+      }
         if(request.bookingId!==""){
         booking.bookingId = request.bookingId;
         }
@@ -106,6 +144,7 @@ export default class BookingService {
       }
       // "whatsapp:+12059734320",
   }
+
 
   async findById(id: string) {
     const booking = await Booking.findOne({ _id:id });
