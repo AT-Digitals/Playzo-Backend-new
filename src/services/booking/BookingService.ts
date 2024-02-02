@@ -231,6 +231,17 @@ if(courtData.court && parseInt(courtData.court)!==i){
     newFilter.endDate = {
       $lte: new Date(req.endDate)
     };
+ }else{
+  if(req.startDate){
+    newFilter.startDate= {
+      $gte: new Date(req.startDate)
+    };
+  }
+  if(req.endDate){
+    newFilter.endDate = {
+      $lte: new Date(req.endDate)
+    };
+  }
  }
 
  const bookings = await Booking.find({"$and": [newFilter]}).populate("user","name email phone userType").exec();
@@ -257,6 +268,17 @@ delete newFilter.limit;
       newFilter.endDate = {
         $lte: new Date(req.endDate)
       };
+   }else{
+    if(req.startDate){
+      newFilter.startDate= {
+        $gte: new Date(req.startDate)
+      };
+    }
+    if(req.endDate){
+      newFilter.endDate = {
+        $lte: new Date(req.endDate)
+      };
+    }
    }
  
    console.log("a",newFilter);
