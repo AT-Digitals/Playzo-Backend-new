@@ -20,33 +20,33 @@ export default class BookingService {
   async create(request: BookingRequestDto) {
    const endDate = DateUtils.add(new Date(request.endDate),1,"day");
 
-      // const bookingList = await Booking.find(
-      // {
-      //   $and: [
-      //     {startTime: {
-      //       $lte: request.endTime
-      //     }},
-      //   {endTime: {
-      //       $gte: request.startTime
-      //     }},
-      //     {  type: request.type },
-      //   ],
-      // }
-      // );
+      const bookingList = await Booking.find(
+      {
+        $and: [
+          {startTime: {
+            $lte: request.endTime
+          }},
+        {endTime: {
+            $gte: request.startTime
+          }},
+          {  type: request.type },
+        ],
+      }
+      );
 
-      const result = await Booking.find(
-        {
-          $and: [
-            {startDate: {
-              $gte: new Date(request.startDate)
-            }},
-          {endDate: {
-            $lte: new Date(endDate)
-            }},
-            {  type: request.type },
-          ],
-        }
-        );
+      // const result = await Booking.find(
+      //   {
+      //     $and: [
+      //       {startDate: {
+      //         $gte: new Date(request.startDate)
+      //       }},
+      //     {endDate: {
+      //       $lte: new Date(endDate)
+      //       }},
+      //       {  type: request.type },
+      //     ],
+      //   }
+      //   );
 
 //   bookingList.map((list)=>{
 //   if(list.startTime <= request.startTime && list.endTime >= request.endTime){
@@ -55,7 +55,7 @@ export default class BookingService {
 
 // });
 
-const bookingList = result.filter((list) => (request.startTime <= list.startTime && request.endTime >= list.endTime)||(request.startTime >= list.startTime && request.endTime <= list.endTime)||(request.startTime >= list.startTime && request.endTime >= list.endTime)||(request.startTime <= list.startTime && request.endTime <= list.endTime));
+// const bookingList = result.filter((list) => (request.startTime <= list.startTime && request.endTime >= list.endTime)||(request.startTime >= list.startTime && request.endTime <= list.endTime)||(request.startTime >= list.startTime && request.endTime >= list.endTime)||(request.startTime <= list.startTime && request.endTime <= list.endTime));
 
       if (bookingList.length >= BookingLength[request.type]) {
         throw new AppErrorDto(AppError.ALREADY_BOOKED);
