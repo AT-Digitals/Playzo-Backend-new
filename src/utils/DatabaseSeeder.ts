@@ -1,9 +1,13 @@
 import { AdminRequestDto } from "../dto/user/AdminRequestDto";
 import { AdminUser } from "../models/admin/AdminUser";
+import { Amount } from "../models/amount/Amount";
+import { AmountModel } from "../models/amount/AmountModel";
+import { BookingType } from "../models/booking/BookingType";
 
 export class DatabaseSeeder {
   public static async init() {
     DatabaseSeeder.seedAdminTable();
+    DatabaseSeeder.seedAmountTable();
   }
 
   public static async seedAdminTable() {
@@ -31,5 +35,58 @@ export class DatabaseSeeder {
       console.log("Created default admin user");
     }
     return;
+  }
+
+  public static async seedAmountTable() {
+   const amountCount = await Amount.countDocuments({});
+   if(amountCount === 0){
+    const defaultAmount: AmountModel[] = [
+      {
+        bookingAmount: 100,
+        bookingtype: BookingType.Badminton,
+        court:1,
+        deleted: false
+      } as AmountModel,
+      {
+        bookingAmount: 100,
+        bookingtype: BookingType.BallMachine,
+        court: 1,
+        deleted: false
+      } as AmountModel,
+      {
+        bookingAmount: 100,
+        bookingtype: BookingType.BoardGame,
+        court: 1,
+        deleted: false
+      } as AmountModel,
+      {
+        bookingAmount: 100,
+        bookingtype: BookingType.CricketNet,
+        court: 1,
+        deleted: false
+      } as AmountModel,
+      {
+        bookingAmount: 100,
+        bookingtype: BookingType.Playstaion,
+        court: 1,
+        deleted: false
+      } as AmountModel,
+      {
+        bookingAmount: 100,
+        bookingtype: BookingType.Turf,
+        court: 1,
+        deleted: false
+      } as AmountModel,
+    ]; 
+    Amount.insertMany(defaultAmount)
+    .then(() => {
+      console.log("created default Amount Documents");
+      
+    })
+    .catch(err => {
+      console.log("error during Amount bulkInsert", err);
+    });
+    return;
+   }
   }
 }

@@ -12,6 +12,7 @@ import DateUtils from "../../utils/DateUtils";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
 import { PaymentType } from "../../models/booking/PaymentType";
 import { Service } from "typedi";
+import { convertToNum } from "../../utils/helpFunc";
 import moment from "moment";
 
 @Service()
@@ -24,38 +25,15 @@ export default class BookingService {
       {
         $and: [
           {startTime: {
-            $lte: request.endTime
+            $lt: request.endTime
           }},
         {endTime: {
-            $gte: request.startTime
+            $gt: request.startTime
           }},
           {  type: request.type },
         ],
       }
       );
-
-      // const result = await Booking.find(
-      //   {
-      //     $and: [
-      //       {startDate: {
-      //         $gte: new Date(request.startDate)
-      //       }},
-      //     {endDate: {
-      //       $lte: new Date(endDate)
-      //       }},
-      //       {  type: request.type },
-      //     ],
-      //   }
-      //   );
-
-//   bookingList.map((list)=>{
-//   if(list.startTime <= request.startTime && list.endTime >= request.endTime){
-
-//   }
-
-// });
-
-// const bookingList = result.filter((list) => (request.startTime <= list.startTime && request.endTime >= list.endTime)||(request.startTime >= list.startTime && request.endTime <= list.endTime)||(request.startTime >= list.startTime && request.endTime >= list.endTime)||(request.startTime <= list.startTime && request.endTime <= list.endTime));
 
       if (bookingList.length >= BookingLength[request.type]) {
         throw new AppErrorDto(AppError.ALREADY_BOOKED);
@@ -64,65 +42,53 @@ export default class BookingService {
         let booking = new Booking(request);
         booking.user = request.user;
         booking.dateOfBooking = new Date();
-     
-        const courtList =  await bookingList.map((bookingData)=>{
+
+        if(request.court !== undefined && request.court !== ""){
+           //check if that court is already booked or not, by iterating bookungList array. If it is already booked then throw error
+          bookingList.forEach((bookingData)=>{
             if(bookingData.court === request.court){
               throw new AppErrorDto("This Court already booked. Please choose another Court"); 
             }
-            return bookingData;
           });
-        if(request.court!==undefined){
-          booking.court = request.court;
-          //check if that court is already booked or not, by iterating bookungList array. If it is already booked then throw error
-        }else{
-          const finalCourt= courtList.filter((countCourt)=>{
-return countCourt.court&& parseInt(countCourt.court)<=BookingLength[request.type];
-          });
-          if(finalCourt.length > 0){
-            finalCourt.map((courtData)=>{ 
-              for(let i =1;i<=BookingLength[request.type];i++){
-if(courtData.court && parseInt(courtData.court)!==i){
-  booking.court = i.toString();
 
-}
-              }
-          });
-        
+          booking.court = request.court;
         }else{
-          booking.court = `${(bookingList.length>0?bookingList.length+1:1)}`;
+          //find the first missing court number
+          let courtNumber = null;
+          for (let i = 1; i <= BookingLength[request.type]; i++) {
+            for (let j = 0; j < bookingList.length; j++) {
+              if(bookingList[j].court && convertToNum(bookingList[j].court) !== i){
+                courtNumber = i.toString();
+                booking.court = i.toString();
+                break;
+              }
+            }
+            if(courtNumber){
+              break;
+            }
+          }
+
+          if(!courtNumber){
+            booking.court = "1";
+          }
+          
         }
-      }
-        if(request.bookingId!==""){
-        booking.bookingId = request.bookingId;
+        if(request.bookingId !== ""){
+          booking.bookingId = request.bookingId;
         }
         const diffDuration = moment.duration(moment(request.endDate).diff(moment(request.startDate)));
-        if(diffDuration.years() > 0){
-          booking.isAnnual = true;
-        }else{
-          booking.isAnnual = false;
-        }
-        booking.duration = moment(endDate).diff(moment(request.startDate),"days")+"days";
+        const days = moment(endDate).diff(moment(request.startDate),"days");
+        booking.isAnnual = diffDuration.years() > 0;
+        booking.duration = `${days}`;
+        
         //Amount Calculations
-        const duration = moment.duration(moment(request.endTime).diff(moment(request.startTime)));
-        const hours = parseInt(duration.asHours().toString());
-        const minutes = parseInt(duration.asMinutes().toString()) % 60;
-        const totalmm = parseInt(booking.duration) * minutes;
-        const mm = totalmm % 60;
-        const hh = Math.floor(totalmm / 60);
-        const GetAmount = await Amount.find({bookingtype : request.type});
-        const amountValue = parseInt(GetAmount[0].bookingAmount.toString());
-        const finalMinutes = mm > 0 ? (amountValue/2) : 0;
-        const totalHH = hours*parseInt(booking.duration);
-        const finalHour = (totalHH + hh) * amountValue ;
-
-        const totalCash = finalMinutes+finalHour;
-        const onlineAmount = totalCash*(30/100);
+        const {totalAmount, onlineAmount} = await this.getAmount(request, days);
 
         if(request.bookingtype === PaymentType.Cash){
           booking.bookingAmount = {
                 online : 0, 
-                cash: totalCash,
-                total: totalCash
+                cash: totalAmount,
+                total: totalAmount
           };
         }else{
           booking.bookingAmount = {
@@ -142,9 +108,23 @@ if(courtData.court && parseInt(courtData.court)!==i){
       // .then(message => console.log(message.sid));
         return booking;
       }
-      // "whatsapp:+12059734320",
   }
 
+  async getAmount(request: any, days: any) {
+    //Amount Calculations
+      const amountList = await Amount.find({bookingtype : request.type});
+      const amount =  parseInt(amountList[0].bookingAmount.toString());
+      const duration = moment.duration(moment(request.endTime).diff(moment(request.startTime)));
+      const minutes = parseInt(duration.asMinutes().toString());
+      const hours = minutes/60;
+      const totalAmount = (days * hours * amount);
+      const onlineAmount = totalAmount * (30/100);
+
+      return {
+        totalAmount,
+        onlineAmount
+      };
+  }
 
   async findById(id: string) {
     const booking = await Booking.findOne({ _id:id });
