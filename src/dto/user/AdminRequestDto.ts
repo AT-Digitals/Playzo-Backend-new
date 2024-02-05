@@ -1,8 +1,12 @@
 import {
   IsDefined,
   IsEmail,
+  IsEnum,
+  IsOptional,
   MinLength,
 } from "class-validator";
+
+import { AccessType } from "../auth/AccessType";
 
 export class AdminRequestDto {
   
@@ -18,5 +22,9 @@ export class AdminRequestDto {
   
   @IsDefined({ message: "Phone number is required" })
   phone: number;
+
+  @IsOptional()
+  @IsEnum(AccessType, { message: "Please provide a valid Booking Type" })
+  accessType?: AccessType;
  
 }

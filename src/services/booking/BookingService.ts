@@ -171,12 +171,16 @@ export default class BookingService {
 
   async updateAmount(id: string, request: BookingAmountRequestDto) {
     let booking = await this.findById(id);
-    if(request.bookingAmount){
+    
+    if(request.bookingAmount && booking.bookingAmount){
+      const cashAmount = parseInt(request.bookingAmount.cash.toString())  + parseInt(booking.bookingAmount.cash.toString());
+      const onlineAmount = parseInt(request.bookingAmount.online.toString()) + parseInt(booking.bookingAmount.online.toString());
+      const finalAmount = cashAmount+onlineAmount;
     booking.bookingAmount =
     {
-        online :request.bookingAmount.online, 
-        cash: request.bookingAmount.cash,
-        total: parseInt(request.bookingAmount.cash.toString()) + parseInt(request.bookingAmount.online.toString())
+        online :onlineAmount, 
+        cash: cashAmount,
+        total: finalAmount
     };
     }
     booking = await booking.save();

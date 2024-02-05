@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 
+import { AccessType } from "../../dto/auth/AccessType";
 import AdminUserModel from "./AdminUserModel";
 import MongoDatabase from "../../utils/MongoDatabase";
 import { UserType } from "../../dto/auth/UserType";
@@ -13,6 +14,12 @@ const AdminUserSchema = new Schema({
     type: String,
     enum: [],
     default: UserType.ADMIN,
+  },
+  accessType:{
+    type: String,
+    enum: [],
+    default: AccessType,
+    required: false
   },
 });
 
