@@ -17,6 +17,7 @@ export class AdminUsersService {
     let admin = new AdminUser(adminDto);
     await admin.setPassword(adminDto.password);
     admin = await admin.save();
+    return admin;
   }
 
   public async getAllAdmins() {

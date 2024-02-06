@@ -17,7 +17,7 @@ import { UserServices } from "../../services/user/UserServices";
 
 @JsonController("/admin")
 @Service()
-export class UserController {
+export class UserLoginController {
   constructor(private userService: UserServices,private authService: AdminAuthService) {}
 
   @Get("/me")

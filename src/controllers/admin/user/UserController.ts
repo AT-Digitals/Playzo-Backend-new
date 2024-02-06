@@ -3,16 +3,18 @@ import { Body, Get, JsonController, Param, Post } from "routing-controllers";
 import { Service } from "typedi";
 import { UserRequestDto } from "../../../dto/user/UserRequestDto";
 import { UserServices } from "../../../services/user/UserServices";
+import { UserDto } from "../../../dto/user/UserDto";
 
-@JsonController("/admin/admins/userSite/users")
+@JsonController("/admin/user/newUsers")
 @Service()
-export class UsersController {
+export class UserController {
   constructor(private usersService: UserServices) {}
 
   @Post("/")
   // @IsAdmin()
   public async createNewAdminUser(@Body() userRequestDto: UserRequestDto) {
-    return this.usersService.createUser(userRequestDto);
+    const user = await this.usersService.createUser(userRequestDto);
+    return new UserDto(user);
   }
 
   @Get("/")

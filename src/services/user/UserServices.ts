@@ -20,6 +20,7 @@ export class UserServices {
     let user = new User(UserDto);
     await user.setPassword(UserDto.password);
     user = await user.save();
+    return user;
   }
 
   public async getAllUsers() {
