@@ -5,7 +5,7 @@ import { AdminUsersService } from "../../../services/admin/adminUser/AdminUsersS
 // import { IsAdmin } from "../../../middleware/AuthValidator";
 import { Service } from "typedi";
 
-@JsonController("/admin/admins/adminUsers")
+@JsonController("/admin/adminUsers")
 @Service()
 export class AdminUsersController {
   constructor(private adminUsersService: AdminUsersService) {}
