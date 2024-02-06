@@ -18,7 +18,7 @@ const AdminUserSchema = new Schema({
   accessType:{
     type: String,
     enum: [],
-    default: AccessType,
+    default: AccessType.ALL,
     required: false
   },
 });
