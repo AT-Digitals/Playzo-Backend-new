@@ -46,4 +46,7 @@ export class BookingRequestDto {
 
     @IsOptional()
     court?:string;
+
+    @IsOptional()
+    isRefund?:string;
   }

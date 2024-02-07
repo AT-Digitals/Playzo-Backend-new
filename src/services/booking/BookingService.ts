@@ -31,6 +31,7 @@ export default class BookingService {
             $gt: request.startTime
           }},
           {  type: request.type },
+          {deleted:false}
         ],
       }
       );
@@ -83,12 +84,13 @@ export default class BookingService {
         
         //Amount Calculations
         const {totalAmount, onlineAmount} = await this.getAmount(request, days);
+        const requestBookingAmount = request.bookingAmount?.cash && request.bookingAmount?.cash > 0?request.bookingAmount?.cash:0;
 
         if(request.bookingtype === PaymentType.Cash){
           booking.bookingAmount = {
                 online : 0, 
-                cash: totalAmount,
-                total: totalAmount
+                cash: requestBookingAmount>0?requestBookingAmount : totalAmount,
+                total: requestBookingAmount>0?requestBookingAmount : totalAmount
           };
         }else{
           booking.bookingAmount = {
@@ -137,14 +139,14 @@ export default class BookingService {
 
   public async getAll() {
     
-    const bookings = await Booking.find({}).populate("user","name email phone userType").exec();
+    const bookings = await Booking.find( {deleted:false}).populate("user","name email phone userType").exec();
     return bookings.map((booking) => new BookingDto(booking));
   }
 
   public async getAllBookings(query:PaginationRequestDto) {
     let bookings: BookingModel[] = [];
     if(query && query.page && query.limit){
-       bookings = await Booking.find({}).skip((+query.page - 1) * query.limit).limit(query.limit).populate("user","name email phone userType").exec();
+       bookings = await Booking.find( {deleted:false}).skip((+query.page - 1) * query.limit).limit(query.limit).populate("user","name email phone userType").exec();
     }
     return bookings.map((booking) => new BookingDto(booking));
   }
@@ -161,6 +163,9 @@ export default class BookingService {
         cash: request.bookingAmount.cash,
         total: parseInt(request.bookingAmount.cash.toString()) + 0
     };
+    }
+    if(request.isRefund){
+      booking.isRefund = true;
     }
     booking.bookingtype = request.bookingtype;
     booking.deleted = false;
@@ -228,7 +233,7 @@ export default class BookingService {
   }
  }
 
- const bookings = await Booking.find({"$and": [newFilter]}).populate("user","name email phone userType").exec();
+ const bookings = await Booking.find({"$and": [newFilter, {deleted:false}]}).populate("user","name email phone userType").exec();
  return bookings.map((booking) => new BookingDto(booking));
    }
 
@@ -270,7 +275,7 @@ delete newFilter.limit;
 let bookings: BookingModel[] = [];
 if(req && req.page && req.limit){
    
-  bookings = await Booking.find( {"$and": [newFilter]}).skip((+req.page - 1) * req.limit).limit(req.limit).populate("user","name email phone userType").exec();
+  bookings = await Booking.find( {"$and": [newFilter, {deleted:false}]}).skip((+req.page - 1) * req.limit).limit(req.limit).populate("user","name email phone userType").exec();
 }
 return bookings.map((booking) => new BookingDto(booking));
   }
@@ -282,6 +287,7 @@ if(request.startDate && request.endDate && request.type){
 const bookingsList =  await Booking.aggregate([
 
   { $match:{ type:request.type}},
+  { $match:{ deleted:false}},
   { $match: {startDate: {
     $gte: new Date(request.startDate)
   }}},
@@ -307,139 +313,5 @@ if (request.type !== undefined) {
 return bookList;
   }
 
-  public async filterDateBookings(request:BookingDateFilterRequestDto) {
-    console.log("req",request.type);
-    let bookings:BookingModel[] =[];
-
- if(request.startDate && request.endDate){
-     const endDate = DateUtils.add(new Date(request.endDate),1,"day");
-      if(request?.limit && request.page){
-      bookings = await Booking.find( {
-        endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
-
-    }).skip((+(request.page) - 1) * (request.limit)).limit((request.limit)).populate("user","name email phone userType").exec();
-  }else{
-    bookings = await Booking.find( {
-      endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
-
-  });
-  }
-  }
-
-    if(request.startDate && request.endDate && request.type){
-      const endDate = DateUtils.add(new Date(request.endDate),1,"day");
-      if(request?.limit && request.page){
-      bookings = await Booking.find( {
-        type: request.type,
-        endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
-
-    }).skip((+(request.page) - 1) * (request.limit)).limit((request.limit)).populate("user","name email phone userType").exec();}
-    else{
-      bookings = await Booking.find( {
-        type: request.type,
-        endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
-
-    });
-    }
-    }
-    if(request.bookingtype){
-      if(request?.limit && request.page){
-      bookings = await Booking.find( {
-        bookingtype: request.bookingtype,
-
-    }).skip((+(request.page) - 1) * (request.limit)).limit((request.limit)).populate("user","name email phone userType").exec();
-  }else{
-    bookings = await Booking.find( {
-      bookingtype: request.bookingtype,
-
-  });
-  }
-  }
-  if(request.startDate && request.endDate && request.bookingtype){
-    const endDate = DateUtils.add(new Date(request.endDate),1,"day");
-    if(request?.limit && request.page){
-    bookings = await Booking.find( {
-      bookingtype: request.bookingtype,
-      endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
-
-  }).skip((+(request.page) - 1) * (request.limit)).limit((request.limit)).populate("user","name email phone userType").exec();
-}
-else{
-  bookings = await Booking.find( {
-    bookingtype: request.bookingtype,
-    endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
-
-});
-}
-  }
-  if(request.startDate && request.endDate && request.type && request.bookingtype){
-    const endDate = DateUtils.add(new Date(request.endDate),1,"day");
-    if(request?.limit && request.page){
-    bookings = await Booking.find( {
-      type: request.type,
-      bookingtype: request.bookingtype,
-      endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
-
-  }).skip((+(request.page) - 1) * (request.limit)).limit((request.limit)).populate("user","name email phone userType").exec();}
-  else{
-    bookings = await Booking.find( {
-      type: request.type,
-      bookingtype: request.bookingtype,
-      endDate: {"$gte":new Date(request.startDate),"$lt":new Date(endDate) },
-
-  }); 
-  }
-  }
-
-  if(request.type && request.bookingtype){
-    if(request?.limit && request.page){
-    bookings = await Booking.find( {
-      type: request.type,
-      bookingtype: request.bookingtype,
-
-  }).skip((+(request.page) - 1) * (request.limit)).limit((request.limit)).populate("user","name email phone userType").exec();}
-  else{
-    bookings = await Booking.find( {
-      type: request.type,
-      bookingtype: request.bookingtype,
-
-  });
-  }
-
-  }
-  if(request.bookingtype){
-    console.log("ajjj",request.bookingtype);
-    if(request.limit && request.page){
-    bookings = await Booking.find( {
-      bookingtype: request.bookingtype
-  }).skip((+request.page - 1) * request.limit).limit(request.limit).populate("user","name email phone userType").exec();
-  console.log("ajj1",bookings);
-}
-  else{
-    bookings = await Booking.find( {
-      bookingtype: request.bookingtype
-
-  });
-  console.log("ajj2",bookings);
-  }
-
-  }
-  if(request.type){
-    if(request?.limit && request.page){
-    bookings = await Booking.find( {
-      type: request.type,
-
-  }).skip((+(request.page) - 1) * (request.limit)).limit((request.limit)).populate("user","name email phone userType").exec();}
-  else{
-    bookings = await Booking.find( {
-      type: request.type,
-
-  });
-  }
-
-  }
-
-  console.log("bookings",bookings);
-    return bookings.map((booking) => new BookingDto(booking));
-  }
+ 
 }

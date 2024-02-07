@@ -30,8 +30,4 @@ export class BookingFilterController {
     return this.bookingService.filterBookings(request);
   }
 
-  @Get("/filterDateBookings")
-  public async filterDateBookings(@QueryParams() request: BookingDateFilterRequestDto) {
-    return this.bookingService.filterDateBookings(request);
-  }
 }

@@ -33,6 +33,7 @@ const bookingSchema = new Schema({
       duration:String,
       court: String,
       isAnnual: Boolean,
+      isRefund: Boolean,
       deleted: Boolean
 
 });

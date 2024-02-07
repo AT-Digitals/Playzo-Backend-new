@@ -22,6 +22,7 @@ export class BookingDto {
   duration:string;
   court?: string;
   isAnnual: boolean;
+  isRefund?: boolean;
   deleted: boolean;
 
   constructor(booking: BookingModel) {
@@ -41,6 +42,7 @@ export class BookingDto {
       this.endDate = booking.endDate;
       this.duration = booking.duration;
       this.court = booking.court;
+      this.isRefund = booking.isRefund;
       this.isAnnual = booking.isAnnual;
   }
 }
