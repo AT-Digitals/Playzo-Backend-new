@@ -1,9 +1,8 @@
-  export const BookingLength = {
-    cricketNet : 1,
-    ballMachine : 1,
-    turf : 2,
-    playstation : 2,
-    badminton : 2,
-    boardGame : 5,
-
+export const BookingLength = {
+  cricketNet: 1,
+  bowlingMachine: 1,
+  turf: 3,
+  playstation: 3,
+  badminton: 3,
+  boardGame: 3
 };

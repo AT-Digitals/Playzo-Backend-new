@@ -49,7 +49,7 @@ export class DatabaseSeeder {
       } as AmountModel,
       {
         bookingAmount: 100,
-        bookingtype: BookingType.BallMachine,
+        bookingtype: BookingType.BowlingMachine,
         court: 1,
         deleted: false
       } as AmountModel,
