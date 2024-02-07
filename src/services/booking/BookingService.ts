@@ -84,13 +84,13 @@ export default class BookingService {
         
         //Amount Calculations
         const {totalAmount, onlineAmount} = await this.getAmount(request, days);
-        const requestBookingAmount = request.bookingAmount?.cash && request.bookingAmount?.cash > 0?request.bookingAmount?.cash:0;
+        const requestBookingAmount = request.bookingAmount?.cash && request.bookingAmount.cash === 0?0:request.bookingAmount?.cash;
 
         if(request.bookingtype === PaymentType.Cash){
           booking.bookingAmount = {
                 online : 0, 
-                cash: requestBookingAmount>0?requestBookingAmount : totalAmount,
-                total: requestBookingAmount>0?requestBookingAmount : totalAmount,
+                cash: requestBookingAmount===0?totalAmount:requestBookingAmount??0,
+                total: requestBookingAmount===0?totalAmount:requestBookingAmount??0,
                 refund:0
           };
         }else{
