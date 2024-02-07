@@ -11,7 +11,8 @@ export class BookingDto {
   bookingAmount?: {
     online: number, 
     cash: number,
-    total: number 
+    total: number,
+    refund:number
   };
   bookingtype:PaymentType;
   startTime: number;

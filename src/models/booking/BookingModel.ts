@@ -10,7 +10,8 @@ export interface BookingModel extends Document {
       bookingAmount?: {
             online : number, 
             cash: number,
-            total: number 
+            total: number,
+            refund:number
           },
       bookingtype: PaymentType,
       startTime: number,

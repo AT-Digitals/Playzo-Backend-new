@@ -1,4 +1,5 @@
 export enum PaymentType {
     Cash="cash",
-    Online="online"
+    Online="online",
+    Refund="refund"
   }

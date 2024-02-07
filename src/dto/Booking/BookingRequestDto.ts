@@ -20,7 +20,8 @@ export class BookingRequestDto {
     bookingAmount?: {
         online : number, 
         cash: number,
-        total: number 
+        total: number,
+        refund:number
       };
   
     @IsEnum(PaymentType, { message: "Please provide a valid Payment Type" })

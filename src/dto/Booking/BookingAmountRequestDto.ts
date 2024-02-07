@@ -8,7 +8,9 @@ export class BookingAmountRequestDto {
     bookingAmount: {
         online : number, 
         cash: number,
-        total: number 
+        total: number,
+        refund:number
       };
-
+      @IsOptional()
+      isRefund: boolean;
   }

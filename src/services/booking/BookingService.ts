@@ -90,13 +90,15 @@ export default class BookingService {
           booking.bookingAmount = {
                 online : 0, 
                 cash: requestBookingAmount>0?requestBookingAmount : totalAmount,
-                total: requestBookingAmount>0?requestBookingAmount : totalAmount
+                total: requestBookingAmount>0?requestBookingAmount : totalAmount,
+                refund:0
           };
         }else{
           booking.bookingAmount = {
             online : onlineAmount, 
             cash: 0,
-            total: onlineAmount
+            total: onlineAmount,
+            refund:0
           };
         }
         booking.deleted = false;
@@ -162,12 +164,11 @@ export default class BookingService {
     {
         online : 0, 
         cash: request.bookingAmount.cash,
-        total: parseInt(request.bookingAmount.cash.toString()) + 0
+        total: parseInt(request.bookingAmount.cash.toString()) + 0,
+        refund:0
     };
     }
-    if(request.isRefund){
-      booking.isRefund = true;
-    }
+  
     booking.bookingtype = request.bookingtype;
     booking.deleted = false;
     booking = await booking.save();
@@ -179,16 +180,33 @@ export default class BookingService {
     let booking = await this.findById(id);
     
     if(request.bookingAmount && booking.bookingAmount){
+     
+      if(request.isRefund){
+    booking.bookingAmount =
+    {
+        online : request.bookingAmount.online, 
+        cash: request.bookingAmount.cash,
+        total: request.bookingAmount.total,
+        refund:request.bookingAmount.refund
+    };
+   
+      booking.isRefund = true;
+      booking.deleted = true;
+    }else{
       const cashAmount = parseInt(request.bookingAmount.cash.toString())  + parseInt(booking.bookingAmount.cash.toString());
       const onlineAmount = parseInt(request.bookingAmount.online.toString()) + parseInt(booking.bookingAmount.online.toString());
       const finalAmount = cashAmount+onlineAmount;
-    booking.bookingAmount =
-    {
-        online :onlineAmount, 
-        cash: cashAmount,
-        total: finalAmount
-    };
+      booking.bookingAmount =
+      {
+          online : onlineAmount, 
+          cash: cashAmount,
+          total: finalAmount,
+          refund:0
+      };
     }
+
+    }
+    
     booking = await booking.save();
     return booking;
   }
