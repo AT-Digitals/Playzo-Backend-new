@@ -99,6 +99,7 @@ export default class BookingService {
             total: onlineAmount
           };
         }
+        booking.deleted = false;
         booking = await booking.save();
           
       // await client.messages
