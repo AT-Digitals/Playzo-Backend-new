@@ -1,8 +1,8 @@
 import { Get, JsonController, QueryParams } from "routing-controllers";
 import { BookingDateFilterRequestDto } from "../../dto/Booking/BookingDateFilterRequestDto";
 import BookingService from "../../services/booking/BookingService";
-import { Service } from "typedi";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
+import { Service } from "typedi";
 
 @JsonController("/admin/bookingFilter")
 @Service()

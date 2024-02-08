@@ -1,9 +1,8 @@
 import {  Get, JsonController, QueryParams } from "routing-controllers";
-
-import { Service } from "typedi";
-import PaginationRequestDto from "../../dto/PaginationRequestDto";
-import EnquiryService from "../../services/enquiry/EnquiryService";
 import { BookingDateFilterRequestDto } from "../../dto/Booking/BookingDateFilterRequestDto";
+import EnquiryService from "../../services/enquiry/EnquiryService";
+import PaginationRequestDto from "../../dto/PaginationRequestDto";
+import { Service } from "typedi";
 
 @JsonController("/admin/enquiryFilter")
 @Service()
@@ -12,7 +11,6 @@ export class EnquiryFilterController {
 
   @Get("/filterEnquiry")
   public async filterPage(@QueryParams() request: BookingDateFilterRequestDto) {
-    console.log("dkvnjdfkj")
     return this.enquiryService.getAllFilter(request);
   }
 
@@ -24,9 +22,7 @@ export class EnquiryFilterController {
 
   @Get("/filterDateEnquiry")
   public async filterDatePAge(@QueryParams() request: BookingDateFilterRequestDto) {
-    console.log("dkvnjdfkj 11")
     return this.enquiryService.getAllDateFilter(request);
   }
-  
 
 }

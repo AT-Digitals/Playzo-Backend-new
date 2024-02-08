@@ -1,9 +1,8 @@
 import { Body, Delete, Get, JsonController, Param, Post, Put } from "routing-controllers";
-
-import { Service } from "typedi";
-import AmountService from "../../services/amount/AmountService";
-import { AmountRequestDto } from "../../dto/amount/AmountRequestDto";
 import { AmountDto } from "../../dto/amount/AmountDto";
+import { AmountRequestDto } from "../../dto/amount/AmountRequestDto";
+import AmountService from "../../services/amount/AmountService";
+import { Service } from "typedi";
 
 @JsonController("/admin/amount")
 @Service()
@@ -35,7 +34,6 @@ export class AmountController {
     @Param("amountId") amountId: string,
     @Body() newPrice: AmountRequestDto
   ) {
-    console.log("amount")
     const amount = await this.amountService.updateById(amountId, newPrice);
     return new AmountDto(amount);
   }

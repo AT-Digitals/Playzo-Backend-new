@@ -1,10 +1,8 @@
 import { Body, Get, JsonController, Post } from "routing-controllers";
-
+import { AdminDto } from "../../../dto/user/AdminDto";
 import { AdminRequestDto } from "../../../dto/user/AdminRequestDto";
 import { AdminUsersService } from "../../../services/admin/adminUser/AdminUsersService";
-// import { IsAdmin } from "../../../middleware/AuthValidator";
 import { Service } from "typedi";
-import { AdminDto } from "../../../dto/user/AdminDto";
 
 @JsonController("/admin/adminUsers")
 @Service()

@@ -1,5 +1,5 @@
-import { Type } from "class-transformer";
 import { IsNumber, IsOptional } from "class-validator";
+import { Type } from "class-transformer";
 
 export default class PaginationRequestDto {
   @IsOptional()

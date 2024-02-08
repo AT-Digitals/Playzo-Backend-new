@@ -33,7 +33,6 @@ export default class AmountService {
   }
 
   async updateById(id: string, request: AmountRequestDto) {
-    console.log()
     let amount = await this.findById(id);
     if (!amount) {
       throw new AppErrorDto(AppError.NOT_FOUND);
@@ -43,7 +42,6 @@ export default class AmountService {
     amount.court = request.court;
     amount.deleted = false;
     amount = await amount.save();
-    console.log("amount")
     return amount;
   }
 

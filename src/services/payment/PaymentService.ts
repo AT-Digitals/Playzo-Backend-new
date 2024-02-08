@@ -75,7 +75,7 @@ export default class PaymentService {
 
   }
 
-async verifyPayment(req:VerifyRequestDto) {
+  async verifyPayment(req:VerifyRequestDto) {
     try {
       const sign = req.orderId + "|" + req.paymentId;
       const expectedSign = crypto
@@ -127,7 +127,5 @@ async verifyPayment(req:VerifyRequestDto) {
         console.log(error);
         return "Unable to refund the payment";
     }
-
- 
   }
 }

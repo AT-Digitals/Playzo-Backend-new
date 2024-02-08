@@ -1,9 +1,7 @@
 import "reflect-metadata";
 
 import { useContainer, useExpressServer } from "routing-controllers";
-
 import { Container } from "typedi";
-import cors from "cors";
 import { DatabaseSeeder } from "./utils/DatabaseSeeder";
 import { DefaultHandler } from "./middleware/DefaultHandler";
 import { EnvUtils } from "./utils/EnvUtils";
@@ -14,18 +12,13 @@ import MongoDatabase from "./utils/MongoDatabase";
 import { MorganMiddleware } from "./middleware/MorganMiddleware";
 import compression from "compression";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import path from "path";
 import winston from "winston";
 
 // import Razorpay from 'razorpay';
-
-// import AuthValidator from "./middleware/AuthValidator";
-
-// import { CsrfHandler } from "./middleware/CsrfHandler";
-
-// import csrf from "csurf";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bodyParser = require("body-parser");
