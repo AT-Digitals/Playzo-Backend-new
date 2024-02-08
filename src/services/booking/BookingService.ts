@@ -216,7 +216,7 @@ export default class BookingService {
     return booking;
   }
 
-  async getAllFilter(req: any) {
+  async getBookingFilterCount(req: any) {
     if(req.startDate){
       req.startDate = DateUtils.formatDate(req.startDate,"yyyy-MM-DDT00:00:00.000+00:00");
      }
@@ -248,11 +248,32 @@ export default class BookingService {
   }
  }
 
- const bookings = await Booking.find({"$and": [newFilter, {deleted:false}]}).populate("user","name email phone userType").exec();
+ let bookings = await Booking.find({"$and": [newFilter, {deleted:false}]}).populate("user","name email phone userType").exec();
+
+   
+  //between days array filter start
+ if(req.startDate && req.endDate){
+  const betweenBookings = await Booking.find({"$and": [{startDate:{
+    $gte: new Date(req.startDate)
+  
+  }},{startDate:{
+    $lte: new Date(req.endDate)
+  }}, {deleted:false}]}).populate("user","name email phone userType").exec();
+  bookings = betweenBookings;
+  const uniqueArrays = bookings.filter((value, index, self) =>
+index === self.findIndex((t) => (
+  t._id === value._id
+))
+)
+console.log("uniqueArrays",uniqueArrays)
+   }
+
+     
+  //between days array filter end
  return bookings.map((booking) => new BookingDto(booking));
    }
 
-async getAllDateFilter(req: any) {
+async getBookingFilter(req: any) {
   
      if(req.startDate){
     req.startDate = DateUtils.formatDate(req.startDate,"yyyy-MM-DDT00:00:00.000+00:00");
@@ -285,13 +306,35 @@ delete newFilter.limit;
     }
    }
  
-   console.log("a",newFilter);
+  
 
 let bookings: BookingModel[] = [];
 if(req && req.page && req.limit){
    
   bookings = await Booking.find( {"$and": [newFilter, {deleted:false}]}).skip((+req.page - 1) * req.limit).limit(req.limit).populate("user","name email phone userType").exec();
+  
+  //between days array filter start
+  
+  if(req.startDate && req.endDate){
+    const betweenBookings = await Booking.find({"$and": [{startDate:{
+      $gte: new Date(req.startDate)
+    
+    }},{startDate:{
+      $lte: new Date(req.endDate)
+    }}, {deleted:false}]}).populate("user","name email phone userType").exec();
+    bookings = betweenBookings;
+    const uniqueArrays = bookings.filter((value, index, self) =>
+  index === self.findIndex((t) => (
+    t._id === value._id
+  ))
+)
+console.log("uniqueArrays",uniqueArrays)
+     }
+
+       
+  //between days array filter end
 }
+
 return bookings.map((booking) => new BookingDto(booking));
   }
 
