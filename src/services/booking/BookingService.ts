@@ -84,13 +84,17 @@ export default class BookingService {
         
         //Amount Calculations
         const {totalAmount, onlineAmount} = await this.getAmount(request, days);
-        const requestBookingAmount = request.bookingAmount?.cash && request.bookingAmount.cash === 0?0:request.bookingAmount?.cash;
+        let requestBookingAmount = 0;
+        
+        if(request.bookingAmount?.cash){
+          requestBookingAmount = request.bookingAmount?.cash;
+        }
 
         if(request.bookingtype === PaymentType.Cash){
           booking.bookingAmount = {
                 online : 0, 
-                cash: requestBookingAmount===0?totalAmount:requestBookingAmount??0,
-                total: requestBookingAmount===0?totalAmount:requestBookingAmount??0,
+                cash: requestBookingAmount === 0 ? totalAmount : requestBookingAmount,
+                total: requestBookingAmount === 0 ? totalAmount : requestBookingAmount,
                 refund:0
           };
         }else{
@@ -103,14 +107,6 @@ export default class BookingService {
         }
         booking.deleted = false;
         booking = await booking.save();
-          
-      // await client.messages
-      // .create({
-      //    from: "whatsapp:+14155238886",
-      //    body: "Hello there!",
-      //    to: "whatsapp:+919384735800"
-      //  })
-      // .then(message => console.log(message.sid));
         return booking;
       }
   }
@@ -331,6 +327,5 @@ if (request.type !== undefined) {
 }
 return bookList;
   }
-
  
 }

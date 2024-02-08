@@ -15,7 +15,6 @@ export class BookingController {
     // @CurrentUser() user: AuthDto,
     @Body() request: BookingRequestDto
   ) {
-    console.log("con",request);
     const booking = await this.bookingService.create(request);
     return new BookingDto(booking);
   }
