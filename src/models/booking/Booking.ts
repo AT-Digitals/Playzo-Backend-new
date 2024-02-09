@@ -30,7 +30,7 @@ const bookingSchema = new Schema({
       endTime: Number,
       bookingId:String,
       cancelDate:Date,
-      duration:String,
+      duration:Number,
       court: String,
       isAnnual: Boolean,
       isRefund: Boolean,
