@@ -6,6 +6,7 @@ import { HttpStatusCode } from "../../dto/error/HttpStatusCode";
 import { Service } from "typedi";
 import { User } from "../../models/user/User";
 import { UserDto } from "../../dto/user/UserDto";
+import { UserModel } from "../../models/user/UserModel";
 import { UserRequestDto } from "../../dto/user/UserRequestDto";
 
 @Service()
@@ -49,4 +50,16 @@ export class UserServices {
     }
     return new UserDto(user);
   }
+
+  async getUserList(req: any) {
+    let users: UserModel[] = [];
+    if(req?.page && req.limit){
+      users = await User.find({}).skip((+req.page - 1) * req.limit).limit(req.limit);
+    }else{
+      users = await User.find({});
+    }
+    return users.map((user) => new UserDto(user));
+  }
+
+  
 }
