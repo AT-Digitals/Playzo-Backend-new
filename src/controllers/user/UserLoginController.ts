@@ -15,7 +15,7 @@ import { Service } from "typedi";
 import UserLoginRequestDto from "../../dto/auth/UserLoginRequestDto";
 import { UserServices } from "../../services/user/UserServices";
 
-@JsonController("/admin")
+@JsonController("/user")
 @Service()
 export class UserLoginController {
   constructor(private userService: UserServices,private authService: AdminAuthService) {}
@@ -32,7 +32,8 @@ export class UserLoginController {
     @Body() request: UserLoginRequestDto
   ) {
     const user = new AdminDto(await this.authService.login(request));
-    AuthUtils.saveAuthToken(res, user);
+   const token= AuthUtils.saveAuthToken(res, user);
+    user["token"] = token??"";
     return res.send(user);
   }
   
