@@ -12,7 +12,6 @@ import DateUtils from "../../utils/DateUtils";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
 import { PaymentType } from "../../models/booking/PaymentType";
 import { Service } from "typedi";
-import { convertToNum } from "../../utils/helpFunc";
 import moment from "moment";
 
 @Service()
@@ -27,11 +26,11 @@ export default class BookingService {
           {startTime: {
             $lt: request.endTime
           }},
-        {endTime: {
+          {endTime: {
             $gt: request.startTime
           }},
-          {  type: request.type },
-          {isRefund:false}
+          {type: request.type},
+          {isRefund: false}
         ],
       }
       );
@@ -43,6 +42,7 @@ export default class BookingService {
         let booking = new Booking(request);
         booking.user = request.user;
         booking.dateOfBooking = new Date();
+        booking.isRefund = false;
 
         if(request.court !== undefined && request.court !== ""){
            //check if that court is already booked or not, by iterating bookungList array. If it is already booked then throw error
@@ -56,21 +56,24 @@ export default class BookingService {
         }else{
           //find the first missing court number
           let courtNumber = null;
-          for (let i = 1; i <= BookingLength[request.type]; i++) {
-            for (let j = 0; j < bookingList.length; j++) {
-              if(bookingList[j].court && convertToNum(bookingList[j].court) !== i){
-                courtNumber = i.toString();
+          const courtNumberObj: any = {};
+          if(bookingList.length === 0){
+            booking.court = "1";
+          }else {
+            for (let i = 1; i <= BookingLength[request.type]; i++) {
+              courtNumberObj[i] = false;
+            }
+            for (let i = 0; i < bookingList.length; i++) {
+              courtNumber = bookingList[i].court;
+              courtNumberObj[courtNumber] = true;
+            }
+            
+            for (let i = 1; i <= BookingLength[request.type]; i++) {
+              if(!courtNumberObj[i]){
                 booking.court = i.toString();
                 break;
               }
             }
-            if(courtNumber){
-              break;
-            }
-          }
-
-          if(!courtNumber){
-            booking.court = "1";
           }
           
         }
@@ -276,7 +279,6 @@ list.bookingAmount["online"] = onlineAmount;
   bookings.push(list);
  });
      }
-
      
   //between days array filter end
  return bookings.map((booking) => new BookingDto(booking));
@@ -365,7 +367,6 @@ return bookings.map((booking) => new BookingDto(booking));
         onlineAmount
       };
   }
-
 
 public async filterBookings(request:BookingDateFilterRequestDto) {
 const bookList:any = [];

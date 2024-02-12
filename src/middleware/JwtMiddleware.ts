@@ -4,23 +4,16 @@ import jwt from "jsonwebtoken";
 
 const JwtMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const arrayPath = ["/admin/admins/login","/admin/admins/adminUsers"];
-  if(arrayPath.includes(req.path) || req.method === "OPTIONS"){
-    console.log("coming here...");   
+  if(arrayPath.includes(req.path) || req.method === "OPTIONS"){  
     next();
   }else {
     const authorizationHeader = req.header("Authorization");
-
-    console.log("path...", req.method);
-
-    console.log("authorization Header", authorizationHeader, req.headers);
-
     if (!authorizationHeader || !authorizationHeader.startsWith("Bearer ")) {
       return res
         .status(401)
         .json({ success: false, message: "Invalid authorization header" });
     }
     const token = authorizationHeader.replace("Bearer ", "");
-    console.log("token herere.....", token);
     
     if (!token) {
         return res
