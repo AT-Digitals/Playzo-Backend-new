@@ -1,5 +1,5 @@
 import AuthDto from "../auth/AuthDto";
-import { BookingDto } from "../Booking/BookingDto";
+import { BookingDto } from "../booking/BookingDto";
 import { UserModel } from "../../models/user/UserModel";
 import { UserType } from "../auth/UserType";
 import { elemT } from "../../utils/UnionArray";

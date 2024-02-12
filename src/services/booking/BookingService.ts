@@ -2,13 +2,14 @@ import { Amount } from "../../models/amount/Amount";
 import { AppError } from "../../dto/error/AppError";
 import { AppErrorDto } from "../../dto/error/AppErrorDto";
 import { Booking } from "../../models/booking/Booking";
-import { BookingAmountRequestDto } from "../../dto/Booking/BookingAmountRequestDto";
-import { BookingDateFilterRequestDto } from "../../dto/Booking/BookingDateFilterRequestDto";
-import { BookingDto } from "../../dto/Booking/BookingDto";
+import { BookingAmountRequestDto } from "../../dto/booking/BookingAmountRequestDto";
+import { BookingDateFilterRequestDto } from "../../dto/booking/BookingDateFilterRequestDto";
+import { BookingDto } from "../../dto/booking/BookingDto";
 import { BookingLength } from "../../enum/BookingLength";
 import { BookingModel } from "../../models/booking/BookingModel";
-import { BookingRequestDto } from "../../dto/Booking/BookingRequestDto";
+import { BookingRequestDto } from "../../dto/booking/BookingRequestDto";
 import DateUtils from "../../utils/DateUtils";
+import MailUtils from "../../utils/MailUtils";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
 import { PaymentType } from "../../models/booking/PaymentType";
 import { Service } from "typedi";
@@ -109,6 +110,19 @@ export default class BookingService {
           };
         }
         booking.deleted = false;
+        
+        MailUtils.sendMail({
+          to: "antoshoba@gmail.com",
+          subject: "Your booking successfully added",
+          html: `<div>
+              <h2>Booking Details</h2>
+              <p>Type : ${booking.type} </p>
+              <p>Start Date : ${request.startDate}</p>
+              <p>End Date : ${request.endDate} </p>
+              <p>Cash Amount : ${booking.bookingAmount.cash}</p>
+              <p>Online Amount : ${booking.bookingAmount.online}</p>
+            </div>`,
+        });
         booking = await booking.save();
         return booking;
       }

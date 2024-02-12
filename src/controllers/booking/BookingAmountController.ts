@@ -1,6 +1,6 @@
 import { Body, JsonController, Param, Put } from "routing-controllers";
-import { BookingAmountRequestDto } from "../../dto/Booking/BookingAmountRequestDto";
-import { BookingDto } from "../../dto/Booking/BookingDto";
+import { BookingAmountRequestDto } from "../../dto/booking/BookingAmountRequestDto";
+import { BookingDto } from "../../dto/booking/BookingDto";
 import BookingService from "../../services/booking/BookingService";
 import { Service } from "typedi";
 
