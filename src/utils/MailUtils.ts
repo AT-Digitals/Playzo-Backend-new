@@ -19,8 +19,8 @@ export default class MailUtils{
         host: "sandbox.smtp.mailtrap.io",
         port: 2525,
         auth: {
-          user: "e1951fe0dabb7e",
-          pass: "a3d79e7cdf0843"
+          user: process.env.MAIL_USER,
+          pass: process.env.MAIL_PASSWORD,
         }
       });
   }
