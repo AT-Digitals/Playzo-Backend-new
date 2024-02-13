@@ -21,6 +21,8 @@ export function filterBookingList(bookingList: any, newStartDate: any,newEndDate
     const filteredList: any[] = [];
     for (let i = 0; i < bookingList.length; i++) {
         const booking = bookingList[i];
+        let oldOnlyStartTime: any = moment.unix((booking.startTime)/1000).format("hh A");
+        oldOnlyStartTime = convertTimeStringtoNum(oldOnlyStartTime);
         const oldStartMSDate = moment.unix((booking.startTime)/1000).format("YYYY-MM-DD hh:mm:ss A");
         const oldEndMSDate = moment.unix((booking.endTime)/1000).format("YYYY-MM-DD hh:mm:ss A");    
         let oldOnlyEndTime: any = moment.unix((booking.endTime)/1000).format("hh A");    
@@ -37,7 +39,7 @@ export function filterBookingList(bookingList: any, newStartDate: any,newEndDate
         const formattedStartMS = moment(formattedStartDate, "YYYY-MM-DD hh:mm:ss A").valueOf();
         const formattedEndMS = moment(formattedEndDate,  "YYYY-MM-DD hh:mm:ss A").valueOf();
  
-        if((DateUtils.checkIsSame(newStartDate, booking.startDate) && DateUtils.checkIsSame(newEndDate, booking.endDate)) && (oldOnlyEndTime <= newOnlyStartTime)){
+        if((DateUtils.checkIsSame(newStartDate, booking.startDate) && DateUtils.checkIsSame(newEndDate, booking.endDate)) && ((oldOnlyEndTime <= newOnlyStartTime) || (oldOnlyStartTime > newOnlyStartTime))){
          continue;
         }else if(!(DateUtils.checkIsAfter(newEndDate, booking.endDate)) && (formattedStartMS < newEndTime) && (formattedEndMS > newStartTime)){
          filteredList.push(booking);
