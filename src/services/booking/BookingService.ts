@@ -13,6 +13,7 @@ import MailUtils from "../../utils/MailUtils";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
 import { PaymentType } from "../../models/booking/PaymentType";
 import { Service } from "typedi";
+import { filterBookingList } from "../../utils/helpFunc";
 import moment from "moment";
 
 @Service()
@@ -41,6 +42,12 @@ export default class BookingService {
       // }
       // else {
         const bookingList = await this.getBookingList(request);
+      const filteredBookingList = filterBookingList(bookingList, request.startDate,request.endDate, request.startTime,request.endTime);
+
+      if (filteredBookingList.length >= BookingLength[request.type]) {
+        throw new AppErrorDto(AppError.ALREADY_BOOKED);
+      }
+      else {
         let booking = new Booking(request);
         booking.user = request.user;
         booking.dateOfBooking = new Date();
@@ -48,7 +55,7 @@ export default class BookingService {
 
         if(request.court !== undefined && request.court !== ""){
            //check if that court is already booked or not, by iterating bookungList array. If it is already booked then throw error
-          bookingList.forEach((bookingData)=>{
+          filteredBookingList.forEach((bookingData)=>{
             if(bookingData.court === request.court){
               throw new AppErrorDto("This Court already booked. Please choose another Court"); 
             }
@@ -59,14 +66,14 @@ export default class BookingService {
           //find the first missing court number
           let courtNumber = null;
           const courtNumberObj: any = {};
-          if(bookingList.length === 0){
+          if(filterBookingList.length === 0){
             booking.court = "1";
           }else {
             for (let i = 1; i <= BookingLength[request.type]; i++) {
               courtNumberObj[i] = false;
             }
-            for (let i = 0; i < bookingList.length; i++) {
-              courtNumber = bookingList[i].court;
+            for (let i = 0; i < filteredBookingList.length; i++) {
+              courtNumber = filteredBookingList[i].court;
               courtNumberObj[courtNumber] = true;
             }
             
