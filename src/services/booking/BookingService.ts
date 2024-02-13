@@ -21,25 +21,26 @@ export default class BookingService {
   async create(request: BookingRequestDto) {
    const endDate = DateUtils.add(new Date(request.endDate),1,"day");
 
-      const bookingList = await Booking.find(
-      {
-        $and: [
-          {startTime: {
-            $lt: request.endTime
-          }},
-          {endTime: {
-            $gt: request.startTime
-          }},
-          {type: request.type},
-          {isRefund: false}
-        ],
-      }
-      );
+      // const bookingList = await Booking.find(
+      // {
+      //   $and: [
+      //     {startTime: {
+      //       $lt: request.endTime
+      //     }},
+      //     {endTime: {
+      //       $gt: request.startTime
+      //     }},
+      //     {type: request.type},
+      //     {isRefund: false}
+      //   ],
+      // }
+      // );
 
-      if (bookingList.length >= BookingLength[request.type]) {
-        throw new AppErrorDto(AppError.ALREADY_BOOKED);
-      }
-      else {
+      // if (bookingList.length >= BookingLength[request.type]) {
+      //   throw new AppErrorDto(AppError.ALREADY_BOOKED);
+      // }
+      // else {
+        const bookingList = await this.getBookingList(request);
         let booking = new Booking(request);
         booking.user = request.user;
         booking.dateOfBooking = new Date();
@@ -125,7 +126,30 @@ export default class BookingService {
         });
         booking = await booking.save();
         return booking;
+      // }
+  }
+
+  async getBookingList(request: BookingRequestDto) {
+    const bookingList = await Booking.find(
+      {
+        $and: [
+          {startTime: {
+            $lt: request.endTime
+          }},
+          {endTime: {
+            $gt: request.startTime
+          }},
+          {type: request.type},
+          {isRefund: false}
+        ],
       }
+      );
+
+      if (bookingList.length >= BookingLength[request.type]) {
+        throw new AppErrorDto(AppError.ALREADY_BOOKED);
+      }
+
+      return bookingList;
   }
 
   async getAmount(request: any, days: any) {

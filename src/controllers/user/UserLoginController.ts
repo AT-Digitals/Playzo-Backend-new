@@ -14,11 +14,12 @@ import { Response } from "express";
 import { Service } from "typedi";
 import UserLoginRequestDto from "../../dto/auth/UserLoginRequestDto";
 import { UserServices } from "../../services/user/UserServices";
+import { UserDto } from "../../dto/user/UserDto";
 
 @JsonController("/user")
 @Service()
 export class UserLoginController {
-  constructor(private userService: UserServices,private authService: AdminAuthService) {}
+  constructor(private userService: UserServices) {}
 
   @Get("/me")
   // @Authorized()
@@ -31,7 +32,7 @@ export class UserLoginController {
     @Res() res: Response,
     @Body() request: UserLoginRequestDto
   ) {
-    const user = new AdminDto(await this.authService.login(request));
+    const user = new UserDto(await this.userService.login(request));
    const token= AuthUtils.saveAuthToken(res, user);
     user["token"] = token??"";
     return res.send(user);

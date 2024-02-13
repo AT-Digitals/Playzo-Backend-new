@@ -22,7 +22,7 @@ export default class EnquiryService {
               <h2>Contact Details</h2>
               <p>Name : ${request.userName} </p>
               <p>Email : ${request.userEmail}</p>
-              <p>Phone : ${request.phoneNumber} </p>
+              <p>project Type : ${request.projectType} </p>
               <p>Message : ${request.enquiryMessage}</p>
             </div>`,
         });

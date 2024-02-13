@@ -27,8 +27,8 @@ export class UserBookingController {
   }
 
   @Get()
-  public async getAllBookings() {
-     const bookings = this.bookingService.getAll();
+  public async getAllBookings( @Body() request: BookingRequestDto) {
+     const bookings = this.bookingService.getBookingList(request);
      return bookings;
   }
 

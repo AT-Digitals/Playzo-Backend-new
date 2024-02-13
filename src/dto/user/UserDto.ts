@@ -9,6 +9,7 @@ export class UserDto extends AuthDto{
   name: string;
   id: string;
   phone: number;
+  token?:string;
   bookingHistory: BookingDto[] = [];
 
   constructor(user: UserModel) {

@@ -9,14 +9,6 @@ import { Service } from "typedi";
 export class EnquiryController {
   constructor(private enquiryService: EnquiryService) {}
 
-  @Post()
-  async create(
-    @Body() request: EnquiryRequestDto
-  ) {
-    const enquiry = await this.enquiryService.create(request);
-    return new EnquiryDto(enquiry);
-  }
-
   @Get("/:enquiryId")
   public async findById(@Param("enquiryId") enquiryId: string) {
     const enquiry =  await this.enquiryService.findById(enquiryId);
