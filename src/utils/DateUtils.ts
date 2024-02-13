@@ -37,4 +37,19 @@ export default class DateUtils {
     const ans = moment(date1).diff(moment(date2), value);
     return abs ? Math.abs(ans) : ans;
   }
+
+  static joinDate(date1: any, date2: any) {
+    const momentObj1 = moment(date1, "YYYY-MM-DD hh:mm:ss A");
+    const momentObj2 = moment(date2, "YYYY-MM-DD hh:mm:ss A");
+    const date = new Date(momentObj1.year(), momentObj1.month(), momentObj1.date(), momentObj2.hour(), momentObj2.minutes(), 0);
+    return moment(date).format("YYYY-MM-DD hh:mm:ss A");
+  }
+
+  static checkIsAfter(date1: Date, date2: Date){
+    //moment('2010-10-20').isAfter('2010-01-01', 'year');
+    const formattedDate1 = moment(date1).format("YYYY-MM-DD");
+    const formattedDate2 = moment(date2).format("YYYY-MM-DD");
+    
+    return moment(formattedDate1).isAfter(formattedDate2, "year");
+  }
 }
