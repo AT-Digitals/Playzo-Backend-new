@@ -36,7 +36,7 @@ export default class BookingService {
       }
       );
 
-      const filteredBookingList = filterBookingList(bookingList, request.endDate, request.startTime,request.endTime);
+      const filteredBookingList = filterBookingList(bookingList, request.startDate,request.endDate, request.startTime,request.endTime);
 
       if (filteredBookingList.length >= BookingLength[request.type]) {
         throw new AppErrorDto(AppError.ALREADY_BOOKED);

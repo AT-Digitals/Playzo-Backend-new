@@ -46,10 +46,16 @@ export default class DateUtils {
   }
 
   static checkIsAfter(date1: Date, date2: Date){
-    //moment('2010-10-20').isAfter('2010-01-01', 'year');
     const formattedDate1 = moment(date1).format("YYYY-MM-DD");
     const formattedDate2 = moment(date2).format("YYYY-MM-DD");
     
     return moment(formattedDate1).isAfter(formattedDate2, "year");
+  }
+
+  static checkIsSame(date1: Date, date2: Date){
+    const formattedDate1 = moment(date1).format("YYYY-MM-DD");
+    const formattedDate2 = moment(date2).format("YYYY-MM-DD");
+
+    return moment(formattedDate1).isSame(formattedDate2);
   }
 }
