@@ -1,5 +1,4 @@
 import { AdminError } from "../../dto/error/AdminError";
-import { AdminLoginDto } from "../../dto/auth/AdminLoginDto";
 import { AppError } from "../../dto/error/AppError";
 import { AppErrorDto } from "../../dto/error/AppErrorDto";
 import { HttpStatusCode } from "../../dto/error/HttpStatusCode";

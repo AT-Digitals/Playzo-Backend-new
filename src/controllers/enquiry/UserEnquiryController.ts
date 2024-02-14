@@ -1,4 +1,4 @@
-import { Body, Delete, Get, JsonController, Param, Post } from "routing-controllers";
+import { Body, JsonController, Post } from "routing-controllers";
 import { EnquiryDto } from "../../dto/enquiry/EnquiryDto";
 import { EnquiryRequestDto } from "../../dto/enquiry/EnquiryRequestDto";
 import EnquiryService from "../../services/enquiry/EnquiryService";
