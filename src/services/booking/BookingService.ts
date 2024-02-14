@@ -134,6 +134,7 @@ export default class BookingService {
         booking = await booking.save();
         return booking;
       // }
+      }
   }
 
   async getBookingList(request: BookingRequestDto) {
