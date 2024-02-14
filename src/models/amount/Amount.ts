@@ -11,7 +11,7 @@ const amountSchema = new Schema({
         enum: [],
         default: BookingType.Turf,
       },
-      bookingAmount: String,
+      bookingAmount: Number,
       court: Number,
       deleted: Boolean
 

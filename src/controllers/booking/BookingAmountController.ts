@@ -1,4 +1,4 @@
-import { Body, JsonController, Param, Put } from "routing-controllers";
+import { Body,JsonController, Param, Put } from "routing-controllers";
 import { BookingAmountRequestDto } from "../../dto/booking/BookingAmountRequestDto";
 import { BookingDto } from "../../dto/booking/BookingDto";
 import BookingService from "../../services/booking/BookingService";
@@ -17,4 +17,8 @@ export class BookingAmountController {
     const booking = await this.bookingService.updateAmount(bookingId, newPrice);
     return new BookingDto(booking);
   }
+
+
 }
+
+

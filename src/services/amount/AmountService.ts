@@ -26,6 +26,18 @@ export default class AmountService {
 
   }
 
+  async findByAmount(type: any) {
+    console.log("type", type);
+    const amount = await Amount.find({bookingtype:type});
+    if (!amount[0]) {
+      throw new AppErrorDto(AppError.NOT_FOUND);
+    }
+    amount[0].bookingAmount = amount[0].bookingAmount*(30/100);
+    // totalAmount * (30/100)
+    return amount[0];
+
+  }
+
   public async getAll() {
     
     const amounts = await Amount.find({}).populate("user","name email phone userType").exec();
