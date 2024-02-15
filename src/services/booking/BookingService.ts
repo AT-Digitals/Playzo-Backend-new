@@ -18,18 +18,13 @@ import moment from "moment";
 
 // import { BookingUserRequestDto } from "../../dto/booking/BookingUserRequestDto";
 
-
-
-
-
-
-
-
 @Service()
 export default class BookingService {
 
   async create(request: BookingRequestDto) {
     const endDate = DateUtils.add(new Date(request.endDate),1,"day");
+    const diffDuration = moment.duration(moment(request.endDate).diff(moment(request.startDate)));
+    const days = moment(endDate).diff(moment(request.startDate),"days");
 
     const bookingList = await Booking.find(
     {
@@ -46,7 +41,8 @@ export default class BookingService {
     }
     );
 
-    const filteredBookingList = filterBookingList(bookingList, request.startDate,request.endDate, request.startTime,request.endTime);
+      
+    const filteredBookingList = filterBookingList(bookingList, request.startDate,request.endDate, request.startTime, request.endTime, days);
 
     if (filteredBookingList.length >= BookingLength[request.type]) {
       throw new AppErrorDto(AppError.ALREADY_BOOKED);
@@ -58,7 +54,7 @@ export default class BookingService {
       booking.isRefund = false;
 
       if(request.court !== undefined && request.court !== ""){
-         //check if that court is already booked or not, by iterating bookungList array. If it is already booked then throw error
+          //check if that court is already booked or not, by iterating bookungList array. If it is already booked then throw error
         filteredBookingList.forEach((bookingData)=>{
           if(bookingData.court === request.court){
             throw new AppErrorDto("This Court already booked. Please choose another Court"); 
@@ -93,8 +89,7 @@ export default class BookingService {
       if(request.bookingId !== ""){
         booking.bookingId = request.bookingId;
       }
-      const diffDuration = moment.duration(moment(request.endDate).diff(moment(request.startDate)));
-      const days = moment(endDate).diff(moment(request.startDate),"days");
+ 
       booking.isAnnual = diffDuration.years() > 0;
       booking.duration = days;
       
@@ -137,7 +132,10 @@ export default class BookingService {
         booking = await booking.save();
         return booking;
       // }
+
+ 
       }
+
   }
 
   // async getBookingList(request: BookingUserRequestDto) {
