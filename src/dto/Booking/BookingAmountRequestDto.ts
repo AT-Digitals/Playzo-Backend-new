@@ -1,9 +1,6 @@
-import {
-    IsOptional,
-} from "class-validator";
+import { IsOptional } from "class-validator";
 
-export class BookingAmountRequestDto {
-    
+export class BookingAmountRequestDto {  
     @IsOptional()
     bookingAmount: {
         online : number, 
@@ -11,6 +8,6 @@ export class BookingAmountRequestDto {
         total: number,
         refund:number
       };
-      @IsOptional()
-      isRefund: boolean;
-  }
+    @IsOptional()
+    isRefund: boolean;
+}

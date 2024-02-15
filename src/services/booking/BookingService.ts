@@ -85,7 +85,6 @@ export default class BookingService {
         
       }
 
-
       if(request.bookingId !== ""){
         booking.bookingId = request.bookingId;
       }
@@ -129,7 +128,6 @@ export default class BookingService {
       }
 
   }
-
   
 async getBookedList(request: BookingRequestDto) {
   console.log("use",request);
@@ -163,7 +161,6 @@ async getBookedList(request: BookingRequestDto) {
   }
 return bookingList.map((booking) => new BookingDto(booking));
 }
- 
 
   async getAmount(request: any, days: any) {
     //Amount Calculations
