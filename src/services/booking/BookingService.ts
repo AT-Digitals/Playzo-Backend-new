@@ -8,7 +8,6 @@ import { BookingDto } from "../../dto/booking/BookingDto";
 import { BookingLength } from "../../enum/BookingLength";
 import { BookingModel } from "../../models/booking/BookingModel";
 import { BookingRequestDto } from "../../dto/booking/BookingRequestDto";
-import { BookingUserRequestDto } from "../../dto/booking/BookingUserRequestDto";
 import DateUtils from "../../utils/DateUtils";
 import MailUtils from "../../utils/MailUtils";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
@@ -16,6 +15,15 @@ import { PaymentType } from "../../models/booking/PaymentType";
 import { Service } from "typedi";
 import { filterBookingList } from "../../utils/helpFunc";
 import moment from "moment";
+
+// import { BookingUserRequestDto } from "../../dto/booking/BookingUserRequestDto";
+
+
+
+
+
+
+
 
 @Service()
 export default class BookingService {
@@ -132,34 +140,34 @@ export default class BookingService {
       }
   }
 
-  async getBookingList(request: BookingUserRequestDto) {
-    console.log("rea",request);
-    const bookingList = await Booking.find(
-      {
-        $and: [
-          {startTime: {
-            $lt: request.endTime
-          }},
-          {endTime: {
-            $gt: request.startTime
-          }},
-          {type: request.type},
-          {isRefund: false}
-        ],
-      }
-      );
+  // async getBookingList(request: BookingUserRequestDto) {
+  //   console.log("rea",request);
+  //   const bookingList = await Booking.find(
+  //     {
+  //       $and: [
+  //         {startTime: {
+  //           $lt: request.endTime
+  //         }},
+  //         {endTime: {
+  //           $gt: request.startTime
+  //         }},
+  //         {type: request.type},
+  //         {isRefund: false}
+  //       ],
+  //     }
+  //     );
 
-      if (bookingList.length >= BookingLength[request.type]) {
-        throw new AppErrorDto(AppError.ALREADY_BOOKED);
-      }
-      const filteredBookingList = filterBookingList(bookingList, request.startDate,request.endDate, request.startTime,request.endTime);
+  //     if (bookingList.length >= BookingLength[request.type]) {
+  //       throw new AppErrorDto(AppError.ALREADY_BOOKED);
+  //     }
+  //     const filteredBookingList = filterBookingList(bookingList, request.startDate,request.endDate, request.startTime,request.endTime);
 
-      if (filteredBookingList.length >= BookingLength[request.type]) {
-        throw new AppErrorDto(AppError.ALREADY_BOOKED);
-      }
+  //     if (filteredBookingList.length >= BookingLength[request.type]) {
+  //       throw new AppErrorDto(AppError.ALREADY_BOOKED);
+  //     }
 
-      return bookingList;
-  }
+  //     return bookingList;
+  // }
 
   async getAmount(request: any, days: any) {
     //Amount Calculations

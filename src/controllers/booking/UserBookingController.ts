@@ -4,7 +4,7 @@ import { BookingDto } from "../../dto/booking/BookingDto";
 import { BookingRequestDto } from "../../dto/booking/BookingRequestDto";
 import BookingService from "../../services/booking/BookingService";
 import { Service } from "typedi";
-import { BookingUserRequestDto } from "../../dto/booking/BookingUserRequestDto";
+// import { BookingUserRequestDto } from "../../dto/booking/BookingUserRequestDto";
 
 @JsonController("/user/bookings")
 @Service()
@@ -27,12 +27,12 @@ export class UserBookingController {
     return new BookingDto(booking);
   }
 
-  @Post("/disable")
-  public async getBookedList( @Body() request: BookingUserRequestDto) {
-    console.log("cont",request); 
-     const bookings = this.bookingService.getBookingList(request);
-     return bookings;
-  }
+  // @Post("/disable")
+  // public async getBookedList( @Body() request: BookingUserRequestDto) {
+  //   console.log("cont",request); 
+  //    const bookings = this.bookingService.getBookingList(request);
+  //    return bookings;
+  // }
   
 
   @Put("/:bookingId")
