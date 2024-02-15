@@ -43,5 +43,3 @@ export class UserBookingController {
     return new Booking(booking);
   }
 }
-
-

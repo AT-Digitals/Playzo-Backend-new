@@ -21,6 +21,7 @@
   "author": "Tamilarasu",
   "license": "ISC",
   "dependencies": {
+    "@types/mongoose": "^5.11.97",
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
@@ -39,6 +40,7 @@
     "mongoose": "^5.13.2",
     "morgan": "^1.10.0",
     "multer": "^1.4.2",
+    "nodemailer": "^6.9.9",
     "razorpay": "^2.9.2",
     "reflect-metadata": "^0.1.13",
     "routing-controllers": "0.9.0",
@@ -59,6 +61,7 @@
     "@types/morgan": "^1.9.3",
     "@types/multer": "^1.4.7",
     "@types/node": "^15.14.1",
+    "@types/nodemailer": "^6.4.14",
     "@types/uuid": "^8.3.1",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@typescript-eslint/parser": "^4.28.2",

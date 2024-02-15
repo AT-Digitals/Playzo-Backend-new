@@ -10,9 +10,9 @@ import AuthDto from "../../dto/auth/AuthDto";
 import { AuthUtils } from "../../utils/AuthUtils";
 import { Response } from "express";
 import { Service } from "typedi";
+import { UserDto } from "../../dto/user/UserDto";
 import UserLoginRequestDto from "../../dto/auth/UserLoginRequestDto";
-import { UserServices } from "../../services/user/UserServices";
-import { UserDto } from "../../dto/user/UserDto"; 
+import { UserServices } from "../../services/user/UserServices"; 
 
 @JsonController("/user")
 @Service()

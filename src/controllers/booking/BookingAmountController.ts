@@ -18,7 +18,4 @@ export class BookingAmountController {
     return new BookingDto(booking);
   }
 
-
 }
-
-

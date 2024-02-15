@@ -60,6 +60,5 @@ export class UserServices {
     }
     return users.map((user) => new UserDto(user));
   }
-
   
 }

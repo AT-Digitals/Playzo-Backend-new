@@ -1,7 +1,7 @@
 import { Get, JsonController, Param } from "routing-controllers";
-import { Service } from "typedi";
-import AmountService from "../../services/amount/AmountService";
 import { AmountDto } from "../../dto/amount/AmountDto";
+import AmountService from "../../services/amount/AmountService";
+import { Service } from "typedi";
 
 @JsonController("/user/booking/amount")
 @Service()
@@ -15,5 +15,3 @@ export class UserBookingController {
   }
 
 }
-
-
