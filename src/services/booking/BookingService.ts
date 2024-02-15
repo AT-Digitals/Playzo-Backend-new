@@ -7,7 +7,7 @@ import { BookingDateFilterRequestDto } from "../../dto/booking/BookingDateFilter
 import { BookingDto } from "../../dto/booking/BookingDto";
 import { BookingLength } from "../../enum/BookingLength";
 import { BookingModel } from "../../models/booking/BookingModel";
-import { BookingRequestDto } from "../../dto/booking/BookingRequestDto";
+import { BookingRequestDto } from "../../dto/Booking/BookingRequestDto";
 import DateUtils from "../../utils/DateUtils";
 import MailUtils from "../../utils/MailUtils";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
@@ -40,7 +40,6 @@ export default class BookingService {
       ],
     }
     );
-
       
     const filteredBookingList = filterBookingList(bookingList, request.startDate,request.endDate, request.startTime, request.endTime, days);
 
@@ -131,9 +130,6 @@ export default class BookingService {
         });
         booking = await booking.save();
         return booking;
-      // }
-
- 
       }
 
   }
@@ -275,79 +271,79 @@ export default class BookingService {
   async getBookingFilterCount(req: any) {
     if(req.startDate){
       req.startDate = DateUtils.formatDate(req.startDate,"yyyy-MM-DDT00:00:00.000+00:00");
-     }
+    }
      if(req.endDate){
       req.endDate = DateUtils.formatDate(req.endDate,"yyyy-MM-DDT00:00:00.000+00:00");
-     }
+    }
     const newFilter = { ...req };
- delete newFilter.page;
- delete newFilter.limit;
- 
- if(newFilter.startDate && newFilter.endDate){
-  delete newFilter.startDate;
-    newFilter.startDate= {
-      $gte: new Date(req.startDate)
-    };
-    newFilter.endDate = {
-      $lte: new Date(req.endDate)
-    };
- }else{
-  if(req.startDate){
-    newFilter.startDate= {
-      $gte: new Date(req.startDate)
-    };
-  }
-  if(req.endDate){
-    newFilter.endDate = {
-      $lte: new Date(req.endDate)
-    };
-  }
- }
-
- const bookings = await Booking.find({"$and": [newFilter]}).populate("user","name email phone userType").exec();
-   
-  //between days array filter start
-  const dateFilter = {...newFilter};
-  delete dateFilter.startDate;
-  delete dateFilter.endDate;
-  const endDate = DateUtils.add(new Date(req.endDate),1,"day");
-  const days = moment(endDate).diff(moment(req.startDate),"days");
-  if(req.startDate && req.endDate){
-    const betweenBookings = await Booking.find({"$and": [{startDate:{
-      $gte: new Date(req.startDate)
+    delete newFilter.page;
+    delete newFilter.limit;
     
-    }},{startDate:{
-      $lte: new Date(req.endDate)
-    }},{duration:{ $gt: days}}, dateFilter]}).populate("user","name email phone userType").exec();
-    betweenBookings.map(async (list)=>{
-if(list.bookingAmount?.cash || list.bookingAmount?.online){
-const {totalAmount, onlineAmount}  = await this.setFilterAmount(list,days);
-console.log(totalAmount,onlineAmount);
-list.bookingAmount["cash"] = totalAmount;
-list.bookingAmount["online"] = onlineAmount;
-}
-    });
+    if(newFilter.startDate && newFilter.endDate){
+      delete newFilter.startDate;
+        newFilter.startDate= {
+          $gte: new Date(req.startDate)
+        };
+        newFilter.endDate = {
+          $lte: new Date(req.endDate)
+        };
+    }else{
+      if(req.startDate){
+        newFilter.startDate= {
+          $gte: new Date(req.startDate)
+        };
+      }
+      if(req.endDate){
+        newFilter.endDate = {
+          $lte: new Date(req.endDate)
+        };
+      }
+    }
 
- betweenBookings.map( (list)=>{
-  bookings.push(list);
- });
-     }
-     
-  //between days array filter end
- return bookings.map((booking) => new BookingDto(booking));
-   }
+    const bookings = await Booking.find({"$and": [newFilter]}).populate("user","name email phone userType").exec();
+    
+    //between days array filter start
+    const dateFilter = {...newFilter};
+    delete dateFilter.startDate;
+    delete dateFilter.endDate;
+    const endDate = DateUtils.add(new Date(req.endDate),1,"day");
+    const days = moment(endDate).diff(moment(req.startDate),"days");
+    if(req.startDate && req.endDate){
+      const betweenBookings = await Booking.find({"$and": [{startDate:{
+        $gte: new Date(req.startDate)
+      
+      }},{startDate:{
+        $lte: new Date(req.endDate)
+      }},{duration:{ $gt: days}}, dateFilter]}).populate("user","name email phone userType").exec();
+      betweenBookings.map(async (list)=>{
+        if(list.bookingAmount?.cash || list.bookingAmount?.online){
+          const {totalAmount, onlineAmount}  = await this.setFilterAmount(list,days);
+          console.log(totalAmount,onlineAmount);
+          list.bookingAmount["cash"] = totalAmount;
+          list.bookingAmount["online"] = onlineAmount;
+        }
+      });
+
+      betweenBookings.map( (list)=>{
+        bookings.push(list);
+      });
+    }
+      
+    //between days array filter end
+    return bookings.map((booking) => new BookingDto(booking));
+  }
 
 async getBookingFilter(req: any) {
   
-     if(req.startDate){
+  if(req.startDate){
     req.startDate = DateUtils.formatDate(req.startDate,"yyyy-MM-DDT00:00:00.000+00:00");
-   }
-   if(req.endDate){
+  }
+  if(req.endDate){
     req.endDate = DateUtils.formatDate(req.endDate,"yyyy-MM-DDT00:00:00.000+00:00");
-   }
-   const newFilter = { ...req };
-delete newFilter.page;
-delete newFilter.limit;
+  }
+  const newFilter = { ...req };
+  delete newFilter.page;
+  delete newFilter.limit;
 
    if(newFilter.startDate && newFilter.endDate){
     delete newFilter.startDate;
@@ -370,7 +366,7 @@ delete newFilter.limit;
     }
    }
 
-let bookings: BookingModel[] = [];
+  let bookings: BookingModel[] = [];
 if(req && req.page && req.limit){
    
   bookings = await Booking.find( {"$and": [newFilter]}).skip((+req.page - 1) * req.limit).limit(req.limit).populate("user","name email phone userType").exec();
