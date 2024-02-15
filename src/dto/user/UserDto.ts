@@ -1,5 +1,5 @@
 import AuthDto from "../auth/AuthDto";
-import { BookingDto } from "../Booking/BookingDto";
+import { BookingDto } from "../booking/BookingDto";
 import { UserModel } from "../../models/user/UserModel";
 import { UserType } from "../auth/UserType";
 import { elemT } from "../../utils/UnionArray";
@@ -9,6 +9,7 @@ export class UserDto extends AuthDto{
   name: string;
   id: string;
   phone: number;
+  token?:string;
   bookingHistory: BookingDto[] = [];
 
   constructor(user: UserModel) {

@@ -8,9 +8,12 @@ export class EnquiryRequestDto {
     @IsEmail({}, { message: "Please provide a valid email" })
     userEmail: string;
   
-    @IsDefined({ message: "phoneNumber is required" })
-    phoneNumber: number;
+    @IsOptional()
+    phoneNumber?: number;
 
     @IsOptional()
     enquiryMessage?: string;
+
+    @IsOptional()
+    projectType?: string;
 }

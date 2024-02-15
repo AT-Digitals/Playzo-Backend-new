@@ -1,6 +1,6 @@
 import {  Get, JsonController, QueryParams } from "routing-controllers";
 import { Service } from "typedi";
-import { BookingDateFilterRequestDto } from "../../../dto/Booking/BookingDateFilterRequestDto";
+import { BookingDateFilterRequestDto } from "../../../dto/booking/BookingDateFilterRequestDto";
 import { AdminUsersService } from "../../../services/admin/adminUser/AdminUsersService";
 import { UserServices } from "../../../services/user/UserServices";
 

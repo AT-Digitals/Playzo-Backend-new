@@ -1,11 +1,11 @@
 import { AdminError } from "../../dto/error/AdminError";
-import { AdminLoginDto } from "../../dto/auth/AdminLoginDto";
 import { AppError } from "../../dto/error/AppError";
 import { AppErrorDto } from "../../dto/error/AppErrorDto";
 import { HttpStatusCode } from "../../dto/error/HttpStatusCode";
 import { Service } from "typedi";
 import { User } from "../../models/user/User";
 import { UserDto } from "../../dto/user/UserDto";
+import UserLoginRequestDto from "../../dto/auth/UserLoginRequestDto";
 import { UserModel } from "../../models/user/UserModel";
 import { UserRequestDto } from "../../dto/user/UserRequestDto";
 
@@ -38,7 +38,7 @@ export class UserServices {
     return new UserDto(user);
   }
 
-  public async login(loginDto: AdminLoginDto) {
+  public async login(loginDto: UserLoginRequestDto) {
     const user = await User.findOne({
       email: loginDto.email,
     });
@@ -48,7 +48,7 @@ export class UserServices {
         HttpStatusCode.UNAUTHORIZED
       );
     }
-    return new UserDto(user);
+    return user;
   }
 
   async getUserList(req: any) {

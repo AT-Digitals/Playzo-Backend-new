@@ -2,18 +2,21 @@ import { Amount } from "../../models/amount/Amount";
 import { AppError } from "../../dto/error/AppError";
 import { AppErrorDto } from "../../dto/error/AppErrorDto";
 import { Booking } from "../../models/booking/Booking";
-import { BookingAmountRequestDto } from "../../dto/Booking/BookingAmountRequestDto";
-import { BookingDateFilterRequestDto } from "../../dto/Booking/BookingDateFilterRequestDto";
-import { BookingDto } from "../../dto/Booking/BookingDto";
+import { BookingAmountRequestDto } from "../../dto/booking/BookingAmountRequestDto";
+import { BookingDateFilterRequestDto } from "../../dto/booking/BookingDateFilterRequestDto";
+import { BookingDto } from "../../dto/booking/BookingDto";
 import { BookingLength } from "../../enum/BookingLength";
 import { BookingModel } from "../../models/booking/BookingModel";
 import { BookingRequestDto } from "../../dto/Booking/BookingRequestDto";
 import DateUtils from "../../utils/DateUtils";
+import MailUtils from "../../utils/MailUtils";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
 import { PaymentType } from "../../models/booking/PaymentType";
 import { Service } from "typedi";
 import { filterBookingList } from "../../utils/helpFunc";
 import moment from "moment";
+
+// import { BookingUserRequestDto } from "../../dto/booking/BookingUserRequestDto";
 
 @Service()
 export default class BookingService {
@@ -85,7 +88,7 @@ export default class BookingService {
       if(request.bookingId !== ""){
         booking.bookingId = request.bookingId;
       }
-      
+ 
       booking.isAnnual = diffDuration.years() > 0;
       booking.duration = days;
       
@@ -113,10 +116,52 @@ export default class BookingService {
         };
       }
       booking.deleted = false;
-      booking = await booking.save();
-      return booking;
-    }
+        MailUtils.sendMail({
+          to: "antoshoba@gmail.com",
+          subject: "Your booking successfully added",
+          html: `<div>
+              <h2>Booking Details</h2>
+              <p>Type : ${booking.type} </p>
+              <p>Start Date : ${request.startDate}</p>
+              <p>End Date : ${request.endDate} </p>
+              <p>Cash Amount : ${booking.bookingAmount.cash}</p>
+              <p>Online Amount : ${booking.bookingAmount.online}</p>
+            </div>`,
+        });
+        booking = await booking.save();
+        return booking;
+      }
+
   }
+
+  // async getBookingList(request: BookingUserRequestDto) {
+  //   console.log("rea",request);
+  //   const bookingList = await Booking.find(
+  //     {
+  //       $and: [
+  //         {startTime: {
+  //           $lt: request.endTime
+  //         }},
+  //         {endTime: {
+  //           $gt: request.startTime
+  //         }},
+  //         {type: request.type},
+  //         {isRefund: false}
+  //       ],
+  //     }
+  //     );
+
+  //     if (bookingList.length >= BookingLength[request.type]) {
+  //       throw new AppErrorDto(AppError.ALREADY_BOOKED);
+  //     }
+  //     const filteredBookingList = filterBookingList(bookingList, request.startDate,request.endDate, request.startTime,request.endTime);
+
+  //     if (filteredBookingList.length >= BookingLength[request.type]) {
+  //       throw new AppErrorDto(AppError.ALREADY_BOOKED);
+  //     }
+
+  //     return bookingList;
+  // }
 
   async getAmount(request: any, days: any) {
     //Amount Calculations
@@ -226,79 +271,79 @@ export default class BookingService {
   async getBookingFilterCount(req: any) {
     if(req.startDate){
       req.startDate = DateUtils.formatDate(req.startDate,"yyyy-MM-DDT00:00:00.000+00:00");
-     }
+    }
      if(req.endDate){
       req.endDate = DateUtils.formatDate(req.endDate,"yyyy-MM-DDT00:00:00.000+00:00");
-     }
+    }
     const newFilter = { ...req };
- delete newFilter.page;
- delete newFilter.limit;
- 
- if(newFilter.startDate && newFilter.endDate){
-  delete newFilter.startDate;
-    newFilter.startDate= {
-      $gte: new Date(req.startDate)
-    };
-    newFilter.endDate = {
-      $lte: new Date(req.endDate)
-    };
- }else{
-  if(req.startDate){
-    newFilter.startDate= {
-      $gte: new Date(req.startDate)
-    };
-  }
-  if(req.endDate){
-    newFilter.endDate = {
-      $lte: new Date(req.endDate)
-    };
-  }
- }
-
- const bookings = await Booking.find({"$and": [newFilter]}).populate("user","name email phone userType").exec();
-   
-  //between days array filter start
-  const dateFilter = {...newFilter};
-  delete dateFilter.startDate;
-  delete dateFilter.endDate;
-  const endDate = DateUtils.add(new Date(req.endDate),1,"day");
-  const days = moment(endDate).diff(moment(req.startDate),"days");
-  if(req.startDate && req.endDate){
-    const betweenBookings = await Booking.find({"$and": [{startDate:{
-      $gte: new Date(req.startDate)
+    delete newFilter.page;
+    delete newFilter.limit;
     
-    }},{startDate:{
-      $lte: new Date(req.endDate)
-    }},{duration:{ $gt: days}}, dateFilter]}).populate("user","name email phone userType").exec();
-    betweenBookings.map(async (list)=>{
-if(list.bookingAmount?.cash || list.bookingAmount?.online){
-const {totalAmount, onlineAmount}  = await this.setFilterAmount(list,days);
-console.log(totalAmount,onlineAmount);
-list.bookingAmount["cash"] = totalAmount;
-list.bookingAmount["online"] = onlineAmount;
-}
-    });
+    if(newFilter.startDate && newFilter.endDate){
+      delete newFilter.startDate;
+        newFilter.startDate= {
+          $gte: new Date(req.startDate)
+        };
+        newFilter.endDate = {
+          $lte: new Date(req.endDate)
+        };
+    }else{
+      if(req.startDate){
+        newFilter.startDate= {
+          $gte: new Date(req.startDate)
+        };
+      }
+      if(req.endDate){
+        newFilter.endDate = {
+          $lte: new Date(req.endDate)
+        };
+      }
+    }
 
- betweenBookings.map( (list)=>{
-  bookings.push(list);
- });
-     }
-     
-  //between days array filter end
- return bookings.map((booking) => new BookingDto(booking));
-   }
+    const bookings = await Booking.find({"$and": [newFilter]}).populate("user","name email phone userType").exec();
+    
+    //between days array filter start
+    const dateFilter = {...newFilter};
+    delete dateFilter.startDate;
+    delete dateFilter.endDate;
+    const endDate = DateUtils.add(new Date(req.endDate),1,"day");
+    const days = moment(endDate).diff(moment(req.startDate),"days");
+    if(req.startDate && req.endDate){
+      const betweenBookings = await Booking.find({"$and": [{startDate:{
+        $gte: new Date(req.startDate)
+      
+      }},{startDate:{
+        $lte: new Date(req.endDate)
+      }},{duration:{ $gt: days}}, dateFilter]}).populate("user","name email phone userType").exec();
+      betweenBookings.map(async (list)=>{
+        if(list.bookingAmount?.cash || list.bookingAmount?.online){
+          const {totalAmount, onlineAmount}  = await this.setFilterAmount(list,days);
+          console.log(totalAmount,onlineAmount);
+          list.bookingAmount["cash"] = totalAmount;
+          list.bookingAmount["online"] = onlineAmount;
+        }
+      });
+
+      betweenBookings.map( (list)=>{
+        bookings.push(list);
+      });
+    }
+      
+    //between days array filter end
+    return bookings.map((booking) => new BookingDto(booking));
+  }
 
 async getBookingFilter(req: any) {
   
-     if(req.startDate){
+  if(req.startDate){
     req.startDate = DateUtils.formatDate(req.startDate,"yyyy-MM-DDT00:00:00.000+00:00");
-   }
-   if(req.endDate){
+  }
+  if(req.endDate){
     req.endDate = DateUtils.formatDate(req.endDate,"yyyy-MM-DDT00:00:00.000+00:00");
-   }
-   const newFilter = { ...req };
-delete newFilter.page;
-delete newFilter.limit;
+  }
+  const newFilter = { ...req };
+  delete newFilter.page;
+  delete newFilter.limit;
 
    if(newFilter.startDate && newFilter.endDate){
     delete newFilter.startDate;
@@ -321,7 +366,7 @@ delete newFilter.limit;
     }
    }
 
-let bookings: BookingModel[] = [];
+  let bookings: BookingModel[] = [];
 if(req && req.page && req.limit){
    
   bookings = await Booking.find( {"$and": [newFilter]}).skip((+req.page - 1) * req.limit).limit(req.limit).populate("user","name email phone userType").exec();

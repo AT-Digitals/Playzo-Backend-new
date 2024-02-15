@@ -1,9 +1,10 @@
 import { Body, Delete, Get, JsonController, Param, Post, Put } from "routing-controllers";
 import { Booking } from "../../models/booking/Booking";
-import { BookingDto } from "../../dto/Booking/BookingDto";
-import { BookingRequestDto } from "../../dto/Booking/BookingRequestDto";
+import { BookingDto } from "../../dto/booking/BookingDto";
+import { BookingRequestDto } from "../../dto/booking/BookingRequestDto";
 import BookingService from "../../services/booking/BookingService";
 import { Service } from "typedi";
+// import { BookingUserRequestDto } from "../../dto/booking/BookingUserRequestDto";
 
 @JsonController("/user/bookings")
 @Service()
@@ -26,11 +27,13 @@ export class UserBookingController {
     return new BookingDto(booking);
   }
 
-  @Get()
-  public async getAllBookings() {
-     const bookings = this.bookingService.getAll();
-     return bookings;
-  }
+  // @Post("/disable")
+  // public async getBookedList( @Body() request: BookingUserRequestDto) {
+  //   console.log("cont",request); 
+  //    const bookings = this.bookingService.getBookingList(request);
+  //    return bookings;
+  // }
+  
 
   @Put("/:bookingId")
   public async updateById(
@@ -47,3 +50,5 @@ export class UserBookingController {
     return new Booking(booking);
   }
 }
+
+

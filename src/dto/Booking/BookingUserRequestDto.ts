@@ -1,15 +1,12 @@
+import { BookingType } from "../../models/booking/BookingType";
 import {
-    IsDefined,
-    IsEnum,
     IsOptional,
 } from "class-validator";
-
-import { BookingType } from "../../models/booking/BookingType";
 import { PaymentType } from "../../models/booking/PaymentType";
 
-export class BookingRequestDto {
+export class BookingUserRequestDto {
 
-    @IsEnum(BookingType, { message: "Please provide a valid Booking Type" })
+    // @IsEnum(BookingType, { message: "Please provide a valid Booking Type" })
     type: BookingType;
   
     // @IsDefined({ message: "Date is required" })
@@ -24,25 +21,25 @@ export class BookingRequestDto {
         refund:number
       };
   
-    @IsEnum(PaymentType, { message: "Please provide a valid Payment Type" })
+    // @IsEnum(PaymentType, { message: "Please provide a valid Payment Type" })
     bookingtype: PaymentType;
 
-    @IsDefined({ message: "starttime is required" })
+    // @IsDefined({ message: "starttime is required" })
     startTime: number;
 
-    @IsDefined({ message: "endtime is required" })
+    // @IsDefined({ message: "endtime is required" })
     endTime: number;
     
-    @IsDefined({ message: "user Id is required" })
+    // @IsDefined({ message: "user Id is required" })
     user:string;
 
     @IsOptional()
     bookingId?: string;
 
-    @IsDefined({ message: "Start Date is required" })
+    // @IsDefined({ message: "Start Date is required" })
     startDate: string;
 
-    @IsDefined({ message: "End Date is required" })
+    // @IsDefined({ message: "End Date is required" })
     endDate:Date;
 
     @IsOptional()

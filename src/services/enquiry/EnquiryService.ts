@@ -5,6 +5,7 @@ import { Enquiry } from "../../models/enquiry/Enquiry";
 import { EnquiryDto } from "../../dto/enquiry/EnquiryDto";
 import { EnquiryModel } from "../../models/enquiry/EnquiryModel";
 import { EnquiryRequestDto } from "../../dto/enquiry/EnquiryRequestDto";
+import MailUtils from "../../utils/MailUtils";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
 import { Service } from "typedi";
 
@@ -14,6 +15,17 @@ export default class EnquiryService {
   async create(request: EnquiryRequestDto) {
         let enquiry = new Enquiry(request);
         enquiry.dateOfEnquiry = new Date(DateUtils.formatDate(new Date(),"yyyy-MM-DDT00:00:00.000+00:00"));
+        MailUtils.sendMail({
+          to: "antoshoba@gmail.com",
+          subject: "Your Details successfully added",
+          html: `<div>
+              <h2>Contact Details</h2>
+              <p>Name : ${request.userName} </p>
+              <p>Email : ${request.userEmail}</p>
+              <p>project Type : ${request.projectType} </p>
+              <p>Message : ${request.enquiryMessage}</p>
+            </div>`,
+        });
         enquiry = await enquiry.save();
         return enquiry;
     

@@ -3,8 +3,8 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
 const JwtMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  const arrayPath = ["/admin/admins/login","/admin/admins/adminUsers"];
-  if(arrayPath.includes(req.path) || req.method === "OPTIONS"){  
+  const arrayPath = ["/admin/admins/login","/admin/admins/adminUsers","/user/login","/user/auth/logout","/user/enquiries"];
+  if(arrayPath.includes(req.path) || req.method === "OPTIONS"){
     next();
   }else {
     const authorizationHeader = req.header("Authorization");
