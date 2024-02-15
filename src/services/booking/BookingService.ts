@@ -19,102 +19,103 @@ import moment from "moment";
 export default class BookingService {
 
   async create(request: BookingRequestDto) {
-   const endDate = DateUtils.add(new Date(request.endDate),1,"day");
+    const endDate = DateUtils.add(new Date(request.endDate),1,"day");
+    const diffDuration = moment.duration(moment(request.endDate).diff(moment(request.startDate)));
+    const days = moment(endDate).diff(moment(request.startDate),"days");
 
-      const bookingList = await Booking.find(
-      {
-        $and: [
-          {startTime: {
-            $lt: request.endTime
-          }},
-          {endTime: {
-            $gt: request.startTime
-          }},
-          {type: request.type},
-          {isRefund: false}
-        ],
-      }
-      );
+    const bookingList = await Booking.find(
+    {
+      $and: [
+        {startTime: {
+          $lt: request.endTime
+        }},
+        {endTime: {
+          $gt: request.startTime
+        }},
+        {type: request.type},
+        {isRefund: false}
+      ],
+    }
+    );
+      
+    const filteredBookingList = filterBookingList(bookingList, request.startDate,request.endDate, request.startTime, request.endTime, days);
 
-      const filteredBookingList = filterBookingList(bookingList, request.startDate,request.endDate, request.startTime,request.endTime);
+    if (filteredBookingList.length >= BookingLength[request.type]) {
+      throw new AppErrorDto(AppError.ALREADY_BOOKED);
+    }
+    else {
+      let booking = new Booking(request);
+      booking.user = request.user;
+      booking.dateOfBooking = new Date();
+      booking.isRefund = false;
 
-      if (filteredBookingList.length >= BookingLength[request.type]) {
-        throw new AppErrorDto(AppError.ALREADY_BOOKED);
-      }
-      else {
-        let booking = new Booking(request);
-        booking.user = request.user;
-        booking.dateOfBooking = new Date();
-        booking.isRefund = false;
+      if(request.court !== undefined && request.court !== ""){
+          //check if that court is already booked or not, by iterating bookungList array. If it is already booked then throw error
+        filteredBookingList.forEach((bookingData)=>{
+          if(bookingData.court === request.court){
+            throw new AppErrorDto("This Court already booked. Please choose another Court"); 
+          }
+        });
 
-        if(request.court !== undefined && request.court !== ""){
-           //check if that court is already booked or not, by iterating bookungList array. If it is already booked then throw error
-          filteredBookingList.forEach((bookingData)=>{
-            if(bookingData.court === request.court){
-              throw new AppErrorDto("This Court already booked. Please choose another Court"); 
-            }
-          });
-
-          booking.court = request.court;
-        }else{
-          //find the first missing court number
-          let courtNumber = null;
-          const courtNumberObj: any = {};
-          if(filterBookingList.length === 0){
-            booking.court = "1";
-          }else {
-            for (let i = 1; i <= BookingLength[request.type]; i++) {
-              courtNumberObj[i] = false;
-            }
-            for (let i = 0; i < filteredBookingList.length; i++) {
-              courtNumber = filteredBookingList[i].court;
-              courtNumberObj[courtNumber] = true;
-            }
-            
-            for (let i = 1; i <= BookingLength[request.type]; i++) {
-              if(!courtNumberObj[i]){
-                booking.court = i.toString();
-                break;
-              }
-            }
+        booking.court = request.court;
+      }else{
+        //find the first missing court number
+        let courtNumber = null;
+        const courtNumberObj: any = {};
+        if(filterBookingList.length === 0){
+          booking.court = "1";
+        }else {
+          for (let i = 1; i <= BookingLength[request.type]; i++) {
+            courtNumberObj[i] = false;
+          }
+          for (let i = 0; i < filteredBookingList.length; i++) {
+            courtNumber = filteredBookingList[i].court;
+            courtNumberObj[courtNumber] = true;
           }
           
+          for (let i = 1; i <= BookingLength[request.type]; i++) {
+            if(!courtNumberObj[i]){
+              booking.court = i.toString();
+              break;
+            }
+          }
         }
-        if(request.bookingId !== ""){
-          booking.bookingId = request.bookingId;
-        }
-        const diffDuration = moment.duration(moment(request.endDate).diff(moment(request.startDate)));
-        const days = moment(endDate).diff(moment(request.startDate),"days");
-        booking.isAnnual = diffDuration.years() > 0;
-        booking.duration = days;
         
-        //Amount Calculations
-        const {totalAmount, onlineAmount} = await this.getAmount(request, days);
-        let requestBookingAmount = 0;
-        
-        if(request.bookingAmount?.cash){
-          requestBookingAmount = request.bookingAmount?.cash;
-        }
-
-        if(request.bookingtype === PaymentType.Cash){
-          booking.bookingAmount = {
-                online : 0, 
-                cash: requestBookingAmount === 0 ? totalAmount : requestBookingAmount,
-                total: requestBookingAmount === 0 ? totalAmount : requestBookingAmount,
-                refund:0
-          };
-        }else{
-          booking.bookingAmount = {
-            online : onlineAmount, 
-            cash: 0,
-            total: onlineAmount,
-            refund:0
-          };
-        }
-        booking.deleted = false;
-        booking = await booking.save();
-        return booking;
       }
+      if(request.bookingId !== ""){
+        booking.bookingId = request.bookingId;
+      }
+      
+      booking.isAnnual = diffDuration.years() > 0;
+      booking.duration = days;
+      
+      //Amount Calculations
+      const {totalAmount, onlineAmount} = await this.getAmount(request, days);
+      let requestBookingAmount = 0;
+      
+      if(request.bookingAmount?.cash){
+        requestBookingAmount = request.bookingAmount?.cash;
+      }
+
+      if(request.bookingtype === PaymentType.Cash){
+        booking.bookingAmount = {
+              online : 0, 
+              cash: requestBookingAmount === 0 ? totalAmount : requestBookingAmount,
+              total: requestBookingAmount === 0 ? totalAmount : requestBookingAmount,
+              refund:0
+        };
+      }else{
+        booking.bookingAmount = {
+          online : onlineAmount, 
+          cash: 0,
+          total: onlineAmount,
+          refund:0
+        };
+      }
+      booking.deleted = false;
+      booking = await booking.save();
+      return booking;
+    }
   }
 
   async getAmount(request: any, days: any) {

@@ -10,14 +10,15 @@ export function convertToString(param: any){
 }
 
 function convertTimeStringtoNum(param: string){
+    const time = parseInt(param.split(" ")[0]);
     if(param.split(" ")[1].toLowerCase() === "am"){
-        return parseInt(param.split(" ")[0]);
+        return time === 12 ? 0 : time;
     }else {
-        return (parseInt(param.split(" ")[0]) + 12) !== 24 ? (parseInt(param.split(" ")[0]) + 12) : 0;
+        return time === 12 ? time : time + 12;
     }
 }
 
-export function filterBookingList(bookingList: any, newStartDate: any,newEndDate: any, newStartTime: any, newEndTime: any){
+export function filterBookingList(bookingList: any, newStartDate: any,newEndDate: any, newStartTime: any, newEndTime: any, duration: any){
     const filteredList: any[] = [];
     for (let i = 0; i < bookingList.length; i++) {
         const booking = bookingList[i];
@@ -39,7 +40,7 @@ export function filterBookingList(bookingList: any, newStartDate: any,newEndDate
         const formattedStartMS = moment(formattedStartDate, "YYYY-MM-DD hh:mm:ss A").valueOf();
         const formattedEndMS = moment(formattedEndDate,  "YYYY-MM-DD hh:mm:ss A").valueOf();
  
-        if((DateUtils.checkIsSame(newStartDate, booking.startDate) && DateUtils.checkIsSame(newEndDate, booking.endDate)) && ((oldOnlyEndTime <= newOnlyStartTime) || (oldOnlyStartTime > newOnlyStartTime))){
+        if(duration > 1 && (DateUtils.checkIsSame(newStartDate, booking.startDate) && DateUtils.checkIsSame(newEndDate, booking.endDate)) && ((oldOnlyEndTime <= newOnlyStartTime) || (oldOnlyStartTime > newOnlyStartTime))){
          continue;
         }else if(!(DateUtils.checkIsAfter(newEndDate, booking.endDate)) && (formattedStartMS < newEndTime) && (formattedEndMS > newStartTime)){
          filteredList.push(booking);
