@@ -7,16 +7,15 @@ import { BookingDateFilterRequestDto } from "../../dto/booking/BookingDateFilter
 import { BookingDto } from "../../dto/booking/BookingDto";
 import { BookingLength } from "../../enum/BookingLength";
 import { BookingModel } from "../../models/booking/BookingModel";
-import { BookingRequestDto } from "../../dto/Booking/BookingRequestDto";
+import { BookingRequestDto } from "../../dto/booking/BookingRequestDto";
 import DateUtils from "../../utils/DateUtils";
+import MailTemplateUtils from "../../utils/MailTemplateUtils";
 import MailUtils from "../../utils/MailUtils";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
 import { PaymentType } from "../../models/booking/PaymentType";
 import { Service } from "typedi";
 import { filterBookingList } from "../../utils/helpFunc";
 import moment from "moment";
-
-// import { BookingUserRequestDto } from "../../dto/booking/BookingUserRequestDto";
 
 @Service()
 export default class BookingService {
@@ -85,6 +84,8 @@ export default class BookingService {
         }
         
       }
+
+
       if(request.bookingId !== ""){
         booking.bookingId = request.bookingId;
       }
@@ -116,52 +117,53 @@ export default class BookingService {
         };
       }
       booking.deleted = false;
+
+        booking = await booking.save();
         MailUtils.sendMail({
           to: "antoshoba@gmail.com",
           subject: "Your booking successfully added",
-          html: `<div>
-              <h2>Booking Details</h2>
-              <p>Type : ${booking.type} </p>
-              <p>Start Date : ${request.startDate}</p>
-              <p>End Date : ${request.endDate} </p>
-              <p>Cash Amount : ${booking.bookingAmount.cash}</p>
-              <p>Online Amount : ${booking.bookingAmount.online}</p>
-            </div>`,
+          html: MailTemplateUtils.BookingMail(booking)
+    
         });
-        booking = await booking.save();
         return booking;
       }
 
   }
 
-  // async getBookingList(request: BookingUserRequestDto) {
-  //   console.log("rea",request);
-  //   const bookingList = await Booking.find(
-  //     {
-  //       $and: [
-  //         {startTime: {
-  //           $lt: request.endTime
-  //         }},
-  //         {endTime: {
-  //           $gt: request.startTime
-  //         }},
-  //         {type: request.type},
-  //         {isRefund: false}
-  //       ],
-  //     }
-  //     );
+  
+async getBookedList(request: BookingRequestDto) {
+  console.log("use",request);
+  const bookingList = await Booking.find(
+    {
+      $and: [
+        {startTime: {
+          $lt: request.endTime
+        }},
+        {endTime: {
+          $gt: request.startTime
+        }},
+        {type: request.type},
+        {isRefund: false}
+      ],
+    }
+    );
 
-  //     if (bookingList.length >= BookingLength[request.type]) {
-  //       throw new AppErrorDto(AppError.ALREADY_BOOKED);
-  //     }
-  //     const filteredBookingList = filterBookingList(bookingList, request.startDate,request.endDate, request.startTime,request.endTime);
+    if (bookingList.length >= BookingLength[request.type]) {
+      throw new AppErrorDto(AppError.ALREADY_BOOKED);
+    }
 
-  //     if (filteredBookingList.length >= BookingLength[request.type]) {
-  //       throw new AppErrorDto(AppError.ALREADY_BOOKED);
-  //     }
+    if(request.court !== undefined && request.court !== ""){
+      //check if that court is already booked or not, by iterating bookungList array. If it is already booked then throw error
+      bookingList.forEach((bookingData)=>{
+      if(bookingData.court === request.court){
+        throw new AppErrorDto("This Court already booked. Please choose another Court"); 
+      }
+    });
 
-  //     return bookingList;
-  // }
+  }
+return bookingList.map((booking) => new BookingDto(booking));
+}
+ 
 
   async getAmount(request: any, days: any) {
     //Amount Calculations

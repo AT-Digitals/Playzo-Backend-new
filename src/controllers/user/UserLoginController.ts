@@ -12,7 +12,7 @@ import { Response } from "express";
 import { Service } from "typedi";
 import UserLoginRequestDto from "../../dto/auth/UserLoginRequestDto";
 import { UserServices } from "../../services/user/UserServices";
-import { UserDto } from "../../dto/user/UserDto";
+import { UserDto } from "../../dto/user/UserDto"; 
 
 @JsonController("/user")
 @Service()

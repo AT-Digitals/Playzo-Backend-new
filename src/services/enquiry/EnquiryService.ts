@@ -5,6 +5,7 @@ import { Enquiry } from "../../models/enquiry/Enquiry";
 import { EnquiryDto } from "../../dto/enquiry/EnquiryDto";
 import { EnquiryModel } from "../../models/enquiry/EnquiryModel";
 import { EnquiryRequestDto } from "../../dto/enquiry/EnquiryRequestDto";
+import MailTemplateUtils from "../../utils/MailTemplateUtils";
 import MailUtils from "../../utils/MailUtils";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
 import { Service } from "typedi";
@@ -18,13 +19,7 @@ export default class EnquiryService {
         MailUtils.sendMail({
           to: "antoshoba@gmail.com",
           subject: "Your Details successfully added",
-          html: `<div>
-              <h2>Contact Details</h2>
-              <p>Name : ${request.userName} </p>
-              <p>Email : ${request.userEmail}</p>
-              <p>project Type : ${request.projectType} </p>
-              <p>Message : ${request.enquiryMessage}</p>
-            </div>`,
+          html:MailTemplateUtils.EnquiryMail(request),
         });
         enquiry = await enquiry.save();
         return enquiry;
