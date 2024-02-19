@@ -93,7 +93,7 @@ export default class BookingService {
       booking.duration = days;
       
       //Amount Calculations
-      const {totalAmount, onlineAmount} = await this.getAmount(request, days);
+      const {totalAmount, onlineAmount} = await this.getAmount(request, days, booking.court);
       let requestBookingAmount = 0;
       
       if(request.bookingAmount?.cash){
@@ -162,9 +162,9 @@ async getBookedList(request: BookingRequestDto) {
 return bookingList.map((booking) => new BookingDto(booking));
 }
 
-  async getAmount(request: any, days: any) {
+  async getAmount(request: any, days: any, court:any) {
     //Amount Calculations
-      const amountList = await Amount.find({bookingtype : request.type});
+      const amountList = await Amount.find({"$and":[{bookingtype : request.type},{court:parseInt(court)}]});
       const amount =  parseInt(amountList[0].bookingAmount.toString());
       const duration = moment.duration(moment(request.endTime).diff(moment(request.startTime)));
       const minutes = parseInt(duration.asMinutes().toString());

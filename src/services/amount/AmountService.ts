@@ -23,7 +23,7 @@ export default class AmountService {
           if (AmountList.length > 0) {
             throw new AppErrorDto(AppError.ALREADY_ADDED);
           }
-
+ 
         amount = await amount.save();
     
         return amount;
