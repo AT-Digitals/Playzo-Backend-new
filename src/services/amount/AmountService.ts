@@ -11,6 +11,18 @@ export default class AmountService {
   async create(request: AmountRequestDto) {
    
         let amount = new Amount(request);
+        const AmountList = await Amount.find(
+          {
+            $and: [
+              {type: request.bookingtype},
+              {court: request.court},
+            ],
+          }
+          );
+
+          if (AmountList.length >= 0) {
+            throw new AppErrorDto(AppError.ALREADY_ADDED);
+          }
 
         amount = await amount.save();
     

@@ -7,6 +7,7 @@ export class EnquiryDto {
   phoneNumber?: number;
   enquiryMessage?: string;
   projectType?:string;
+  dateOfEnquiry?:Date;
   deleted: boolean;
 
   constructor(enquiry: EnquiryModel) {
@@ -16,6 +17,7 @@ export class EnquiryDto {
     this.phoneNumber = enquiry.phoneNumber;
     this.enquiryMessage = enquiry.enquiryMessage;
     this.projectType = enquiry.projectType;
+    this.dateOfEnquiry = enquiry.dateOfEnquiry;
     this.deleted = enquiry.deleted;
  
   }
