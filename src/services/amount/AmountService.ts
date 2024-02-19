@@ -14,13 +14,13 @@ export default class AmountService {
         const AmountList = await Amount.find(
           {
             $and: [
-              {type: request.bookingtype},
+              {bookingtype: request.bookingtype},
               {court: request.court},
             ],
           }
           );
 
-          if (AmountList.length >= 0) {
+          if (AmountList.length > 0) {
             throw new AppErrorDto(AppError.ALREADY_ADDED);
           }
 
