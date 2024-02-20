@@ -11,7 +11,7 @@ export class UserController {
 
   @Post("/")
   // @IsAdmin()
-  public async createNewAdminUser(@Body() userRequestDto: UserRequestDto) {
+  public async createNewUser(@Body() userRequestDto: UserRequestDto) {
     const user = await this.usersService.createUser(userRequestDto);
     return new UserDto(user);
   }

@@ -1,6 +1,7 @@
 import { AdminError } from "../../dto/error/AdminError";
 import { AppError } from "../../dto/error/AppError";
 import { AppErrorDto } from "../../dto/error/AppErrorDto";
+import { Booking } from "../../models/booking/Booking";
 import { HttpStatusCode } from "../../dto/error/HttpStatusCode";
 import { Service } from "typedi";
 import { User } from "../../models/user/User";
@@ -48,6 +49,10 @@ export class UserServices {
         HttpStatusCode.UNAUTHORIZED
       );
     }
+    const booking = await Booking.find({user:user.id});
+if(booking.length>0){
+  user.bookingHistory = booking;
+}
     return user;
   }
 

@@ -1,3 +1,4 @@
+import { AdminUser } from "../../models/admin/AdminUser";
 import { Amount } from "../../models/amount/Amount";
 import { AppError } from "../../dto/error/AppError";
 import { AppErrorDto } from "../../dto/error/AppErrorDto";
@@ -14,6 +15,7 @@ import MailUtils from "../../utils/MailUtils";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
 import { PaymentType } from "../../models/booking/PaymentType";
 import { Service } from "typedi";
+import { User } from "../../models/user/User";
 import { filterBookingList } from "../../utils/helpFunc";
 import moment from "moment";
 
@@ -47,6 +49,16 @@ export default class BookingService {
     }
     else {
       let booking = new Booking(request);
+
+      if(request.user){
+        
+        const adminUser = await AdminUser.find({_id:request.user})??[];
+        const normalUser = await User.find({_id:request.user})??[];
+
+        if(adminUser.length===0 && normalUser.length===0){
+          throw new AppErrorDto("User not found"); 
+        }
+      }
       booking.user = request.user;
       booking.dateOfBooking = new Date();
       booking.isRefund = false;

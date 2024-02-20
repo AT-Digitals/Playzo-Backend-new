@@ -13,6 +13,7 @@ import { Service } from "typedi";
 import { UserDto } from "../../dto/user/UserDto";
 import UserLoginRequestDto from "../../dto/auth/UserLoginRequestDto";
 import { UserServices } from "../../services/user/UserServices"; 
+import { UserRequestDto } from "../../dto/user/UserRequestDto";
 
 @JsonController("/user")
 @Service()
@@ -40,5 +41,12 @@ export class UserLoginController {
   public async logoutUser(@Res() res: Response) {
     AuthUtils.logoutUser(res);
     return res.send("");
+  }
+
+  @Post("/newUsers")
+  // @IsAdmin()
+  public async createNewUser(@Body() userRequestDto: UserRequestDto) {
+    const user = await this.userService.createUser(userRequestDto);
+    return new UserDto(user);
   }
 }
