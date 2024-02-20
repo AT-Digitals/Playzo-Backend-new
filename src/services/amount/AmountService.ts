@@ -11,7 +11,19 @@ export default class AmountService {
   async create(request: AmountRequestDto) {
    
         let amount = new Amount(request);
+        const AmountList = await Amount.find(
+          {
+            $and: [
+              {bookingtype: request.bookingtype},
+              {court: request.court},
+            ],
+          }
+          );
 
+          if (AmountList.length > 0) {
+            throw new AppErrorDto(AppError.ALREADY_ADDED);
+          }
+ 
         amount = await amount.save();
     
         return amount;
@@ -26,9 +38,9 @@ export default class AmountService {
 
   }
 
-  async findByAmount(type: any) {
+  async findByAmount(type: any, court:any) {
     console.log("type", type);
-    const amount = await Amount.find({bookingtype:type});
+    const amount = await Amount.find({"$and":[{bookingtype : type},{court:parseInt(court)}]});
     if (!amount[0]) {
       throw new AppErrorDto(AppError.NOT_FOUND);
     }

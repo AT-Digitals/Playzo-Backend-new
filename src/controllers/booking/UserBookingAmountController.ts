@@ -8,9 +8,9 @@ import { Service } from "typedi";
 export class UserBookingController {
   constructor(private amountService: AmountService) {}
 
-  @Get("/:type")
-  public async getAmount(@Param("type") type: string) {
-    const amount = await this.amountService.findByAmount(type);
+  @Get("/:type/:court")
+  public async getAmount(@Param("type") type: string, @Param("court") court: number) {
+    const amount = await this.amountService.findByAmount(type, court);
     return new AmountDto(amount);
   }
 

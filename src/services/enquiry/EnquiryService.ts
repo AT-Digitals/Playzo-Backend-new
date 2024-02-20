@@ -61,7 +61,7 @@ export default class EnquiryService {
      if(req.endDate){
       req.endDate = DateUtils.formatDate(req.endDate,"yyyy-MM-DDT00:00:00.000+00:00");
      }
-    const enquiries = await Enquiry.find({"$and": [{dateOfEnquiry : {"$gte":new Date(req.startDate),"$lt":new Date(req.endDate)}}]});
+    const enquiries = await Enquiry.find({"$and": [{dateOfEnquiry : {"$gte":new Date(req.startDate),"$lte":new Date(req.endDate)}}]});
     return enquiries.map((enquiry) => new EnquiryDto(enquiry));
   }
 
@@ -75,7 +75,7 @@ export default class EnquiryService {
     
     let enquiries: EnquiryModel[] = [];
     if(req?.page && req.limit){  
-      enquiries = await Enquiry.find( {"$and": [{dateOfEnquiry : {"$gte":new Date(req.startDate),"$lt":new Date(req.endDate)}}]}).skip((+req.page - 1) * req.limit).limit(req.limit);
+      enquiries = await Enquiry.find( {"$and": [{dateOfEnquiry : {"$gte":new Date(req.startDate),"$lte":new Date(req.endDate)}}]}).skip((+req.page - 1) * req.limit).limit(req.limit);
     }
     return enquiries.map((enquiry) => new EnquiryDto(enquiry));
   }
