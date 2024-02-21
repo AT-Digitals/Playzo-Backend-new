@@ -380,7 +380,7 @@ async getBookingFilter(req: any) {
   let bookings: BookingModel[] = [];
 if(req && req.page && req.limit){
    
-  bookings = await Booking.find( {"$and": [newFilter]}).skip((+req.page - 1) * req.limit).limit(req.limit).populate("user","name email phone userType").exec();
+  bookings = await Booking.find( {"$and": [newFilter]}).sort({dateOfBooking:-1}).skip((+req.page - 1) * req.limit).limit(req.limit).populate("user","name email phone userType").exec();
   
   //between days array filter start
   const dateFilter = {...newFilter};
