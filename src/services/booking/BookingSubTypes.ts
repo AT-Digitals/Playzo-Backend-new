@@ -12,7 +12,7 @@ export const BookingSubTypes = {
   playstation: {
     1: "PS 1",
     2: "PS 2",
-    3: "PS 3"
+    3: "PS 1&2"
   },
   cricketNet: {
     1: "Cricket Net"
@@ -23,6 +23,7 @@ export const BookingSubTypes = {
   badminton: {
     1: "Court 1",
     2: "Court 2",
-    3: "Court 3"
+    3: "Court 3",
+    4: "Court 4"
   }
 };

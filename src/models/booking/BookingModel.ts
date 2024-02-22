@@ -1,6 +1,7 @@
 import { BookingType } from "./BookingType";
 import { Document } from "mongoose";
 import { PaymentType } from "./PaymentType";
+import { UserBookingType } from "./UserBookingType";
 
 export interface BookingModel extends Document {
       type: BookingType,
@@ -14,6 +15,7 @@ export interface BookingModel extends Document {
             refund:number
           },
       bookingtype: PaymentType,
+      userBookingType:UserBookingType,
       startTime: number,
       endTime: number,
       bookingId?:string,

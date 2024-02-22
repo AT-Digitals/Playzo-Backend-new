@@ -8,4 +8,5 @@ export enum AppError {
   UPLOAD_INVALID_FILE_TYPE = "Invalid file type provided.",
   ALREADY_BOOKED = "Please choose another date and slot",
   ALREADY_ADDED = "Amount already added, please update Your amount",
+  AMOUNT_ERROR ="The Amount is higher than fixed amount"
 }

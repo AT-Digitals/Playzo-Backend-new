@@ -33,5 +33,8 @@ export class BookingDateFilterRequestDto extends PaginationRequestDto {
 
     @IsOptional()
     user?: string;
+
+    @IsOptional()
+    court?: string;
    
   }
