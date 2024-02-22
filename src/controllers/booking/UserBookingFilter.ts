@@ -20,4 +20,14 @@ export class BookingFilterController {
   public async filterBookings(@QueryParams() request: BookingDateFilterRequestDto ) {
     return this.bookingService.filterBookings(request);
   }
+
+  @Get("/filterPage")
+  public async filterPage(@QueryParams() request: BookingDateFilterRequestDto) {
+    return this.bookingService.getBookingFilter(request);
+  }
+
+  @Get("/filterBook")
+  public async filterBook(@QueryParams() request: BookingDateFilterRequestDto) {
+    return this.bookingService.getBookingFilterCount(request);
+  }
 }
