@@ -5,6 +5,7 @@ import { BookingModel } from "./BookingModel";
 import { BookingType } from "./BookingType";
 import MongoDatabase from "../../utils/MongoDatabase";
 import { PaymentType } from "./PaymentType";
+import { UserBookingType } from "./UserBookingType";
 
 const bookingSchema = new Schema({
     type: {
@@ -12,17 +13,27 @@ const bookingSchema = new Schema({
         enum: [],
         default: BookingType.Turf,
       },
-      user: {
-        type: Schema.Types.ObjectId,
-        ref: "admins"
-    },
-     
+    //   admin: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: "admins",
+    //     require:false
+    // },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "admins",
+      // require:false
+  },
       bookingtype:{
         type: String,
         enum: [],
         default: PaymentType.Cash,
       },
       bookingAmount: BookingAmount,
+      userBookingType: {
+        type: String,
+        enum: [],
+        default: UserBookingType.Manual,
+      },
       dateOfBooking:Date,
       startDate:Date,
       endDate:Date,

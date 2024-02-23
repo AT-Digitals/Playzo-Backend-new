@@ -6,6 +6,7 @@ import {
 import { BookingType } from "../../models/booking/BookingType";
 import PaginationRequestDto from "../PaginationRequestDto";
 import { PaymentType } from "../../models/booking/PaymentType";
+import { UserBookingType } from "../../models/booking/UserBookingType";
 
 export class BookingDateFilterRequestDto extends PaginationRequestDto {
   
@@ -36,5 +37,8 @@ export class BookingDateFilterRequestDto extends PaginationRequestDto {
 
     @IsOptional()
     court?: string;
+
+    @IsOptional()
+    userBookingType?: UserBookingType;
    
   }

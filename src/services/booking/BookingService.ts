@@ -84,7 +84,7 @@ bookingData = {
           throw new AppErrorDto("User not found"); 
         }
       }
-      booking.user = request.user;
+      
       booking.dateOfBooking = new Date();
       booking.isRefund = false;
       booking.userBookingType = request.userBookingType;
@@ -98,8 +98,9 @@ bookingData = {
       booking.duration = days;
       
       //Amount Calculations
+      const {totalAmount, onlineAmount} = await this.getAmount(request, days, booking.court);
+
       if(request.userBookingType === UserBookingType.Online){
-      const {onlineAmount} = await this.getAmount(request, days, booking.court);
 
         booking.bookingAmount = {
           online : onlineAmount, 
@@ -108,13 +109,12 @@ bookingData = {
           refund:0
         };
       }else{
-        const amountList = await Amount.find({"$and":[{bookingtype : request.type},{court:parseInt(request.court)}]});
-        const amount =  parseInt(amountList[0].bookingAmount.toString());
-        if(request.bookingAmount?.online&&request.bookingAmount?.online<=amount){
+        const onlineValue =request.bookingAmount?.online?request.bookingAmount?.online:0;
+        if(onlineValue<=totalAmount){
         booking.bookingAmount = {
-          online : request.bookingAmount?.online<=amount?request.bookingAmount?.online:0, 
+          online : onlineValue,
           cash: 0,
-          total: request.bookingAmount?.online??0,
+          total: onlineValue,
           refund:0
         };
       }else{
@@ -256,8 +256,10 @@ return bookingList.map((booking) => new BookingDto(booking));
 
   async updateAmount(id: string, request: BookingAmountRequestDto) {
     let booking = await this.findById(id);
-    const amountList = await Amount.find({"$and":[{bookingtype : booking.type},{court:parseInt(booking.court)}]});
-    const amount =  parseInt(amountList[0].bookingAmount.toString());
+    const endDate = DateUtils.add(new Date(booking.endDate),1,"day");
+    const days = moment(endDate).diff(moment(booking.startDate),"days");
+    const {totalAmount} = await this.getAmount(booking, days, booking.court);
+
     if(request.bookingAmount && booking.bookingAmount){
      
       if(request.isRefund){
@@ -279,7 +281,7 @@ return bookingList.map((booking) => new BookingDto(booking));
       const cashAmount = parseInt(request.bookingAmount.cash.toString())  + parseInt(booking.bookingAmount.cash.toString());
       const onlineAmount = parseInt(request.bookingAmount.online.toString()) + parseInt(booking.bookingAmount.online.toString());
       const finalAmount = cashAmount+onlineAmount;
- if(finalAmount<=amount){
+ if(finalAmount<=totalAmount){
 
       booking.bookingAmount =
       {
@@ -339,8 +341,7 @@ return bookingList.map((booking) => new BookingDto(booking));
         };
       }
     }
-
-    const bookings = await Booking.find({"$and": [newFilter]}).populate("user","name email phone userType").exec();
+      const  bookings = await Booking.find({"$and": [newFilter]}).populate("user","name email phone userType").exec();
     
     //between days array filter start
     const dateFilter = {...newFilter};
@@ -384,6 +385,7 @@ async getBookingFilter(req: any) {
   const newFilter = { ...req };
   delete newFilter.page;
   delete newFilter.limit;
+  
 
    if(newFilter.startDate && newFilter.endDate){
     delete newFilter.startDate;
@@ -407,9 +409,9 @@ async getBookingFilter(req: any) {
    }
 
   let bookings: BookingModel[] = [];
-if(req && req.page && req.limit){
-   
-  bookings = await Booking.find( {"$and": [newFilter]}).sort({dateOfBooking:-1}).skip((+req.page - 1) * req.limit).limit(req.limit).populate("user","name email phone userType").exec();
+
+    bookings = await Booking.find( {"$and": [newFilter]}).sort({dateOfBooking:-1}).skip((+req.page - 1) * req.limit).limit(req.limit).populate("user","name email phone userType").exec(); 
+    if(req && req.page && req.limit){
   
   //between days array filter start
   const dateFilter = {...newFilter};
@@ -439,7 +441,7 @@ list.bookingAmount["online"] = onlineAmount;
      }
 
   //between days array filter end
-}
+    }
 
 return bookings.map((booking) => new BookingDto(booking));
   }

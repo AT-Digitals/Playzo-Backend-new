@@ -37,9 +37,9 @@ export class BookingRequestDto {
     @IsDefined({ message: "endtime is required" })
     endTime: number;
     
-    @IsDefined({ message: "user Id is required" })
+    @IsDefined({ message: "user is required" })
     user:string;
-
+    
     @IsOptional()
     bookingId?: string;
 
