@@ -261,13 +261,13 @@ return bookingList.map((booking) => new BookingDto(booking));
     if(request.bookingAmount && booking.bookingAmount){
      
       if(request.isRefund){
-        if(request.bookingAmount.refund<=amount && parseInt(booking.bookingAmount.cash.toString())>=request.bookingAmount.refund){
+        if(parseInt(booking.bookingAmount.cash.toString())>=parseInt(request.bookingAmount.refund.toString())){
     booking.bookingAmount =
     {
         online : request.bookingAmount.online, 
         cash: parseInt(booking.bookingAmount.cash.toString()) - request.bookingAmount.refund,
         total: parseInt(booking.bookingAmount.online.toString()) + (parseInt(booking.bookingAmount.cash.toString()) - request.bookingAmount.refund),
-        refund:request.bookingAmount.refund
+        refund: parseInt(booking.bookingAmount.refund.toString()) + parseInt(request.bookingAmount.refund.toString())
     };
    
       booking.isRefund = true;
@@ -286,7 +286,7 @@ return bookingList.map((booking) => new BookingDto(booking));
           online : onlineAmount, 
           cash: cashAmount,
           total: finalAmount,
-          refund:0
+          refund:parseInt(booking.bookingAmount.refund.toString()) + parseInt(request.bookingAmount.refund.toString())
       };
     }else{
       throw new AppErrorDto(AppError.AMOUNT_ERROR); 
