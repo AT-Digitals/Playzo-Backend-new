@@ -6,7 +6,6 @@ import { Booking } from "../../models/booking/Booking";
 import { BookingAmountRequestDto } from "../../dto/booking/BookingAmountRequestDto";
 import { BookingDateFilterRequestDto } from "../../dto/booking/BookingDateFilterRequestDto";
 import { BookingDto } from "../../dto/booking/BookingDto";
-import { BookingLength } from "../../enum/BookingLength";
 import { BookingModel } from "../../models/booking/BookingModel";
 import { BookingRequestDto } from "../../dto/booking/BookingRequestDto";
 import { BookingType } from "../../models/booking/BookingType";
@@ -48,71 +47,72 @@ export default class BookingService {
       throw new AppErrorDto(AppError.ALREADY_BOOKED);
     }
 
-    if (filteredBookingList.length >= BookingLength[request.type]) {
+    const courtFilteredList = this.filterBasedCourt(filteredBookingList, request.court);
+
+    if (courtFilteredList.length >= 1) {
       throw new AppErrorDto(AppError.ALREADY_BOOKED);
     }
-    else {
-      const bookingData: any = {
-        ...request,
-        admin: request.user
+    
+    const bookingData: any = {
+      ...request,
+      admin: request.user
+    };
+
+    delete bookingData[isAdmin ? "user" : "admin"];
+    let booking = new Booking(bookingData);
+
+    if(request.user){
+      const adminUser = await AdminUser.find({_id:request.user}) ?? [];
+      const users = await User.find({_id: request.user}) ?? [];
+      if(adminUser.length === 0 && users.length === 0){
+        throw new AppErrorDto("User not found"); 
+      }
+    }
+    
+    booking.dateOfBooking = new Date();
+    booking.isRefund = false;
+    booking.userBookingType = request.userBookingType;
+    booking.court = request.court;
+
+    if(request.bookingId !== ""){
+      booking.bookingId = request.bookingId;
+    }
+
+    booking.isAnnual = diffDuration.years() > 0;
+    booking.duration = days;
+    
+    //Amount Calculations
+    const {totalAmount, onlineAmount} = await this.getAmount(request, days);
+
+    if(request.userBookingType === UserBookingType.Online){
+      booking.bookingAmount = {
+        online : onlineAmount, 
+        cash: 0,
+        total: onlineAmount,
+        refund:0
       };
-
-      delete bookingData[isAdmin ? "user" : "admin"];
-      let booking = new Booking(bookingData);
-
-      if(request.user){
-        const adminUser = await AdminUser.find({_id:request.user}) ?? [];
-        const users = await User.find({_id: request.user}) ?? [];
-        if(adminUser.length === 0 && users.length === 0){
-          throw new AppErrorDto("User not found"); 
-        }
-      }
-      
-      booking.dateOfBooking = new Date();
-      booking.isRefund = false;
-      booking.userBookingType = request.userBookingType;
-      booking.court = request.court;
-
-      if(request.bookingId !== ""){
-        booking.bookingId = request.bookingId;
-      }
- 
-      booking.isAnnual = diffDuration.years() > 0;
-      booking.duration = days;
-      
-      //Amount Calculations
-      const {totalAmount, onlineAmount} = await this.getAmount(request, days);
-
-      if(request.userBookingType === UserBookingType.Online){
+    }else{
+      const onlineValue =request.bookingAmount?.online?request.bookingAmount?.online:0;
+      if(onlineValue<=totalAmount){
         booking.bookingAmount = {
-          online : onlineAmount, 
+          online : onlineValue,
           cash: 0,
-          total: onlineAmount,
+          total: onlineValue,
           refund:0
         };
       }else{
-        const onlineValue =request.bookingAmount?.online?request.bookingAmount?.online:0;
-        if(onlineValue<=totalAmount){
-          booking.bookingAmount = {
-            online : onlineValue,
-            cash: 0,
-            total: onlineValue,
-            refund:0
-          };
-        }else{
-          throw new AppErrorDto(AppError.AMOUNT_ERROR); 
-        }
+        throw new AppErrorDto(AppError.AMOUNT_ERROR); 
       }
-      booking.deleted = false;
-      booking = await booking.save();
-        // MailUtils.sendMail({
-        //   to: "antoshoba@gmail.com",
-        //   subject: "Your booking successfully added",
-        //   html: MailTemplateUtils.BookingMail(booking)
-    
-        // });
-      return booking;
     }
+    booking.deleted = false;
+    booking = await booking.save();
+      // MailUtils.sendMail({
+      //   to: "antoshoba@gmail.com",
+      //   subject: "Your booking successfully added",
+      //   html: MailTemplateUtils.BookingMail(booking)
+  
+      // });
+    return booking;
   }
 
   checkForCombinedSlots(bookingList: any, request: any) {
@@ -133,6 +133,17 @@ export default class BookingService {
     }
     return false;
   }
+
+  filterBasedCourt(bookingList: any, court: string){
+    const filteredBookingList = [];
+    for (let i = 0; i < bookingList.length; i++) {
+      const booking = bookingList[i];
+      if(booking.court === court){
+        filteredBookingList.push(booking);
+      }
+    }
+    return filteredBookingList;
+  }
   
   async getBookedList(request: BookingRequestDto) {
     const bookingData = {
@@ -149,7 +160,7 @@ export default class BookingService {
     };
     const bookingList = await Booking.find(bookingData);
 
-    if (bookingList.length >= BookingLength[request.type] || this.checkForCombinedSlots(bookingList, request)) {
+    if (this.filterBasedCourt(bookingList, request.court).length >= 1 || this.checkForCombinedSlots(bookingList, request)) {
       throw new AppErrorDto(AppError.ALREADY_BOOKED);
     }
 
