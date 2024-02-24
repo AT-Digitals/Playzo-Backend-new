@@ -6,18 +6,20 @@ import { Booking } from "../../models/booking/Booking";
 import { BookingAmountRequestDto } from "../../dto/booking/BookingAmountRequestDto";
 import { BookingDateFilterRequestDto } from "../../dto/booking/BookingDateFilterRequestDto";
 import { BookingDto } from "../../dto/booking/BookingDto";
-import { BookingLength } from "../../enum/BookingLength";
 import { BookingModel } from "../../models/booking/BookingModel";
 import { BookingRequestDto } from "../../dto/booking/BookingRequestDto";
+import { BookingType } from "../../models/booking/BookingType";
 import DateUtils from "../../utils/DateUtils";
-import MailTemplateUtils from "../../utils/MailTemplateUtils";
-import MailUtils from "../../utils/MailUtils";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
-import { PaymentType } from "../../models/booking/PaymentType";
 import { Service } from "typedi";
 import { User } from "../../models/user/User";
+import { UserBookingType } from "../../models/booking/UserBookingType";
 import { filterBookingList } from "../../utils/helpFunc";
 import moment from "moment";
+
+// import MailTemplateUtils from "../../utils/MailTemplateUtils";
+// import MailUtils from "../../utils/MailUtils";
+
 
 @Service()
 export default class BookingService {
@@ -26,9 +28,29 @@ export default class BookingService {
     const endDate = DateUtils.add(new Date(request.endDate),1,"day");
     const diffDuration = moment.duration(moment(request.endDate).diff(moment(request.startDate)));
     const days = moment(endDate).diff(moment(request.startDate),"days");
-
-    const bookingList = await Booking.find(
+  let bookingData;
+  if(request.court ==="3"&&(request.type===BookingType.Turf||request.type===BookingType.Playstaion)){
+bookingData = {
+  $and: [
     {
+      $or:[
+        {court: "1"},
+        {court:"2"},
+      ]
+    },
+    {startTime: {
+      $lt: request.endTime
+    }},
+    {endTime: {
+      $gt: request.startTime
+    }},
+    {type: request.type},
+   
+    {isRefund: false}
+  ],
+};
+  }else{
+    bookingData =  {
       $and: [
         {startTime: {
           $lt: request.endTime
@@ -37,14 +59,17 @@ export default class BookingService {
           $gt: request.startTime
         }},
         {type: request.type},
+       {court: request.court},
         {isRefund: false}
       ],
-    }
-    );
+    };
+  }
+
+    const bookingList = await Booking.find(bookingData);
       
     const filteredBookingList = filterBookingList(bookingList, request.startDate,request.endDate, request.startTime, request.endTime, days);
 
-    if (filteredBookingList.length >= BookingLength[request.type]) {
+    if (filteredBookingList.length >= 1) {
       throw new AppErrorDto(AppError.ALREADY_BOOKED);
     }
     else {
@@ -59,43 +84,11 @@ export default class BookingService {
           throw new AppErrorDto("User not found"); 
         }
       }
-      booking.user = request.user;
+      
       booking.dateOfBooking = new Date();
       booking.isRefund = false;
-
-      if(request.court !== undefined && request.court !== ""){
-          //check if that court is already booked or not, by iterating bookungList array. If it is already booked then throw error
-        filteredBookingList.forEach((bookingData)=>{
-          if(bookingData.court === request.court){
-            throw new AppErrorDto("This Court already booked. Please choose another Court"); 
-          }
-        });
-
-        booking.court = request.court;
-      }else{
-        //find the first missing court number
-        let courtNumber = null;
-        const courtNumberObj: any = {};
-        if(filterBookingList.length === 0){
-          booking.court = "1";
-        }else {
-          for (let i = 1; i <= BookingLength[request.type]; i++) {
-            courtNumberObj[i] = false;
-          }
-          for (let i = 0; i < filteredBookingList.length; i++) {
-            courtNumber = filteredBookingList[i].court;
-            courtNumberObj[courtNumber] = true;
-          }
-          
-          for (let i = 1; i <= BookingLength[request.type]; i++) {
-            if(!courtNumberObj[i]){
-              booking.court = i.toString();
-              break;
-            }
-          }
-        }
-        
-      }
+      booking.userBookingType = request.userBookingType;
+      booking.court = request.court;
 
       if(request.bookingId !== ""){
         booking.bookingId = request.bookingId;
@@ -106,36 +99,37 @@ export default class BookingService {
       
       //Amount Calculations
       const {totalAmount, onlineAmount} = await this.getAmount(request, days, booking.court);
-      let requestBookingAmount = 0;
-      
-      if(request.bookingAmount?.cash){
-        requestBookingAmount = request.bookingAmount?.cash;
-      }
 
-      if(request.bookingtype === PaymentType.Cash){
-        booking.bookingAmount = {
-              online : 0, 
-              cash: requestBookingAmount === 0 ? totalAmount : requestBookingAmount,
-              total: requestBookingAmount === 0 ? totalAmount : requestBookingAmount,
-              refund:0
-        };
-      }else{
+      if(request.userBookingType === UserBookingType.Online){
+
         booking.bookingAmount = {
           online : onlineAmount, 
           cash: 0,
           total: onlineAmount,
           refund:0
         };
+      }else{
+        const onlineValue =request.bookingAmount?.online?request.bookingAmount?.online:0;
+        if(onlineValue<=totalAmount){
+        booking.bookingAmount = {
+          online : onlineValue,
+          cash: 0,
+          total: onlineValue,
+          refund:0
+        };
+      }else{
+        throw new AppErrorDto(AppError.AMOUNT_ERROR); 
+      }
       }
       booking.deleted = false;
 
         booking = await booking.save();
-        MailUtils.sendMail({
-          to: "antoshoba@gmail.com",
-          subject: "Your booking successfully added",
-          html: MailTemplateUtils.BookingMail(booking)
+        // MailUtils.sendMail({
+        //   to: "antoshoba@gmail.com",
+        //   subject: "Your booking successfully added",
+        //   html: MailTemplateUtils.BookingMail(booking)
     
-        });
+        // });
         return booking;
       }
 
@@ -143,8 +137,29 @@ export default class BookingService {
   
 async getBookedList(request: BookingRequestDto) {
   console.log("use",request);
-  const bookingList = await Booking.find(
+  let bookingData;
+  if(request.court ==="3"&&(request.type===BookingType.Turf||request.type===BookingType.Playstaion)){
+bookingData = {
+  $and: [
     {
+      $or:[
+        {court: "1"},
+        {court:"2"},
+      ]
+    },
+    {startTime: {
+      $lt: request.endTime
+    }},
+    {endTime: {
+      $gt: request.startTime
+    }},
+    {type: request.type},
+   
+    {isRefund: false}
+  ],
+};
+  }else{
+    bookingData =  {
       $and: [
         {startTime: {
           $lt: request.endTime
@@ -153,24 +168,26 @@ async getBookedList(request: BookingRequestDto) {
           $gt: request.startTime
         }},
         {type: request.type},
+       {court: request.court},
         {isRefund: false}
       ],
-    }
-    );
+    };
+  }
+  const bookingList = await Booking.find(bookingData);
 
-    if (bookingList.length >= BookingLength[request.type]) {
+    if (bookingList.length >= 1) {
       throw new AppErrorDto(AppError.ALREADY_BOOKED);
     }
 
-    if(request.court !== undefined && request.court !== ""){
-      //check if that court is already booked or not, by iterating bookungList array. If it is already booked then throw error
-      bookingList.forEach((bookingData)=>{
-      if(bookingData.court === request.court){
-        throw new AppErrorDto("This Court already booked. Please choose another Court"); 
-      }
-    });
+  //   if(request.court !== undefined && request.court !== ""){
+  //     //check if that court is already booked or not, by iterating bookungList array. If it is already booked then throw error
+  //     bookingList.forEach((bookingData)=>{
+  //     if(bookingData.court === request.court){
+  //       throw new AppErrorDto("This Court already booked. Please choose another Court"); 
+  //     }
+  //   });
 
-  }
+  // }
 return bookingList.map((booking) => new BookingDto(booking));
 }
 
@@ -202,14 +219,16 @@ return bookingList.map((booking) => new BookingDto(booking));
   public async getAll() {
     
     const bookings = await Booking.find({}).populate("user","name email phone userType").exec();
+
     return bookings.map((booking) => new BookingDto(booking));
   }
 
   public async getAllBookings(query:PaginationRequestDto) {
     let bookings: BookingModel[] = [];
     if(query && query.page && query.limit){
-       bookings = await Booking.find( {}).skip((+query.page - 1) * query.limit).limit(query.limit).populate("user","name email phone userType").exec();
+       bookings = await Booking.find({}).skip((+query.page - 1) * query.limit).limit(query.limit).populate("user","name email phone userType").exec();
     }
+ 
     return bookings.map((booking) => new BookingDto(booking));
   }
 
@@ -237,32 +256,44 @@ return bookingList.map((booking) => new BookingDto(booking));
 
   async updateAmount(id: string, request: BookingAmountRequestDto) {
     let booking = await this.findById(id);
-    
+    const endDate = DateUtils.add(new Date(booking.endDate),1,"day");
+    const days = moment(endDate).diff(moment(booking.startDate),"days");
+    const {totalAmount} = await this.getAmount(booking, days, booking.court);
+
     if(request.bookingAmount && booking.bookingAmount){
      
       if(request.isRefund){
+        if(parseInt(booking.bookingAmount.cash.toString())>=parseInt(request.bookingAmount.refund.toString())){
     booking.bookingAmount =
     {
         online : request.bookingAmount.online, 
-        cash: request.bookingAmount.cash,
-        total: request.bookingAmount.total,
-        refund:request.bookingAmount.refund
+        cash: parseInt(booking.bookingAmount.cash.toString()) - request.bookingAmount.refund,
+        total: parseInt(booking.bookingAmount.online.toString()) + (parseInt(booking.bookingAmount.cash.toString()) - request.bookingAmount.refund),
+        refund: parseInt(booking.bookingAmount.refund.toString()) + parseInt(request.bookingAmount.refund.toString())
     };
    
       booking.isRefund = true;
       booking.deleted = false;
+  }else{
+    throw new AppErrorDto(AppError.AMOUNT_ERROR); 
+  }
     }else{
       const cashAmount = parseInt(request.bookingAmount.cash.toString())  + parseInt(booking.bookingAmount.cash.toString());
       const onlineAmount = parseInt(request.bookingAmount.online.toString()) + parseInt(booking.bookingAmount.online.toString());
       const finalAmount = cashAmount+onlineAmount;
+ if(finalAmount<=totalAmount){
+
       booking.bookingAmount =
       {
           online : onlineAmount, 
           cash: cashAmount,
           total: finalAmount,
-          refund:0
+          refund:parseInt(booking.bookingAmount.refund.toString()) + parseInt(request.bookingAmount.refund.toString())
       };
+    }else{
+      throw new AppErrorDto(AppError.AMOUNT_ERROR); 
     }
+  }
 
     }
     
@@ -310,8 +341,7 @@ return bookingList.map((booking) => new BookingDto(booking));
         };
       }
     }
-
-    const bookings = await Booking.find({"$and": [newFilter]}).populate("user","name email phone userType").exec();
+      const  bookings = await Booking.find({"$and": [newFilter]}).populate("user","name email phone userType").exec();
     
     //between days array filter start
     const dateFilter = {...newFilter};
@@ -355,6 +385,7 @@ async getBookingFilter(req: any) {
   const newFilter = { ...req };
   delete newFilter.page;
   delete newFilter.limit;
+  
 
    if(newFilter.startDate && newFilter.endDate){
     delete newFilter.startDate;
@@ -378,9 +409,9 @@ async getBookingFilter(req: any) {
    }
 
   let bookings: BookingModel[] = [];
-if(req && req.page && req.limit){
-   
-  bookings = await Booking.find( {"$and": [newFilter]}).sort({dateOfBooking:-1}).skip((+req.page - 1) * req.limit).limit(req.limit).populate("user","name email phone userType").exec();
+
+    bookings = await Booking.find( {"$and": [newFilter]}).sort({dateOfBooking:-1}).skip((+req.page - 1) * req.limit).limit(req.limit).populate("user","name email phone userType").exec(); 
+    if(req && req.page && req.limit){
   
   //between days array filter start
   const dateFilter = {...newFilter};
@@ -410,7 +441,7 @@ list.bookingAmount["online"] = onlineAmount;
      }
 
   //between days array filter end
-}
+    }
 
 return bookings.map((booking) => new BookingDto(booking));
   }
@@ -432,23 +463,44 @@ public async filterBookings(request:BookingDateFilterRequestDto) {
 const bookList:any = [];
 if(request.startDate && request.endDate && request.type){
     const endDate = DateUtils.add(new Date(request.endDate),1,"day");
-const bookingsList =  await Booking.aggregate([
+    let bookedData;
+    if(request.court ==="3"&&(request.type===BookingType.Turf||request.type===BookingType.Playstaion)){
+      bookedData = [
 
-  { $match:{ type:request.type}},
-  { $match:{ isRefund:false}},
-  { $match: {startDate: {
-    $gte: new Date(request.startDate)
-  }}},
-  { $match:{endDate: {
-    $lte: new Date(endDate)
-  }}},
-  
-  {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},
+        { $match:{ type:request.type}},
+        {$match: { $or: [{ author: "1" }, { author: "2" }] }},
+        { $match:{ isRefund:false}},
+        { $match: {startDate: {
+          $gte: new Date(request.startDate)
+        }}},
+        { $match:{endDate: {
+          $lte: new Date(endDate)
+        }}},
+        
+        {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},
+      
+      ];
+    }else{
+      bookedData= [
 
-]); 
+        { $match:{ type:request.type}},
+        { $match:{ court:request.court}},
+        { $match:{ isRefund:false}},
+        { $match: {startDate: {
+          $gte: new Date(request.startDate)
+        }}},
+        { $match:{endDate: {
+          $lte: new Date(endDate)
+        }}},
+        
+        {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},
+      
+      ];
+    }
+const bookingsList =  await Booking.aggregate(bookedData); 
 bookingsList.filter(async (book)=>{
 if (request.type !== undefined) {
-  if (book["count"] >= BookingLength[request.type]) {
+  if (book["count"] >= 1) {
   bookList.push({startTime:book._id.startTime,
        endTime: book._id.endTime,
        startDate: book._id.startDate,

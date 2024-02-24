@@ -1,8 +1,9 @@
-import { Body, Get, JsonController, Post } from "routing-controllers";
+import { Body, Get, JsonController, Param, Post, Put } from "routing-controllers";
 import { AdminDto } from "../../../dto/user/AdminDto";
 import { AdminRequestDto } from "../../../dto/user/AdminRequestDto";
 import { AdminUsersService } from "../../../services/admin/adminUser/AdminUsersService";
 import { Service } from "typedi";
+import PasswordRequestDto from "../../../dto/auth/PasswordRequestDto";
 
 @JsonController("/admin/adminUsers")
 @Service()
@@ -20,5 +21,14 @@ export class AdminUsersController {
   // @IsAdmin()
   public async getAllAdminUsers() {
     return this.adminUsersService.getAllAdmins();
+  }
+
+  @Put("/:userId")
+  public async updateById(
+    @Param("userId") userId: string,
+    @Body() request: PasswordRequestDto
+  ) {
+    const user = await this.adminUsersService.updateById(userId, request);
+    return new AdminDto(user);
   }
 }

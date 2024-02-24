@@ -1,6 +1,7 @@
 import { BookingModel } from "../../models/booking/BookingModel";
 import { BookingType } from "../../models/booking/BookingType";
 import { PaymentType } from "../../models/booking/PaymentType";
+import { UserBookingType } from "../../models/booking/UserBookingType";
 
 export class BookingDto {
   id: string;
@@ -15,13 +16,14 @@ export class BookingDto {
     refund:number
   };
   bookingtype:PaymentType;
+  userBookingType:UserBookingType;
   startTime: number;
   endTime: number;
   bookingId?:string;
   startDate: Date;
   endDate:Date;
   duration:number;
-  court?: string;
+  court: string;
   isAnnual: boolean;
   isRefund?: boolean;
   deleted: boolean;
@@ -35,6 +37,7 @@ export class BookingDto {
       this.cancelDate = booking.cancelDate;
       this.bookingAmount = booking.bookingAmount;
       this.bookingtype = booking.bookingtype;
+      this.userBookingType = booking.userBookingType;
       this.startTime = booking.startTime;
       this.endTime = booking.endTime;
       this.deleted = booking.deleted;
