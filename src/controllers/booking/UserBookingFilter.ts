@@ -11,9 +11,8 @@ export class BookingFilterController {
 
   @Post("/booked")
   public async getBookedList(@Body() query: BookingRequestDto) {
-    console.log("query",query);
-     const bookings = this.bookingService.getBookedList(query);
-     return bookings;
+    const bookings = this.bookingService.getBookedList(query);
+    return bookings;
   }
 
   @Get("/filterBookings")

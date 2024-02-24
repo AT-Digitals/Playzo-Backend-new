@@ -50,9 +50,9 @@ export class UserServices {
       );
     }
     const booking = await Booking.find({user:user.id});
-if(booking.length>0){
-  user.bookingHistory = booking;
-}
+    if(booking.length > 0){
+      user.bookingHistory = booking;
+    }
     return user;
   }
 

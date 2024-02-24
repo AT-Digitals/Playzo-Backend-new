@@ -11,11 +11,8 @@ export class BookingController {
   constructor(private bookingService: BookingService) {}
 
   @Post()
-  async create(
-    // @CurrentUser() user: AuthDto,
-    @Body() request: BookingRequestDto
-  ) {
-    const booking = await this.bookingService.create(request);
+  async create(@Body() request: BookingRequestDto) {
+    const booking = await this.bookingService.create(request, true);
     return new BookingDto(booking);
   }
 
@@ -27,8 +24,8 @@ export class BookingController {
 
   @Get()
   public async getAllBookings() {
-     const bookings = this.bookingService.getAll();
-     return bookings;
+    const bookings = this.bookingService.getAll();
+    return bookings;
   }
 
   @Put("/:bookingId")

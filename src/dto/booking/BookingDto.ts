@@ -31,22 +31,21 @@ export class BookingDto {
   constructor(booking: BookingModel) {
     this.id = booking.id;
     this.type = booking.type;
-    this.user = 
-    JSON.stringify(booking.user);
-      this.dateOfBooking = booking.dateOfBooking;
-      this.cancelDate = booking.cancelDate;
-      this.bookingAmount = booking.bookingAmount;
-      this.bookingtype = booking.bookingtype;
-      this.userBookingType = booking.userBookingType;
-      this.startTime = booking.startTime;
-      this.endTime = booking.endTime;
-      this.deleted = booking.deleted;
-      this.bookingId = booking.bookingId;
-      this.startDate = booking.startDate;
-      this.endDate = booking.endDate;
-      this.duration = booking.duration;
-      this.court = booking.court;
-      this.isRefund = booking.isRefund;
-      this.isAnnual = booking.isAnnual;
+    this.user = JSON.stringify(booking.user ? booking.user : booking.admin);
+    this.dateOfBooking = booking.dateOfBooking;
+    this.cancelDate = booking.cancelDate;
+    this.bookingAmount = booking.bookingAmount;
+    this.bookingtype = booking.bookingtype;
+    this.userBookingType = booking.userBookingType;
+    this.startTime = booking.startTime;
+    this.endTime = booking.endTime;
+    this.deleted = booking.deleted;
+    this.bookingId = booking.bookingId;
+    this.startDate = booking.startDate;
+    this.endDate = booking.endDate;
+    this.duration = booking.duration;
+    this.court = booking.court;
+    this.isRefund = booking.isRefund;
+    this.isAnnual = booking.isAnnual;
   }
 }
