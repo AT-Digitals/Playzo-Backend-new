@@ -2,6 +2,7 @@ import { AdminUser } from "../../models/admin/AdminUser";
 import { Amount } from "../../models/amount/Amount";
 import { AppError } from "../../dto/error/AppError";
 import { AppErrorDto } from "../../dto/error/AppErrorDto";
+import { BookedRequestDto } from "../../dto/booking/BookedRequestDto";
 import { Booking } from "../../models/booking/Booking";
 import { BookingAmountRequestDto } from "../../dto/booking/BookingAmountRequestDto";
 import { BookingDateFilterRequestDto } from "../../dto/booking/BookingDateFilterRequestDto";
@@ -145,7 +146,7 @@ export default class BookingService {
     return filteredBookingList;
   }
   
-  async getBookedList(request: BookingRequestDto) {
+  async getBookedList(request: BookedRequestDto) {
     const bookingData = {
       $and: [
         {startTime: {
@@ -192,15 +193,15 @@ export default class BookingService {
 
   }
 
-  public async getAll() {
-    const bookings = await Booking.find({}).populate("admin","name email phone userType").exec();
+  public async getAll(isAdmin = false) {
+    const bookings = await Booking.find({}).populate(isAdmin ? "admin" : "user","name email phone userType").exec();
     return bookings.map((booking) => new BookingDto(booking));
   }
 
-  public async getAllBookings(query:PaginationRequestDto) {
+  public async getAllBookings(query:PaginationRequestDto,isAdmin = false) {
     let bookings: BookingModel[] = [];
     if(query && query.page && query.limit){
-      bookings = await Booking.find({}).skip((+query.page - 1) * query.limit).limit(query.limit).populate("admin","name email phone userType").exec();
+      bookings = await Booking.find({}).skip((+query.page - 1) * query.limit).limit(query.limit).populate(isAdmin ? "admin" : "user","name email phone userType").exec();
     }
     return bookings.map((booking) => new BookingDto(booking));
   }
