@@ -5,10 +5,13 @@ import { Enquiry } from "../../models/enquiry/Enquiry";
 import { EnquiryDto } from "../../dto/enquiry/EnquiryDto";
 import { EnquiryModel } from "../../models/enquiry/EnquiryModel";
 import { EnquiryRequestDto } from "../../dto/enquiry/EnquiryRequestDto";
-import MailTemplateUtils from "../../utils/MailTemplateUtils";
-import MailUtils from "../../utils/MailUtils";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
 import { Service } from "typedi";
+
+// import MailTemplateUtils from "../../utils/MailTemplateUtils";
+// import MailUtils from "../../utils/MailUtils";
+
+
 
 @Service()
 export default class EnquiryService {
@@ -16,11 +19,11 @@ export default class EnquiryService {
   async create(request: EnquiryRequestDto) {
         let enquiry = new Enquiry(request);
         enquiry.dateOfEnquiry = new Date(DateUtils.formatDate(new Date(),"yyyy-MM-DDT00:00:00.000+00:00"));
-        MailUtils.sendMail({
-          to: "antoshoba@gmail.com",
-          subject: "Your Details successfully added",
-          html:MailTemplateUtils.EnquiryMail(request),
-        });
+        // MailUtils.sendMail({
+        //   to: "antoshoba@gmail.com",
+        //   subject: "Your Details successfully added",
+        //   html:MailTemplateUtils.EnquiryMail(request),
+        // });
         enquiry = await enquiry.save();
         return enquiry;
     

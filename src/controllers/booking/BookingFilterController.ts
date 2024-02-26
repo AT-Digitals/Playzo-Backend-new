@@ -11,7 +11,7 @@ export class BookingFilterController {
 
   @Get("/filterPaging")
   public async getAllBookings(@QueryParams() query: PaginationRequestDto) {
-     const bookings = this.bookingService.getAllBookings(query);
+     const bookings = this.bookingService.getAllBookings(query, true);
      return bookings;
   }
 

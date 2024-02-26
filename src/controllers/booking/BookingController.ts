@@ -24,7 +24,7 @@ export class BookingController {
 
   @Get()
   public async getAllBookings() {
-    const bookings = this.bookingService.getAll();
+    const bookings = this.bookingService.getAll(true);
     return bookings;
   }
 
