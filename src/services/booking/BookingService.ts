@@ -432,18 +432,18 @@ export default class BookingService {
   public async filterBookings(request:BookingDateFilterRequestDto) {
     const bookList:any = [];
     if(request.startDate && request.endDate && request.type){
-      const endDate = DateUtils.add(new Date(request.endDate),1,"day");
+      // const endDate = DateUtils.add(new Date(request.endDate),1,"day");
       let bookedData;
       if(request.court ==="3"&&(request.type===BookingType.Turf||request.type===BookingType.Playstaion)){
         bookedData = [
           { $match:{ type:request.type}},
-          {$match: { $or: [{ author: "1" }, { author: "2" }] }},
+          {$match: { $or: [{ court: "1" }, { court: "2" }] }},
           { $match:{ isRefund:false}},
           { $match: {startDate: {
             $gte: new Date(request.startDate)
           }}},
           { $match:{endDate: {
-            $lte: new Date(endDate)
+            $lte: new Date(request.endDate)
           }}},
           
           {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},
@@ -459,7 +459,7 @@ export default class BookingService {
             $gte: new Date(request.startDate)
           }}},
           { $match:{endDate: {
-            $lte: new Date(endDate)
+            $lte: new Date(request.endDate)
           }}},
           
           {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},
