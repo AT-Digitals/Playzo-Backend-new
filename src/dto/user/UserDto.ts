@@ -9,6 +9,7 @@ export class UserDto extends AuthDto{
   name: string;
   id: string;
   phone: number;
+  interestedSports?:string[];
   token?:string;
   bookingHistory: BookingDto[] = [];
 
@@ -22,5 +23,6 @@ export class UserDto extends AuthDto{
     );
     this.phone = user.phone;
     this.userType = UserType.USER;
+    this.interestedSports = user.interestedSports;
   }
 }
