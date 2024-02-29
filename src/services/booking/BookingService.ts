@@ -193,15 +193,16 @@ export default class BookingService {
 
   }
 
-  public async getAll(isAdmin = false) {
-    const bookings = await Booking.find({}).populate(isAdmin ? "admin" : "user","name email phone userType").exec();
+  public async getAll() {
+    const bookings = await Booking.find({}).populate("user","name email phone userType").populate("admin","name email phone userType").exec();
     return bookings.map((booking) => new BookingDto(booking));
   }
 
-  public async getAllBookings(query:PaginationRequestDto,isAdmin = false) {
+  public async getAllBookings(query:PaginationRequestDto) {
     let bookings: BookingModel[] = [];
     if(query && query.page && query.limit){
-      bookings = await Booking.find({}).skip((+query.page - 1) * query.limit).limit(query.limit).populate(isAdmin ? "admin" : "user","name email phone userType").exec();
+      bookings = await Booking.find({}).skip((+query.page - 1) * query.limit).limit(query.limit).populate("user","name email phone userType")
+      .populate("admin","name email phone userType").exec();
     }
     return bookings.map((booking) => new BookingDto(booking));
   }
@@ -282,7 +283,7 @@ export default class BookingService {
     return booking;
   }
 
-  async getBookingFilterCount(req: any, isAdmin = false) {
+  async getBookingFilterCount(req: any) {
     if(req.startDate){
       req.startDate = DateUtils.formatDate(req.startDate,"yyyy-MM-DDT00:00:00.000+00:00");
     }
@@ -314,7 +315,7 @@ export default class BookingService {
       }
     }
 
-    const  bookings = await Booking.find({"$and": [newFilter]}).populate(isAdmin ? "admin" : "user","name email phone userType").exec();
+    const  bookings = await Booking.find({"$and": [newFilter]}).populate("user","name email phone userType").populate("admin","name email phone userType").exec();
     //between days array filter start
     const dateFilter = {...newFilter};
     delete dateFilter.startDate;
@@ -327,7 +328,7 @@ export default class BookingService {
       
       }},{startDate:{
         $lte: new Date(req.endDate)
-      }},{duration:{ $gt: days}}, dateFilter]}).populate(isAdmin ? "admin" : "user","name email phone userType").exec();
+      }},{duration:{ $gt: days}}, dateFilter]}).populate("user","name email phone userType").populate("admin","name email phone userType").exec();
       betweenBookings.map(async (list)=>{
         if(list.bookingAmount?.cash || list.bookingAmount?.online){
           const {totalAmount, onlineAmount}  = await this.setFilterAmount(list,days);
@@ -346,7 +347,7 @@ export default class BookingService {
     return bookings.map((booking) => new BookingDto(booking));
   }
 
-  async getBookingFilter(req: any, isAdmin = false) {
+  async getBookingFilter(req: any) {
     
     if(req.startDate){
       req.startDate = DateUtils.formatDate(req.startDate,"yyyy-MM-DDT00:00:00.000+00:00");
@@ -381,7 +382,8 @@ export default class BookingService {
 
     let bookings: BookingModel[] = [];
 
-    bookings = await Booking.find( {"$and": [newFilter]}).sort({dateOfBooking:-1}).skip((+req.page - 1) * req.limit).limit(req.limit).populate(isAdmin ? "admin" : "user","name email phone userType").exec(); 
+    bookings = await Booking.find( {"$and": [newFilter]}).sort({dateOfBooking:-1}).skip((+req.page - 1) * req.limit).limit(req.limit).populate("user","name email phone userType")
+    .populate("admin","name email phone userType").exec(); 
     if(req && req.page && req.limit){ 
       //between days array filter start
       const dateFilter = {...newFilter};
@@ -395,7 +397,7 @@ export default class BookingService {
         
         }},{startDate:{
           $lte: new Date(req.endDate)
-        }},{duration:{ $gt: days}}, dateFilter]}).populate(isAdmin ? "admin" : "user","name email phone userType").exec();
+        }},{duration:{ $gt: days}}, dateFilter]}).populate("user","name email phone userType").populate("admin","name email phone userType").exec();
         betweenBookings.map(async (list)=>{
           if(list.bookingAmount?.cash || list.bookingAmount?.online){
           const {totalAmount, onlineAmount}  = this.setFilterAmount(list,days);
@@ -430,18 +432,18 @@ export default class BookingService {
   public async filterBookings(request:BookingDateFilterRequestDto) {
     const bookList:any = [];
     if(request.startDate && request.endDate && request.type){
-      const endDate = DateUtils.add(new Date(request.endDate),1,"day");
+      // const endDate = DateUtils.add(new Date(request.endDate),1,"day");
       let bookedData;
       if(request.court ==="3"&&(request.type===BookingType.Turf||request.type===BookingType.Playstaion)){
         bookedData = [
           { $match:{ type:request.type}},
-          {$match: { $or: [{ author: "1" }, { author: "2" }] }},
+          {$match: { $or: [{ court: "1" }, { court: "2" }] }},
           { $match:{ isRefund:false}},
           { $match: {startDate: {
             $gte: new Date(request.startDate)
           }}},
           { $match:{endDate: {
-            $lte: new Date(endDate)
+            $lte: new Date(request.endDate)
           }}},
           
           {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},
@@ -457,7 +459,7 @@ export default class BookingService {
             $gte: new Date(request.startDate)
           }}},
           { $match:{endDate: {
-            $lte: new Date(endDate)
+            $lte: new Date(request.endDate)
           }}},
           
           {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},

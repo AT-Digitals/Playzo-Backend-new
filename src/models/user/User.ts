@@ -14,6 +14,7 @@ const UserSchema = new Schema({
     enum: [],
     default: UserType.USER,
   },
+  interestedSports:[String],
   bookingHistory: [
     {
       type: Schema.Types.ObjectId,

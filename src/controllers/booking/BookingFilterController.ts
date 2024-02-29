@@ -11,18 +11,18 @@ export class BookingFilterController {
 
   @Get("/filterPaging")
   public async getAllBookings(@QueryParams() query: PaginationRequestDto) {
-     const bookings = this.bookingService.getAllBookings(query, true);
+     const bookings = this.bookingService.getAllBookings(query);
      return bookings;
   }
 
   @Get("/filterPage")
   public async filterPage(@QueryParams() request: BookingDateFilterRequestDto) {
-    return this.bookingService.getBookingFilter(request, true);
+    return this.bookingService.getBookingFilter(request);
   }
 
   @Get("/filterBook")
   public async filterBook(@QueryParams() request: BookingDateFilterRequestDto) {
-    return this.bookingService.getBookingFilterCount(request, true);
+    return this.bookingService.getBookingFilterCount(request);
   }
 
   @Get("/filterBookings")

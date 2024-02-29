@@ -1,6 +1,7 @@
 import {
   IsDefined,
   IsEmail,
+  IsOptional,
   MinLength,
 } from "class-validator";
 
@@ -17,5 +18,8 @@ export class UserRequestDto {
 
   @IsDefined({ message: "Phone number is required" })
   phone: number;
+  
+  @IsOptional()
+  interestedSports?:string[];
  
 }
