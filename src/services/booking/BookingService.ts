@@ -168,7 +168,7 @@ export default class BookingService {
       throw new AppErrorDto(AppError.ALREADY_BOOKED);
     }
 
-    return bookingList.map((booking) => new BookingDto(booking));
+    return filteredBookingList.map((booking) => new BookingDto(booking));
   }
 
   async getAmount(request: any, days: any) {
