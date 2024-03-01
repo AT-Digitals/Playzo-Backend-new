@@ -8,12 +8,14 @@ import {
 } from "routing-controllers";
 import AuthDto from "../../dto/auth/AuthDto";
 import { AuthUtils } from "../../utils/AuthUtils";
+import { OAuth2Client } from "google-auth-library";
 import { Response } from "express";
 import { Service } from "typedi";
 import { UserDto } from "../../dto/user/UserDto";
 import UserLoginRequestDto from "../../dto/auth/UserLoginRequestDto";
-import { UserServices } from "../../services/user/UserServices"; 
 import { UserRequestDto } from "../../dto/user/UserRequestDto";
+import { UserServices } from "../../services/user/UserServices"; 
+import { error } from "console";
 
 @JsonController("/user")
 @Service()
@@ -44,9 +46,34 @@ export class UserLoginController {
   }
 
   @Post("/newUsers")
-  // @IsAdmin()
   public async createNewUser(@Body() userRequestDto: UserRequestDto) {
     const user = await this.userService.createUser(userRequestDto);
     return new UserDto(user);
+  }
+
+  @Post("/auth/google")
+  public async getGoogleToken(@Body() authBody: any, @Res() res: Response,){
+    const oAuth2Client = new OAuth2Client(
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_CLIENT_SECRET,
+      "postmessage"
+    );
+    const {code} = authBody;
+    const { tokens } = await oAuth2Client.getToken(code);
+
+    if(tokens.id_token){
+      const ticket = await oAuth2Client.verifyIdToken({
+        idToken: tokens.id_token
+      });
+
+      const payload = ticket.getPayload();
+      let user: any = await this.userService.loginViaGoogle(payload);
+      user = new UserDto(user);    
+      const token= AuthUtils.saveAuthToken(res, user);
+      user["token"] = token ?? "";
+      return user;
+    } 
+    
+    throw error("Not able to get token");
   }
 }

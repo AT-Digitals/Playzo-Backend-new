@@ -62,19 +62,6 @@ app.use(JwtMiddleware);
 //   key_secret: "TPX6eMdNAuxM86xdHdtDFvjp",
 // });
 
-// app.post("/create/orderId",(req,res)=>{
-//   console.log("create oredr request",req.body);
-//   const options = {
-//     amount: req.body.amount,
-//     currency:"INR",
-//     receipt:"rcp1"
-//   };
-//   instance.orders.create(options, function(_err,order){
-//     console.log(order);
-//     res.send(order);
-//   });
-// });
-
 // Uploads
 const staticPath = path.join(__dirname, "..", "uploads");
 console.log("Uploads Folder:", staticPath);

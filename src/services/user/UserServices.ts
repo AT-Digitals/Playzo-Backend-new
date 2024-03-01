@@ -56,6 +56,29 @@ export class UserServices {
     return user;
   }
 
+  public async loginViaGoogle(loginReq: any) {
+    const user = await User.findOne({
+      email: loginReq.email,
+    });
+    let newUser = new User(user);
+
+    if(!user){
+      //add user to DB
+      newUser = new User({
+        email: loginReq.email,
+        name: loginReq.name,
+        phone: 123456789,
+        interestedSports: [],
+      });
+
+      newUser = await newUser.save();
+    }
+
+    const booking = await Booking.find({user:newUser.id});    
+    newUser.bookingHistory = booking;
+    return newUser;
+  }
+
   async getUserList(req: any) {
     let users: UserModel[] = [];
     if(req?.page && req.limit){
