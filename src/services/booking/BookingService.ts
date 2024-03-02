@@ -147,6 +147,8 @@ export default class BookingService {
   }
   
   async getBookedList(request: BookedRequestDto) {
+    const endDate = DateUtils.add(new Date(request.endDate),1,"day");
+    const days = moment(endDate).diff(moment(request.startDate),"days");
     const bookingData = {
       $and: [
         {startTime: {
@@ -160,12 +162,13 @@ export default class BookingService {
       ],
     };
     const bookingList = await Booking.find(bookingData);
+    const filteredBookingList = filterBookingList(bookingList, request.startDate,request.endDate, request.startTime, request.endTime, days);
 
-    if (this.filterBasedCourt(bookingList, request.court).length >= 1 || this.checkForCombinedSlots(bookingList, request)) {
+    if (this.filterBasedCourt(filteredBookingList, request.court).length >= 1 || this.checkForCombinedSlots(filteredBookingList, request)) {
       throw new AppErrorDto(AppError.ALREADY_BOOKED);
     }
 
-    return bookingList.map((booking) => new BookingDto(booking));
+    return filteredBookingList.map((booking) => new BookingDto(booking));
   }
 
   async getAmount(request: any, days: any) {
