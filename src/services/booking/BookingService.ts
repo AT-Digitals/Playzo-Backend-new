@@ -244,7 +244,7 @@ export default class BookingService {
         if(parseInt(booking.bookingAmount.cash.toString())>=parseInt(request.bookingAmount.refund.toString())){
           booking.bookingAmount =
           {
-            online : request.bookingAmount.online, 
+            online : parseInt(booking.bookingAmount.online.toString()) + request.bookingAmount.online, 
             cash: parseInt(booking.bookingAmount.cash.toString()) - request.bookingAmount.refund,
             total: parseInt(booking.bookingAmount.online.toString()) + (parseInt(booking.bookingAmount.cash.toString()) - request.bookingAmount.refund),
             refund: parseInt(booking.bookingAmount.refund.toString()) + parseInt(request.bookingAmount.refund.toString())
