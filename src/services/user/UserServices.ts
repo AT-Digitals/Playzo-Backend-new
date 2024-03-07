@@ -17,7 +17,7 @@ export class UserServices {
       email: UserDto.email
     });
     if (userEmail) {
-      throw new AppErrorDto(AdminError.ADMIN_EXISTS);
+      throw new AppErrorDto(AdminError.USER_EXISTS);
     }
     let user = new User(UserDto);
     await user.setPassword(UserDto.password);

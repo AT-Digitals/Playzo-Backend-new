@@ -434,42 +434,98 @@ export default class BookingService {
 
   public async filterBookings(request:BookingDateFilterRequestDto) {
     const bookList:any = [];
+    // { $match: {startDate: {
+    //   $gte: new Date(request.startDate)
+    // }}},
+    // { $match:{endDate: {
+    //   $lte: new Date(request.endDate)
+    // }}},
     if(request.startDate && request.endDate && request.type){
       // const endDate = DateUtils.add(new Date(request.endDate),1,"day");
       let bookedData;
       if(request.court ==="3"&&(request.type===BookingType.Turf||request.type===BookingType.Playstaion)){
         bookedData = [
           { $match:{ type:request.type}},
-          {$match: { $or: [{ court: "1" }, { court: "2" }] }},
+          {$match: { $or: [{ court: "1" }, { court: "2" }, { court: "3" }] }},
           { $match:{ isRefund:false}},
-          { $match: {startDate: {
+          { $match:  {$or:[{$and: [{startDate: {
             $gte: new Date(request.startDate)
-          }}},
-          { $match:{endDate: {
+          }},{endDate: {
             $lte: new Date(request.endDate)
-          }}},
+          }}]},{$and: [{startDate: {
+            $lte: new Date(request.startDate)
+          }},{endDate: {
+            $gte: new Date(request.endDate)
+          }}]}]}},
           
           {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},
         
         ];
-      }else{
-        bookedData= [
-
+      }else if(request.court ==="1"&&(request.type===BookingType.Turf||request.type===BookingType.Playstaion)){
+        bookedData = [
           { $match:{ type:request.type}},
-          { $match:{ court:request.court}},
+          {$match: { $or: [{ court: "1" },{ court: "3" }] }},
           { $match:{ isRefund:false}},
-          { $match: {startDate: {
+          { $match:  {$or:[{$and: [{startDate: {
             $gte: new Date(request.startDate)
-          }}},
-          { $match:{endDate: {
+          }},{endDate: {
             $lte: new Date(request.endDate)
-          }}},
+          }}]},{$and: [{startDate: {
+            $lte: new Date(request.startDate)
+          }},{endDate: {
+            $gte: new Date(request.endDate)
+          }}]}]}},
+          
+          {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},
+        
+        ];
+      }else if(request.court ==="2"&&(request.type===BookingType.Turf||request.type===BookingType.Playstaion)){
+        bookedData = [
+          { $match:{ type:request.type}},
+          {$match: { $or: [{ court: "2" },{ court: "3" }] }},
+          { $match:{ isRefund:false}},
+          { $match:  {$or:[{$and: [{startDate: {
+            $gte: new Date(request.startDate)
+          }},{endDate: {
+            $lte: new Date(request.endDate)
+          }}]},{$and: [{startDate: {
+            $lte: new Date(request.startDate)
+          }},{endDate: {
+            $gte: new Date(request.endDate)
+          }}]}]}},
           
           {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},
         
         ];
       }
+        else{
+        bookedData= [
+
+          { $match:{ type:request.type}},
+          { $match:{ court:request.court}},
+          { $match:{ isRefund:false}},
+          { $match:  {$or:[{$and: [{startDate: {
+            $gte: new Date(request.startDate)
+          }},{endDate: {
+            $lte: new Date(request.endDate)
+          }}]},{$and: [{startDate: {
+            $lte: new Date(request.startDate)
+          }},{endDate: {
+            $gte: new Date(request.endDate)
+          }}]}]}},
+          // { $match:},
+          
+          {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},
+        
+        ];
+      }
+    
       const bookingsList =  await Booking.aggregate(bookedData); 
+    //   const endDate = DateUtils.add(new Date(request.endDate),1,"day");
+    // const days = moment(endDate).diff(moment(request.startDate),"days");
+    // if(days>1){
+    //   console.log(days);
+    // }
       bookingsList.filter(async (book)=>{
         if (request.type !== undefined) {
           if (book["count"] >= 1) {
