@@ -67,7 +67,7 @@ export class UserServices {
       newUser = new User({
         email: loginReq.email,
         name: loginReq.name,
-        phone: 123456789,
+        phone: 0,
         interestedSports: [],
       });
 

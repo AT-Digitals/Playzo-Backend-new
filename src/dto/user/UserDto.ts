@@ -8,7 +8,7 @@ export class UserDto extends AuthDto{
   email: string;
   name: string;
   id: string;
-  phone: number;
+  phone?: number;
   interestedSports?:string[];
   token?:string;
   bookingHistory: BookingDto[] = [];

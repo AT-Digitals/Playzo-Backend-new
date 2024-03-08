@@ -6,7 +6,7 @@ export interface UserModel extends Document {
   email: string;
   name: string;
   password: string;
-  phone:number;
+  phone?:number;
   userType:UserType;
   interestedSports?:string[];
   bookingHistory: BookingModel["id"][] | BookingModel[];

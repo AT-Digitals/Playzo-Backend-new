@@ -13,7 +13,8 @@ export class BookingDto {
     online: number, 
     cash: number,
     total: number,
-    refund:number
+    refund:number,
+    upi:number
   };
   bookingtype:PaymentType;
   userBookingType:UserBookingType;

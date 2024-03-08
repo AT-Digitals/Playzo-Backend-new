@@ -8,7 +8,10 @@ const UserSchema = new Schema({
   email: { type: String, required: true, unique: true },
   name: String,
   password: String,
-  phone:Number,
+  phone:{
+    type: Number,
+    default: 0,
+  },
   userType:{
     type: String,
     enum: [],

@@ -22,7 +22,8 @@ export class BookingRequestDto {
         online : number, 
         cash: number,
         total: number,
-        refund:number
+        refund:number,
+        upi:number
       };
   
     @IsEnum(PaymentType, { message: "Please provide a valid Payment Type" })

@@ -21,6 +21,12 @@ import moment from "moment";
 // import MailTemplateUtils from "../../utils/MailTemplateUtils";
 // import MailUtils from "../../utils/MailUtils";
 
+
+
+
+
+
+
 @Service()
 export default class BookingService {
   async create(request: BookingRequestDto, isAdmin = false) {
@@ -90,7 +96,8 @@ export default class BookingService {
         online : onlineAmount, 
         cash: 0,
         total: onlineAmount,
-        refund:0
+        refund:0,
+        upi:0
       };
     }else{
       const onlineValue =request.bookingAmount?.online?request.bookingAmount?.online:0;
@@ -99,7 +106,8 @@ export default class BookingService {
           online : onlineValue,
           cash: 0,
           total: onlineValue,
-          refund:0
+          refund:0,
+          upi:0
         };
       }else{
         throw new AppErrorDto(AppError.AMOUNT_ERROR); 
@@ -172,8 +180,14 @@ export default class BookingService {
   }
 
   async getAmount(request: any, days: any) {
-    //Amount Calculations
-    const amountList = await Amount.find({bookingtype : request.type});
+    //Amount Calculations 
+    const amountList = await Amount.find({
+      $and: [
+      
+        {bookingtype: request.type},
+        {court: request.court},
+      ],
+    });
     const amount =  parseInt(amountList[0].bookingAmount.toString());
     const duration = moment.duration(moment(request.endTime).diff(moment(request.startTime)));
     const minutes = parseInt(duration.asMinutes().toString());
@@ -221,7 +235,8 @@ export default class BookingService {
         online : 0, 
         cash: request.bookingAmount.cash,
         total: parseInt(request.bookingAmount.cash.toString()) + 0,
-        refund:0
+        refund:0,
+        upi:0
     };
     }
   
@@ -233,21 +248,31 @@ export default class BookingService {
   }
 
   async updateAmount(id: string, request: BookingAmountRequestDto) {
+    console.log("request", request)
     let booking = await this.findById(id);
     const endDate = DateUtils.add(new Date(booking.endDate),1,"day");
     const days = moment(endDate).diff(moment(booking.startDate),"days");
     const {totalAmount} = await this.getAmount(booking, days);
+    console.log("total amount", totalAmount);
 
-    if(request.bookingAmount && booking.bookingAmount){
+    if(request.bookingAmount && booking.bookingAmount && (request.bookingAmount.cash>0||request.bookingAmount.upi>0)){
      
       if(request.isRefund){
-        if(parseInt(booking.bookingAmount.cash.toString())>=parseInt(request.bookingAmount.refund.toString())){
+        const amt = booking.bookingAmount.cash+booking.bookingAmount.upi;
+        if(amt>=request.bookingAmount.refund){
+         if(request.bookingAmount.upi>booking.bookingAmount.upi){
+          throw new AppErrorDto(AppError.AMOUNT_ERROR); 
+         }
+         if(request.bookingAmount.cash>booking.bookingAmount.cash){
+          throw new AppErrorDto(AppError.AMOUNT_ERROR); 
+         }
           booking.bookingAmount =
           {
-            online : parseInt(booking.bookingAmount.online.toString()) + request.bookingAmount.online, 
-            cash: parseInt(booking.bookingAmount.cash.toString()) - request.bookingAmount.refund,
-            total: parseInt(booking.bookingAmount.online.toString()) + (parseInt(booking.bookingAmount.cash.toString()) - request.bookingAmount.refund),
-            refund: parseInt(booking.bookingAmount.refund.toString()) + parseInt(request.bookingAmount.refund.toString())
+            online : booking.bookingAmount.online + request.bookingAmount.online, 
+            cash: booking.bookingAmount.cash - request.bookingAmount.cash,
+            total: (booking.bookingAmount.online + booking.bookingAmount.cash + booking.bookingAmount.upi) - request.bookingAmount.refund,
+            refund: booking.bookingAmount.refund + request.bookingAmount.refund,
+            upi: booking.bookingAmount.upi - request.bookingAmount.upi,
           };
       
           booking.isRefund = true;
@@ -256,22 +281,35 @@ export default class BookingService {
           throw new AppErrorDto(AppError.AMOUNT_ERROR); 
         }
       }else{
-        const cashAmount = parseInt(request.bookingAmount.cash.toString())  + parseInt(booking.bookingAmount.cash.toString());
-        const onlineAmount = parseInt(request.bookingAmount.online.toString()) + parseInt(booking.bookingAmount.online.toString());
-        const finalAmount = cashAmount+onlineAmount;
-        if(finalAmount<=totalAmount){
+        const cashAmount = request.bookingAmount.cash  + booking.bookingAmount.cash;
+        const onlineAmount = request.bookingAmount.online + booking.bookingAmount.online;
+        const upiAmount =  request.bookingAmount.upi + booking.bookingAmount.upi;
+        const finalAmount = cashAmount+onlineAmount+upiAmount;
+        const total = totalAmount-(booking.bookingAmount.online>0?booking.bookingAmount.online:0);
+        console.log(total);
+        let refund = booking.bookingAmount.refund + request.bookingAmount.refund;
+        if(refund>0&&refund>=cashAmount){
+          refund = refund-cashAmount;
+        }
+        if(refund>0&&refund>=upiAmount){
+          refund = refund-upiAmount;
+        }
+        if(finalAmount<=total){
 
           booking.bookingAmount =
           {
-            online : onlineAmount, 
-            cash: cashAmount,
-            total: finalAmount,
-            refund:parseInt(booking.bookingAmount.refund.toString()) + parseInt(request.bookingAmount.refund.toString())
+            online : onlineAmount>0?onlineAmount:0, 
+            cash: cashAmount>0?cashAmount:0,
+            total: finalAmount>0?finalAmount:0,
+            refund:refund>0?refund:0,
+            upi:upiAmount>0?upiAmount:0
           };
         }else{
           throw new AppErrorDto(AppError.AMOUNT_ERROR); 
         }
       }
+    }else{
+      throw new AppErrorDto(AppError.AMOUNT_ERROR); 
     }
     booking = await booking.save();
     return booking;
