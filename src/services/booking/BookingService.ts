@@ -311,6 +311,47 @@ export default class BookingService {
     }else{
       throw new AppErrorDto(AppError.AMOUNT_ERROR); 
     }
+         // MailUtils.sendMail({
+      //   to: "antoshoba@gmail.com",
+      //   subject: "Your booking amount successfully paid",
+      //   html: MailTemplateUtils.UpdateAmountMail(booking)
+  
+      // });
+    booking = await booking.save();
+    return booking;
+  }
+
+  async updateCashUpiAmount(id: string, request: BookingAmountRequestDto) {
+    let booking = await this.findById(id);
+    const endDate = DateUtils.add(new Date(booking.endDate),1,"day");
+    const days = moment(endDate).diff(moment(booking.startDate),"days");
+    const {totalAmount} = await this.getAmount(booking, days);
+
+    if(request.bookingAmount && booking.bookingAmount && (request.bookingAmount.cash>0||request.bookingAmount.upi>0)){
+    
+        const cashAmount = request.bookingAmount.cash;
+        const onlineAmount = booking.bookingAmount.online;
+        const upiAmount =  request.bookingAmount.upi;
+        const finalAmount = cashAmount+onlineAmount+upiAmount;
+        const total = totalAmount-(booking.bookingAmount.online>0?booking.bookingAmount.online:0);
+      
+        if(finalAmount<=total){
+
+          booking.bookingAmount =
+          {
+            online : onlineAmount>0?onlineAmount:0, 
+            cash: cashAmount>0?cashAmount:0,
+            total: finalAmount>0?finalAmount:0,
+            refund:booking.bookingAmount.refund,
+            upi:upiAmount>0?upiAmount:0
+          };
+        }else{
+          throw new AppErrorDto(AppError.AMOUNT_ERROR); 
+        }
+    }else{
+      throw new AppErrorDto(AppError.AMOUNT_ERROR); 
+    }
+
     booking = await booking.save();
     return booking;
   }
