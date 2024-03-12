@@ -4,6 +4,7 @@ import { AppErrorDto } from "../../dto/error/AppErrorDto";
 import { Booking } from "../../models/booking/Booking";
 import { HttpStatusCode } from "../../dto/error/HttpStatusCode";
 import MailUtils from "../../utils/MailUtils";
+import PasswordRequestDto from "../../dto/auth/PasswordRequestDto";
 import { Service } from "typedi";
 import { User } from "../../models/user/User";
 import { UserDto } from "../../dto/user/UserDto";
@@ -117,7 +118,7 @@ public async sendOtp(req: any) {
     const link = `http://localhost:8000/user/otpVerification/${req.email}/${otp}`;
     MailUtils.sendMail({
         to: req.email,
-           subject: `OTP for account verification is " ${otp} "` ,
+           subject: "OTP verification" ,
         html: `<!DOCTYPE html>
         <html lang="en">
            <head>
@@ -140,37 +141,16 @@ public async sendOtp(req: any) {
                 align-items: center;
               }
               
-              .form-control {
-                display: block;
-                width: 300px;
-                margin: 10px 0;
-                padding: 10px;
-                border-radius: 5px;
-                border: 2px solid #172432;
-              }
-              
-              button {
-                display: inline-block;
-                background-color: #172432;
-                border: none;
-                color: #ddd;
-                padding: 10px 20px;
-                border-radius: 5px;
-              }
-              
 </style>
            </head>
            <body>
            
            <div class="container">
-        <form action="" id="otpForm">
-          <h1>OTP Verification</h1>
-          <input type="text" id="otp" class="form-control" placeholder="Enter your OTP...">
-          <button type="submit">Submit</button>
-<a href="${link}">Click here</a>
-        </form>
-        <style>
-        </style>
+     
+          <h1>OTP for account verification is " ${otp} "</h1>
+        
+          <a href="${link}">Click here</a>
+       
       </div>
       </body>
       </html>
@@ -194,8 +174,20 @@ public async sendOtp(req: any) {
     if(!moment(user[0].expireTime).isSameOrAfter(moment(),"minutes")){
       throw new AppErrorDto(AdminError.EXPIRE_TIME);
     }
-    console.log(user[0], moment(user[0].expireTime).isSameOrAfter(moment(),"minutes"));
     return user[0];
+  }
+  async findById(id: string) {
+    const user = await User.findOne({ _id:id });
+    if (!user) {
+      throw new AppErrorDto(AppError.NOT_FOUND);
+    }
+    return user;
+  }
+  async forgotPassword(id: string, request: PasswordRequestDto) {
+    let user = await this.findById(id);
+    await user.setPassword(request.password);
+    user = await user.save();
+    return user;
   }
   
 }
