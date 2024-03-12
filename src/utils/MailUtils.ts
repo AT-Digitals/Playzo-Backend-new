@@ -7,7 +7,7 @@ export default class MailUtils{
     const channel = MailUtils.createChannel();
 
  return channel.sendMail({
-      from: "\"Booking\" <antoshoba@gmail.com>",
+      from: "<antoshoba@gmail.com>",
       to: request.to,
       subject: request.subject,
       text: request.text,

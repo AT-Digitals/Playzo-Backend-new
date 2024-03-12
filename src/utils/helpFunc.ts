@@ -49,3 +49,9 @@ export function filterBookingList(bookingList: any, newStartDate: any,newEndDate
 
     return filteredList;
 }
+
+export function randomAlphaNumeric(length: any, chars: string | any[]) {
+    let result = "";
+    for (let i = length; i > 0; --i) {result += chars[Math.round(Math.random() * (chars.length - 1))];}
+    return result;
+}

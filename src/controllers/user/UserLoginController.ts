@@ -3,7 +3,9 @@ import {
   CurrentUser,
   Get,
   JsonController,
+  Param,
   Post,
+  Put,
   Res,
 } from "routing-controllers";
 import AuthDto from "../../dto/auth/AuthDto";
@@ -48,6 +50,18 @@ export class UserLoginController {
   @Post("/newUsers")
   public async createNewUser(@Body() userRequestDto: UserRequestDto) {
     const user = await this.userService.createUser(userRequestDto);
+    return new UserDto(user);
+  }
+
+  @Put("/sendOtp")
+  public async createOtp(@Body() email: any) {
+    const user = await this.userService.sendOtp(email);
+    return user;
+  }
+
+  @Get("/otpVerification/:email/:otp")
+  public async otpVerification(@Param("email") email: string, @Param("otp") otp: string) {
+    const user =  await this.userService.otpVerification(email,otp);
     return new UserDto(user);
   }
 

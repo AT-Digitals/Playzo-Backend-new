@@ -9,6 +9,8 @@ const UserSchema = new Schema({
   name: String,
   password: String,
   phone:Number,
+  otp:String,
+  expireTime: Date,
   userType:{
     type: String,
     enum: [],

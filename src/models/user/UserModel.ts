@@ -8,6 +8,8 @@ export interface UserModel extends Document {
   password: string;
   phone:number;
   userType:UserType;
+  otp?:string;
+  expireTime?:Date;
   interestedSports?:string[];
   bookingHistory: BookingModel["id"][] | BookingModel[];
   setPassword(password: string): Promise<void>;
