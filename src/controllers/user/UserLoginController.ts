@@ -65,6 +65,15 @@ export class UserLoginController {
     return new UserDto(user);
   }
 
+  @Put("/:userId")
+  public async updateById(
+    @Param("userId") userId: string,
+    @Body() newNumber: any
+  ) {
+    const user = await this.userService.updateById(userId, newNumber);
+    return new UserDto(user);
+  }
+
   @Post("/auth/google")
   public async getGoogleToken(@Body() authBody: any, @Res() res: Response,){
     const oAuth2Client = new OAuth2Client(

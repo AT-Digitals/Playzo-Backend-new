@@ -18,4 +18,13 @@ export class BookingAmountController {
     return new BookingDto(booking);
   }
 
+  @Put("/updateCashUpi/:bookingId")
+  public async updateByCashUpi(
+    @Param("bookingId") bookingId: string,
+    @Body() newPrice: BookingAmountRequestDto
+  ) {
+    const booking = await this.bookingService.updateCashUpiAmount(bookingId, newPrice);
+    return new BookingDto(booking);
+  }
+
 }

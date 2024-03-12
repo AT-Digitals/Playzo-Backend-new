@@ -15,6 +15,21 @@ static BookingMail(booking: BookingModel) {
 </div>`;
 
   }
+
+  static UpdateAmountMail(booking: BookingModel) {
+    return `<div>
+    <h2>Paid Amount Details</h2>
+    <p>Type : ${booking.type} </p>
+    <p>Start Date : ${DateUtils.formatDate(new Date(booking.startDate),"DD-MM-YYYY")}</p>
+    <p>End Date : ${DateUtils.formatDate(booking.endDate,"DD-MM-YYYY")} </p>
+    <p>Start Time : ${DateUtils.formatDate(new Date(booking.startTime),"hh:00 A")}</p>
+    <p>End Time : ${DateUtils.formatDate(new Date(booking.endTime),"hh:00 A")}</p>
+    <p>Cash Amount : ${booking.bookingAmount?.cash}</p>
+    <p>UPI Amount : ${booking.bookingAmount?.upi}</p>
+    <p>Online Amount : ${booking.bookingAmount?.online}</p>
+   </div>`;
+   
+     }
   static EnquiryMail(request: any) {
 
     return `<div>
