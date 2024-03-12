@@ -16,8 +16,8 @@ export class UserRequestDto {
   @IsDefined({ message: "Name is required" })
   name: string;
 
-  @IsDefined({ message: "Phone number is required" })
-  phone: number;
+  @IsOptional()
+  phone?: number;
   
   @IsOptional()
   interestedSports?:string[];

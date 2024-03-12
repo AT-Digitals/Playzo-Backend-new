@@ -31,10 +31,10 @@ export class BookingController {
   @Put("/:bookingId")
   public async updateById(
     @Param("bookingId") bookingId: string,
-    @Body() newPrice: BookingRequestDto
+    @Body() newPrice: any
   ) {
     const booking = await this.bookingService.updateById(bookingId, newPrice);
-    return new Booking(booking);
+    return new BookingDto(booking);
   }
 
   @Delete()

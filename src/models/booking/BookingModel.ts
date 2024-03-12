@@ -13,7 +13,8 @@ export interface BookingModel extends Document {
 		online : number, 
 		cash: number,
 		total: number,
-		refund:number
+		refund:number,
+		upi:number
 	},
 	bookingtype: PaymentType,
 	userBookingType:UserBookingType,

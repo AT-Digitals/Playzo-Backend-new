@@ -30,6 +30,16 @@ export class UserServices {
     return users.map((user) => new UserDto(user));
   }
 
+  async updateById(id: string, request: any) {
+    let user = await User.findOne({id});
+    if (!user) {
+      throw new AppErrorDto(AppError.NOT_FOUND);
+    }
+    user.phone = request.phone;
+    user = await user.save();
+    return user;
+  }
+
   public async getUser(userId: string) {
     let user = await User.findById(userId);
     if (!user) {
@@ -67,7 +77,7 @@ export class UserServices {
       newUser = new User({
         email: loginReq.email,
         name: loginReq.name,
-        phone: 123456789,
+        phone: 0,
         interestedSports: [],
       });
 
