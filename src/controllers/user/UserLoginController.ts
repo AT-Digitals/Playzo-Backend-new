@@ -3,7 +3,9 @@ import {
   CurrentUser,
   Get,
   JsonController,
+  Param,
   Post,
+  Put,
   Res,
 } from "routing-controllers";
 import AuthDto from "../../dto/auth/AuthDto";
@@ -48,6 +50,15 @@ export class UserLoginController {
   @Post("/newUsers")
   public async createNewUser(@Body() userRequestDto: UserRequestDto) {
     const user = await this.userService.createUser(userRequestDto);
+    return new UserDto(user);
+  }
+
+  @Put("/:userId")
+  public async updateById(
+    @Param("userId") userId: string,
+    @Body() newNumber: any
+  ) {
+    const user = await this.userService.updateById(userId, newNumber);
     return new UserDto(user);
   }
 
