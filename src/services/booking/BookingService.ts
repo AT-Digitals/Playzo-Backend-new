@@ -224,36 +224,34 @@ export default class BookingService {
     return bookings.map((booking) => new BookingDto(booking));
   }
 
-  async updateById(id: string, request: BookingRequestDto) {
+  async updateById(id: string, request: any) {
     let booking = await Booking.findOne({id});
-    if(booking){
-    booking.type = request.type;
-    booking.cancelDate = request.cancelDate;
+    if (!booking) {
+      throw new AppErrorDto(AppError.NOT_FOUND);
+    }
     if(request.bookingAmount){
+      const cashAmount = request.bookingAmount.cash>0?request.bookingAmount.cash:booking.bookingAmount?.cash??0;
+      const onlineAmount = booking.bookingAmount?.online??0;
+      const upiAmount = request.bookingAmount.cash>0?request.bookingAmount.cash:booking.bookingAmount?.cash??0;
     booking.bookingAmount =
     {
-        online : 0, 
-        cash: request.bookingAmount.cash,
-        total: parseInt(request.bookingAmount.cash.toString()) + 0,
-        refund:0,
-        upi:0
+        online : onlineAmount, 
+        cash: cashAmount,
+        total: cashAmount+onlineAmount+upiAmount,
+        refund:booking.bookingAmount?.refund??0, 
+        upi:upiAmount,
     };
     }
-  
-    booking.bookingtype = request.bookingtype;
     booking.deleted = false;
     booking = await booking.save();
-    }
     return booking;
   }
 
   async updateAmount(id: string, request: BookingAmountRequestDto) {
-    console.log("request", request)
     let booking = await this.findById(id);
     const endDate = DateUtils.add(new Date(booking.endDate),1,"day");
     const days = moment(endDate).diff(moment(booking.startDate),"days");
     const {totalAmount} = await this.getAmount(booking, days);
-    console.log("total amount", totalAmount);
 
     if(request.bookingAmount && booking.bookingAmount && (request.bookingAmount.cash>0||request.bookingAmount.upi>0)){
      
