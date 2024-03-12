@@ -43,6 +43,10 @@ const bookingSchema = new Schema({
   cancelDate:Date,
   duration:Number,
   court: String,
+  numberOfPerson: {
+    type: Number,
+    default: 0,
+  },
   isAnnual: Boolean,
   isRefund: Boolean,
   deleted: Boolean

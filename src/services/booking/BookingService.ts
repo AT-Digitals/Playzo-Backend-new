@@ -90,12 +90,18 @@ export default class BookingService {
     
     //Amount Calculations
     const {totalAmount, onlineAmount} = await this.getAmount(request, days);
+    let amountVal = 0;
+    if(booking.numberOfPerson && booking.numberOfPerson> 0 && booking.type === BookingType.Badminton){
+      amountVal = onlineAmount*booking.numberOfPerson;
+    }else{
+      amountVal = onlineAmount;
+    }
 
     if(request.userBookingType === UserBookingType.Online){
       booking.bookingAmount = {
-        online : onlineAmount, 
+        online : amountVal, 
         cash: 0,
-        total: onlineAmount,
+        total: amountVal,
         refund:0,
         upi:0
       };
@@ -225,7 +231,7 @@ export default class BookingService {
   }
 
   async updateById(id: string, request: any) {
-    let booking = await Booking.findOne({id});
+    let booking = await Booking.findOne({_id:id});
     if (!booking) {
       throw new AppErrorDto(AppError.NOT_FOUND);
     }

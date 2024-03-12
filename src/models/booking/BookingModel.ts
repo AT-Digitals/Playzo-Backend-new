@@ -25,6 +25,7 @@ export interface BookingModel extends Document {
 	endDate:Date,
 	duration:number,
 	court: string,
+	numberOfPerson?:number,
 	isAnnual: boolean,
 	isRefund?: boolean,
 	deleted: boolean

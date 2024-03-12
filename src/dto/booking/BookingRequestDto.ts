@@ -55,4 +55,7 @@ export class BookingRequestDto {
 
     @IsOptional()
     isRefund?:string;
+
+    @IsOptional()
+    numberOfPerson?:number;
   }
