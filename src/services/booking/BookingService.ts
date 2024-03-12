@@ -238,7 +238,7 @@ export default class BookingService {
     if(request.bookingAmount){
       const cashAmount = request.bookingAmount.cash>0?request.bookingAmount.cash:booking.bookingAmount?.cash??0;
       const onlineAmount = booking.bookingAmount?.online??0;
-      const upiAmount = request.bookingAmount.cash>0?request.bookingAmount.cash:booking.bookingAmount?.cash??0;
+      const upiAmount = request.bookingAmount.api>0?request.bookingAmount.upi:booking.bookingAmount?.upi??0;
     booking.bookingAmount =
     {
         online : onlineAmount, 
