@@ -31,7 +31,7 @@ export class UserServices {
   }
 
   async updateById(id: string, request: any) {
-    let user = await User.findOne({id});
+    let user = await User.findOne({_id:id});
     if (!user) {
       throw new AppErrorDto(AppError.NOT_FOUND);
     }
