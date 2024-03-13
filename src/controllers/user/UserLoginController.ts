@@ -57,7 +57,7 @@ export class UserLoginController {
   @Put("/sendOtp")
   public async createOtp(@Body() email: any) {
     const user = await this.userService.sendOtp(email);
-    return user;
+    return new UserDto(user);
   }
 
   @Get("/otpVerification/:email/:otp")
