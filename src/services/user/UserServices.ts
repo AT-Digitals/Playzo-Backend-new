@@ -184,7 +184,12 @@ public async sendOtp(req: any) {
     return user;
   }
   async forgotPassword(id: string, request: PasswordRequestDto) {
-    let user = await this.findById(id);
+ let user = await User.findOne({
+      email: id,
+    });
+    if (!user) {
+      throw new AppErrorDto(AppError.NOT_FOUND);
+    }
     await user.setPassword(request.password);
     user = await user.save();
     return user;
