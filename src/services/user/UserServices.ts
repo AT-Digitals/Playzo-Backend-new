@@ -115,48 +115,103 @@ public async sendOtp(req: any) {
     }
     
     const otp = randomAlphaNumeric(8, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
-//     const link = `http://localhost:8000/user/otpVerification/${req.email}/${otp}`;
-//     MailUtils.sendMail({
-//         to: req.email,
-//            subject: "OTP verification" ,
-//         html: `<!DOCTYPE html>
-//         <html lang="en">
-//            <head>
-//               <meta charset="UTF-8" />
-//               <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-//               <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-//               <title>Send OTP</title>
-//               <style>
-//               body {
-//                 width: 100vw;
-//                 background-color: #ddd;
-//                 font-family: sans-serif;
-//               }
-              
-//               .container {
-//                 height: 100vh;
-//                 width: 100%;
-//                 display: flex;
-//                 justify-content: center;
-//                 align-items: center;
-//               }
-              
-// </style>
-//            </head>
-//            <body>
-           
-//            <div class="container">
-     
-//           <h1>OTP for account verification is " ${otp} "</h1>
+    // <img src="company_logo.png" alt="Company Logo" class="logo">
+    // const link = `http://playzo33.in/${req.email}`;
+    // const link = `http://localhost:3000/${req.email}`;
+    // MailUtils.sendMail({
+    //     to: req.email,
+    //        subject: "OTP verification" ,
+    //     html: `<!DOCTYPE html>
+    //     <html lang="en">
+    //     <head>
+    //     <meta charset="UTF-8">
+    //     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    //     <title>Password Reset OTP</title>
+    //     <style>
+    //       body {
+    //         font-family: Arial, sans-serif;
+    //         line-height: 1.6;
+    //         background-color: #f4f4f4;
+    //         margin: 0;
+    //         padding: 0;
+    //       }
         
-//           <a href="${link}">Click here</a>
-       
-//       </div>
-//       </body>
-//       </html>
-//       `
+    //       .container {
+    //         max-width: 600px;
+    //         margin: 20px auto;
+    //         padding: 20px;
+    //         background-color: #fff;
+    //         border-radius: 5px;
+    //         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    //       }
+        
+    //       h1 {
+    //         color: #333;
+    //         text-align: center;
+    //       }
+        
+    //       p {
+    //         margin-bottom: 20px;
+    //       }
+        
+    //       .otp {
+    //         font-size: 24px;
+    //         font-weight: bold;
+    //         text-align: center;
+    //         color: #007bff;
+    //         margin-bottom: 30px;
+    //       }
+        
+    //       .footer {
+    //         text-align: center;
+    //         margin-top: 20px;
+    //         color: #888;
+    //       }
+        
+    //       .logo {
+    //         display: block;
+    //         margin: 0 auto;
+    //         max-width: 200px;
+    //       }
+        
+    //       .redirect-link {
+    //         text-align: center;
+    //         margin-top: 30px;
+    //       }
+        
+    //       .redirect-link a {
+    //         color: #007bff;
+    //         text-decoration: none;
+    //         font-weight: bold;
+    //       }
+        
+    //       .redirect-link a:hover {
+    //         text-decoration: underline;
+    //       }
+    //     </style>
+    //     </head>
+    //     <body>
+        
+    //     <div class="container">
+          
+    //       <h1>Password Reset OTP</h1>
+    //       <p>You have requested to reset your password. Please use the following OTP (One-Time Password) to reset your password:</p>
+    //       <div class="otp">${otp}</div>
+    //       <div class="redirect-link">
+    //       <p>If you didn't request this change, please ignore this email.</p>
+    //       </div>
+    //       <div class="redirect-link">
+    //         Click Here for OTP Verification <a href=${link}>http://playzo33.in/verify</a>
+    //       </div>
+    //       <p class="footer">This email was sent by <a href="http://playzo33.in/">http://playzo33.in/</a></p>
+    //     </div>
+        
+    //     </body>
+    //     </html>
+        
+    //   `
   
-//       });
+    //   });
 
       user.otp = otp;
       user.expireTime = new Date();
