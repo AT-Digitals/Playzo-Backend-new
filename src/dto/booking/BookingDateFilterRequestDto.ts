@@ -40,5 +40,8 @@ export class BookingDateFilterRequestDto extends PaginationRequestDto {
 
     @IsOptional()
     userBookingType?: UserBookingType;
+
+    @IsOptional()
+    paybookingtype?: PaymentType;
    
   }
