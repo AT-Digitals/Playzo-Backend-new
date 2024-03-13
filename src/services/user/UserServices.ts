@@ -115,48 +115,48 @@ public async sendOtp(req: any) {
     }
     
     const otp = randomAlphaNumeric(8, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
-    const link = `http://localhost:8000/user/otpVerification/${req.email}/${otp}`;
-   await MailUtils.sendMail({
-        to: req.email,
-           subject: "OTP verification" ,
-        html: `<!DOCTYPE html>
-        <html lang="en">
-           <head>
-              <meta charset="UTF-8" />
-              <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-              <title>Send OTP</title>
-              <style>
-              body {
-                width: 100vw;
-                background-color: #ddd;
-                font-family: sans-serif;
-              }
+//     const link = `http://localhost:8000/user/otpVerification/${req.email}/${otp}`;
+//     MailUtils.sendMail({
+//         to: req.email,
+//            subject: "OTP verification" ,
+//         html: `<!DOCTYPE html>
+//         <html lang="en">
+//            <head>
+//               <meta charset="UTF-8" />
+//               <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+//               <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+//               <title>Send OTP</title>
+//               <style>
+//               body {
+//                 width: 100vw;
+//                 background-color: #ddd;
+//                 font-family: sans-serif;
+//               }
               
-              .container {
-                height: 100vh;
-                width: 100%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-              }
+//               .container {
+//                 height: 100vh;
+//                 width: 100%;
+//                 display: flex;
+//                 justify-content: center;
+//                 align-items: center;
+//               }
               
-</style>
-           </head>
-           <body>
+// </style>
+//            </head>
+//            <body>
            
-           <div class="container">
+//            <div class="container">
      
-          <h1>OTP for account verification is " ${otp} "</h1>
+//           <h1>OTP for account verification is " ${otp} "</h1>
         
-          <a href="${link}">Click here</a>
+//           <a href="${link}">Click here</a>
        
-      </div>
-      </body>
-      </html>
-      `
+//       </div>
+//       </body>
+//       </html>
+//       `
   
-      });
+//       });
 
       user.otp = otp;
       user.expireTime = new Date();
@@ -167,7 +167,7 @@ public async sendOtp(req: any) {
   public async otpVerification(email: string, otp:string) {
     const user = await User.find({email:email,otp:otp});
     if (!user[0]) {
-      throw new AppErrorDto(AdminError.USER_EXISTS);
+      throw new AppErrorDto(AdminError.USER_NOT_EXISTS);
     }
    const time = moment(user[0].expireTime).add(1, "hours");
     if(!time.isSameOrAfter(moment(),"minutes")){
