@@ -116,7 +116,7 @@ public async sendOtp(req: any) {
     
     const otp = randomAlphaNumeric(8, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
     const link = `http://localhost:8000/user/otpVerification/${req.email}/${otp}`;
-    MailUtils.sendMail({
+   await MailUtils.sendMail({
         to: req.email,
            subject: "OTP verification" ,
         html: `<!DOCTYPE html>
@@ -161,8 +161,7 @@ public async sendOtp(req: any) {
       user.otp = otp;
       user.expireTime = new Date();
       user = await user.save();
-    //  await this.otpVerification({email:user.email,otp:otp});
-    return {otp:otp,expireTime:new Date()};
+    return user;
   }
 
   public async otpVerification(email: string, otp:string) {
@@ -170,8 +169,8 @@ public async sendOtp(req: any) {
     if (!user[0]) {
       throw new AppErrorDto(AdminError.USER_EXISTS);
     }
-   
-    if(!moment(user[0].expireTime).isSameOrAfter(moment(),"minutes")){
+   const time = moment(user[0].expireTime).add(1, "hours");
+    if(!time.isSameOrAfter(moment(),"minutes")){
       throw new AppErrorDto(AdminError.EXPIRE_TIME);
     }
     return user[0];
