@@ -8,6 +8,8 @@ const UserSchema = new Schema({
   email: { type: String, required: true, unique: true },
   name: String,
   password: String,
+  otp:String,
+  expireTime: Date,
   phone:{
     type: Number,
     default: 0,

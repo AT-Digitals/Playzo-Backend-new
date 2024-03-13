@@ -40,4 +40,6 @@ static BookingMail(booking: BookingModel) {
     <p>Message : ${request.enquiryMessage}</p>
   </div>`;
      }
+
+
 }

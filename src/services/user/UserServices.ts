@@ -3,12 +3,18 @@ import { AppError } from "../../dto/error/AppError";
 import { AppErrorDto } from "../../dto/error/AppErrorDto";
 import { Booking } from "../../models/booking/Booking";
 import { HttpStatusCode } from "../../dto/error/HttpStatusCode";
+import MailUtils from "../../utils/MailUtils";
+import PasswordRequestDto from "../../dto/auth/PasswordRequestDto";
 import { Service } from "typedi";
 import { User } from "../../models/user/User";
 import { UserDto } from "../../dto/user/UserDto";
 import UserLoginRequestDto from "../../dto/auth/UserLoginRequestDto";
 import { UserModel } from "../../models/user/UserModel";
 import { UserRequestDto } from "../../dto/user/UserRequestDto";
+import moment from "moment";
+import { randomAlphaNumeric } from "../../utils/helpFunc";
+
+// import MailTemplateUtils from "../../utils/MailTemplateUtils";
 
 @Service()
 export class UserServices {
@@ -97,6 +103,95 @@ export class UserServices {
       users = await User.find({});
     }
     return users.map((user) => new UserDto(user));
+  }
+
+public async sendOtp(req: any) {
+    let user = await User.findOne({
+      email: req.email,
+    });
+
+    if (!user) {
+      throw new AppErrorDto(AdminError.USER_NOT_EXISTS);
+    }
+    
+    const otp = randomAlphaNumeric(8, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    const link = `http://localhost:8000/user/otpVerification/${req.email}/${otp}`;
+   await MailUtils.sendMail({
+        to: req.email,
+           subject: "OTP verification" ,
+        html: `<!DOCTYPE html>
+        <html lang="en">
+           <head>
+              <meta charset="UTF-8" />
+              <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <title>Send OTP</title>
+              <style>
+              body {
+                width: 100vw;
+                background-color: #ddd;
+                font-family: sans-serif;
+              }
+              
+              .container {
+                height: 100vh;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              }
+              
+</style>
+           </head>
+           <body>
+           
+           <div class="container">
+     
+          <h1>OTP for account verification is " ${otp} "</h1>
+        
+          <a href="${link}">Click here</a>
+       
+      </div>
+      </body>
+      </html>
+      `
+  
+      });
+
+      user.otp = otp;
+      user.expireTime = new Date();
+      user = await user.save();
+    return user;
+  }
+
+  public async otpVerification(email: string, otp:string) {
+    const user = await User.find({email:email,otp:otp});
+    if (!user[0]) {
+      throw new AppErrorDto(AdminError.USER_EXISTS);
+    }
+   const time = moment(user[0].expireTime).add(1, "hours");
+    if(!time.isSameOrAfter(moment(),"minutes")){
+      throw new AppErrorDto(AdminError.EXPIRE_TIME);
+    }
+    return user[0];
+  }
+  async findById(id: string) {
+    const user = await User.findOne({ _id:id });
+    if (!user) {
+      throw new AppErrorDto(AppError.NOT_FOUND);
+    }
+    return user;
+  }
+  async forgotPassword(id: string, request: PasswordRequestDto) {
+ let user = await User.findOne({
+      email: id,
+    });
+    if (!user) {
+      throw new AppErrorDto(AppError.NOT_FOUND);
+    }
+    await user.setPassword(request.password);
+    user = await user.save();
+    return user;
   }
   
 }

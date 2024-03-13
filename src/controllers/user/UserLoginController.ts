@@ -18,6 +18,7 @@ import UserLoginRequestDto from "../../dto/auth/UserLoginRequestDto";
 import { UserRequestDto } from "../../dto/user/UserRequestDto";
 import { UserServices } from "../../services/user/UserServices"; 
 import { error } from "console";
+import PasswordRequestDto from "../../dto/auth/PasswordRequestDto";
 
 @JsonController("/user")
 @Service()
@@ -50,6 +51,26 @@ export class UserLoginController {
   @Post("/newUsers")
   public async createNewUser(@Body() userRequestDto: UserRequestDto) {
     const user = await this.userService.createUser(userRequestDto);
+    return new UserDto(user);
+  }
+
+  @Put("/sendOtp")
+  public async createOtp(@Body() email: any) {
+    const user = await this.userService.sendOtp(email);
+    return user;
+  }
+
+  @Get("/otpVerification/:email/:otp")
+  public async otpVerification(@Param("email") email: string, @Param("otp") otp: string) {
+    const user =  await this.userService.otpVerification(email,otp);
+    return new UserDto(user);
+  }
+  @Put("/:userId")
+  public async forgotPassword(
+    @Param("userId") userId: string,
+    @Body() request: PasswordRequestDto
+  ) {
+    const user = await this.userService.forgotPassword(userId, request);
     return new UserDto(user);
   }
 
@@ -87,4 +108,5 @@ export class UserLoginController {
     
     throw error("Not able to get token");
   }
+  
 }
