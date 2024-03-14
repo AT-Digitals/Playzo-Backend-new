@@ -74,7 +74,7 @@ export class UserLoginController {
     return new UserDto(user);
   }
 
-  @Put("/:userId")
+  @Put("/updatePhone/:userId")
   public async updateById(
     @Param("userId") userId: string,
     @Body() newNumber: any
