@@ -27,6 +27,7 @@ export class BookingDto {
   court: string;
   isAnnual: boolean;
   numberOfPerson?:number;
+  membership:boolean;
   isRefund?: boolean;
   deleted: boolean;
 
@@ -50,5 +51,6 @@ export class BookingDto {
     this.numberOfPerson = booking.numberOfPerson;
     this.isRefund = booking.isRefund;
     this.isAnnual = booking.isAnnual;
+    this.membership = booking.membership;
   }
 }
