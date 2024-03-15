@@ -11,17 +11,12 @@ import { BookingModel } from "../../models/booking/BookingModel";
 import { BookingRequestDto } from "../../dto/booking/BookingRequestDto";
 import { BookingType } from "../../models/booking/BookingType";
 import DateUtils from "../../utils/DateUtils";
-import MailTemplateUtils from "../../utils/MailTemplateUtils";
-import MailUtils from "../../utils/MailUtils";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
 import { Service } from "typedi";
 import { User } from "../../models/user/User";
 import { UserBookingType } from "../../models/booking/UserBookingType";
 import { filterBookingList } from "../../utils/helpFunc";
 import moment from "moment";
-
-// import MailTemplateUtils from "../../utils/MailTemplateUtils";
-// import MailUtils from "../../utils/MailUtils";
 
 @Service()
 export default class BookingService {
@@ -335,12 +330,12 @@ export default class BookingService {
     }else{
       throw new AppErrorDto(AppError.AMOUNT_ERROR); 
     }
-         MailUtils.sendMail({
-        to: "antoshoba@gmail.com",
-        subject: "Your booking amount successfully paid",
-        html: MailTemplateUtils.UpdateAmountMail(booking)
+      //    MailUtils.sendMail({
+      //   to: "antoshoba@gmail.com",
+      //   subject: "Your booking amount successfully paid",
+      //   html: MailTemplateUtils.UpdateAmountMail(booking)
   
-      });
+      // });
     booking = await booking.save();
     return booking;
   }
