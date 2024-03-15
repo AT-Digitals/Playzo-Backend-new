@@ -229,9 +229,9 @@ export default class BookingService {
     const days = moment(endDate).diff(moment(booking.startDate),"days");
     const {totalAmount} = await this.getAmount(booking, days);
     if(request.bookingAmount){
-      const cashAmount = request.bookingAmount.cash>0?request.bookingAmount.cash:booking.bookingAmount?.cash??0;
+      const cashAmount = request.bookingAmount.cash;
       const onlineAmount = booking.bookingAmount?.online??0;
-      const upiAmount = request.bookingAmount.upi>0?request.bookingAmount.upi:booking.bookingAmount?.upi??0;
+      const upiAmount = request.bookingAmount.upi;
     const finalAmount = cashAmount+onlineAmount+upiAmount;
     let totalAmt = 0;
     if(booking.numberOfPerson && booking.numberOfPerson > 0 && booking.type === BookingType.Badminton){
@@ -239,9 +239,7 @@ export default class BookingService {
     }else{
       totalAmt = totalAmount;
     }
-    const total = totalAmt-(booking.bookingAmount&&booking.bookingAmount.online>0?booking.bookingAmount.online:0);
-
-    if(finalAmount<=total){
+    if(finalAmount<=totalAmt){
          
       booking.bookingAmount =
       {
@@ -304,8 +302,6 @@ export default class BookingService {
         }else{
           totalAmt = totalAmount;
         }
-        const total = totalAmt-(booking.bookingAmount.online>0?booking.bookingAmount.online:0);
-        console.log(total);
         let refund = booking.bookingAmount.refund + request.bookingAmount.refund;
         if(refund>0&&refund>=cashAmount){
           refund = refund-cashAmount;
@@ -313,7 +309,7 @@ export default class BookingService {
         if(refund>0&&refund>=upiAmount){
           refund = refund-upiAmount;
         }
-        if(finalAmount<=total){
+        if(finalAmount<=totalAmt){
          
           booking.bookingAmount =
           {
