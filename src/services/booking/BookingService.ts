@@ -29,32 +29,32 @@ export default class BookingService {
     const endDate = DateUtils.add(new Date(request.endDate),1,"day");
     const diffDuration = moment.duration(moment(request.endDate).diff(moment(request.startDate)));
     const days = moment(endDate).diff(moment(request.startDate),"days");
-    // const bookingQuery =  {
-    //   $and: [
-    //     {startTime: {
-    //       $lt: request.endTime
-    //     }},
-    //     {endTime: {
-    //       $gt: request.startTime
-    //     }},
-    //     {type: request.type},
-    //     {isRefund: false}
-    //   ],
-    // };
-    // const bookingList = await Booking.find(bookingQuery);
+    const bookingQuery =  {
+      $and: [
+        {startTime: {
+          $lt: request.endTime
+        }},
+        {endTime: {
+          $gt: request.startTime
+        }},
+        {type: request.type},
+        {isRefund: false}
+      ],
+    };
+    const bookingList = await Booking.find(bookingQuery);
       
-    // const filteredBookingList = filterBookingList(bookingList, request.startDate,request.endDate, request.startTime, request.endTime, days);
+    const filteredBookingList = filterBookingList(bookingList, request.startDate,request.endDate, request.startTime, request.endTime, days);
 
     //check for combinedSlots
-    // if(this.checkForCombinedSlots(filteredBookingList, request)){
-    //   throw new AppErrorDto(AppError.ALREADY_BOOKED);
-    // }
+    if(this.checkForCombinedSlots(filteredBookingList, request)){
+      throw new AppErrorDto(AppError.ALREADY_BOOKED);
+    }
 
-    // const courtFilteredList = this.filterBasedCourt(filteredBookingList, request.court);
+    const courtFilteredList = this.filterBasedCourt(filteredBookingList, request.court);
 
-    // if (courtFilteredList.length >= 1) {
-    //   throw new AppErrorDto(AppError.ALREADY_BOOKED);
-    // }
+    if (courtFilteredList.length >= 1) {
+      throw new AppErrorDto(AppError.ALREADY_BOOKED);
+    }
     
     const bookingData: any = {
       ...request,
