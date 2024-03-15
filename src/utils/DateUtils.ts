@@ -58,4 +58,19 @@ export default class DateUtils {
 
     return moment(formattedDate1).isSame(formattedDate2);
   }
+
+  static betweenWeekDays(startDate: Date, endDate: Date,weekdays: number[]){
+    console.log("weekdays", weekdays)
+    const result = [];
+    const currentDate = moment(startDate);
+    
+    while (currentDate.isSameOrBefore(endDate)) {
+        if (weekdays.includes(currentDate.day())) {
+            result.push(currentDate.clone().format("YYYY-MM-DD"));
+        }
+        currentDate.add(1, "day");
+    }
+    console.log("result",result)
+    return result;
+  }
 }

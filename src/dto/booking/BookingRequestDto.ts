@@ -58,4 +58,7 @@ export class BookingRequestDto {
 
     @IsOptional()
     numberOfPerson?:number;
+    
+    @IsOptional()
+    membership?:boolean[]
   }

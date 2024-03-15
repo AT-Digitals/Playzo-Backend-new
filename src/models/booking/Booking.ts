@@ -47,6 +47,10 @@ const bookingSchema = new Schema({
     type: Number,
     default: 0,
   },
+  membership:{
+    type: Boolean,
+    default: false,
+  },  
   isAnnual: Boolean,
   isRefund: Boolean,
   deleted: Boolean

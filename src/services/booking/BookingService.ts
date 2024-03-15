@@ -18,15 +18,6 @@ import { UserBookingType } from "../../models/booking/UserBookingType";
 import { filterBookingList } from "../../utils/helpFunc";
 import moment from "moment";
 
-// import MailTemplateUtils from "../../utils/MailTemplateUtils";
-// import MailUtils from "../../utils/MailUtils";
-
-
-
-
-
-
-
 @Service()
 export default class BookingService {
   async create(request: BookingRequestDto, isAdmin = false) {
@@ -87,7 +78,6 @@ export default class BookingService {
 
     booking.isAnnual = diffDuration.years() > 0;
     booking.duration = days;
-    
     //Amount Calculations
     const {totalAmount, onlineAmount} = await this.getAmount(request, days);
     let amountVal = 0;
@@ -224,7 +214,7 @@ export default class BookingService {
   public async getAllBookings(query:PaginationRequestDto) {
     let bookings: BookingModel[] = [];
     if(query && query.page && query.limit){
-      bookings = await Booking.find({}).skip((+query.page - 1) * query.limit).limit(query.limit).populate("user","name email phone userType")
+      bookings = await Booking.find({}).sort({dateOfBooking:-1}).skip((+query.page - 1) * query.limit).limit(query.limit).populate("user","name email phone userType")
       .populate("admin","name email phone userType").exec();
     }
     return bookings.map((booking) => new BookingDto(booking));
@@ -235,18 +225,34 @@ export default class BookingService {
     if (!booking) {
       throw new AppErrorDto(AppError.NOT_FOUND);
     }
+    const endDate = DateUtils.add(new Date(booking.endDate),1,"day");
+    const days = moment(endDate).diff(moment(booking.startDate),"days");
+    const {totalAmount} = await this.getAmount(booking, days);
     if(request.bookingAmount){
-      const cashAmount = request.bookingAmount.cash>0?request.bookingAmount.cash:booking.bookingAmount?.cash??0;
+      const cashAmount = request.bookingAmount.cash;
       const onlineAmount = booking.bookingAmount?.online??0;
-      const upiAmount = request.bookingAmount.upi>0?request.bookingAmount.upi:booking.bookingAmount?.upi??0;
-    booking.bookingAmount =
-    {
-        online : onlineAmount, 
-        cash: cashAmount,
-        total: cashAmount+onlineAmount+upiAmount,
-        refund:booking.bookingAmount?.refund??0, 
-        upi:upiAmount,
-    };
+      const upiAmount = request.bookingAmount.upi;
+    const finalAmount = cashAmount+onlineAmount+upiAmount;
+    let totalAmt = 0;
+    if(booking.numberOfPerson && booking.numberOfPerson > 0 && booking.type === BookingType.Badminton){
+      totalAmt = totalAmount*booking.numberOfPerson;
+    }else{
+      totalAmt = totalAmount;
+    }
+    if(finalAmount<=totalAmt){
+         
+      booking.bookingAmount =
+      {
+          online : onlineAmount, 
+          cash: cashAmount,
+          total: cashAmount+onlineAmount+upiAmount,
+          refund:booking.bookingAmount?.refund??0, 
+          upi:upiAmount,
+      };
+    }else{
+      throw new AppErrorDto(AppError.AMOUNT_ERROR); 
+    }
+   
     }
     booking.deleted = false;
     booking = await booking.save();
@@ -285,12 +291,17 @@ export default class BookingService {
           throw new AppErrorDto(AppError.AMOUNT_ERROR); 
         }
       }else{
+       
         const cashAmount = request.bookingAmount.cash  + booking.bookingAmount.cash;
         const onlineAmount = request.bookingAmount.online + booking.bookingAmount.online;
         const upiAmount =  request.bookingAmount.upi + booking.bookingAmount.upi;
         const finalAmount = cashAmount+onlineAmount+upiAmount;
-        const total = totalAmount-(booking.bookingAmount.online>0?booking.bookingAmount.online:0);
-        console.log(total);
+        let totalAmt = 0;
+        if(booking.numberOfPerson && booking.numberOfPerson > 0 && booking.type === BookingType.Badminton){
+          totalAmt = totalAmount*booking.numberOfPerson;
+        }else{
+          totalAmt = totalAmount;
+        }
         let refund = booking.bookingAmount.refund + request.bookingAmount.refund;
         if(refund>0&&refund>=cashAmount){
           refund = refund-cashAmount;
@@ -298,8 +309,8 @@ export default class BookingService {
         if(refund>0&&refund>=upiAmount){
           refund = refund-upiAmount;
         }
-        if(finalAmount<=total){
-
+        if(finalAmount<=totalAmt){
+         
           booking.bookingAmount =
           {
             online : onlineAmount>0?onlineAmount:0, 
@@ -315,7 +326,7 @@ export default class BookingService {
     }else{
       throw new AppErrorDto(AppError.AMOUNT_ERROR); 
     }
-         // MailUtils.sendMail({
+      //    MailUtils.sendMail({
       //   to: "antoshoba@gmail.com",
       //   subject: "Your booking amount successfully paid",
       //   html: MailTemplateUtils.UpdateAmountMail(booking)
@@ -531,6 +542,7 @@ export default class BookingService {
           { $match:{ type:request.type}},
           {$match: { $or: [{ court: "1" }, { court: "2" }, { court: "3" }] }},
           { $match:{ isRefund:false}},
+          { $match:{ membership:false}},
           { $match:  {$or:[{$and: [{startDate: {
             $gte: new Date(request.startDate)
           }},{endDate: {
@@ -549,6 +561,7 @@ export default class BookingService {
           { $match:{ type:request.type}},
           {$match: { $or: [{ court: "1" },{ court: "3" }] }},
           { $match:{ isRefund:false}},
+          { $match:{ membership:false}},
           { $match:  {$or:[{$and: [{startDate: {
             $gte: new Date(request.startDate)
           }},{endDate: {
@@ -567,6 +580,7 @@ export default class BookingService {
           { $match:{ type:request.type}},
           {$match: { $or: [{ court: "2" },{ court: "3" }] }},
           { $match:{ isRefund:false}},
+          { $match:{ membership:false}},
           { $match:  {$or:[{$and: [{startDate: {
             $gte: new Date(request.startDate)
           }},{endDate: {
@@ -587,6 +601,7 @@ export default class BookingService {
           { $match:{ type:request.type}},
           { $match:{ court:request.court}},
           { $match:{ isRefund:false}},
+          { $match:{ membership:false}},
           { $match:  {$or:[{$and: [{startDate: {
             $gte: new Date(request.startDate)
           }},{endDate: {
@@ -602,9 +617,53 @@ export default class BookingService {
         
         ];
       }
+    const  bookedData1= [
+
+      { $match:{ type:request.type}},
+      { $match:{ court:request.court}},
+      { $match:{ isRefund:false}},
+      { $match:{ membership:true}},
+      { $match:  {$or:[{$and: [{startDate: {
+        $gte: new Date(request.startDate)
+      }},{endDate: {
+        $lte: new Date(request.endDate)
+      }}]},{$and: [{startDate: {
+        $lte: new Date(request.startDate)
+      }},{endDate: {
+        $gte: new Date(request.endDate)
+      }}]}]}},
+      // { $match:},
+      
+      {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},
     
+    ];
       const bookingsList =  await Booking.aggregate(bookedData); 
-   
+      const bookingsList1 =  await Booking.aggregate(bookedData1); 
+      
+   if(bookingsList1.length>0){
+    const sum = bookingsList1.reduce((total, item) => total + item.count, 0);
+    console.log("bookingList1", bookingsList1);
+    if(sum>= 8){
+    bookingsList1.filter(async (book)=>{
+      console.log("book",book)
+      if (request.type !== undefined) {
+        // if (book["count"] >= 8) {
+          bookList.push(
+            {
+              startTime:book._id.startTime,
+              endTime: book._id.endTime,
+              type: book._id.type
+            }
+          );
+        // }
+      }
+    });
+  }
+    console.log("bookList", bookList);
+
+   }else{
+    console.log("bookingList", bookingsList);
+
       bookingsList.filter(async (book)=>{
         if (request.type !== undefined) {
           if (book["count"] >= 1) {
@@ -620,7 +679,10 @@ export default class BookingService {
           }
         }
       });
+   }
+
     }
+    console.log("bookList1", bookList);
     return bookList;
   }
  

@@ -3,7 +3,6 @@ import { AppError } from "../../dto/error/AppError";
 import { AppErrorDto } from "../../dto/error/AppErrorDto";
 import { Booking } from "../../models/booking/Booking";
 import { HttpStatusCode } from "../../dto/error/HttpStatusCode";
-import MailUtils from "../../utils/MailUtils";
 import PasswordRequestDto from "../../dto/auth/PasswordRequestDto";
 import { Service } from "typedi";
 import { User } from "../../models/user/User";
@@ -13,6 +12,17 @@ import { UserModel } from "../../models/user/UserModel";
 import { UserRequestDto } from "../../dto/user/UserRequestDto";
 import moment from "moment";
 import { randomAlphaNumeric } from "../../utils/helpFunc";
+
+// import MailUtils from "../../utils/MailUtils";
+
+
+
+
+
+
+
+
+
 
 // import MailTemplateUtils from "../../utils/MailTemplateUtils";
 
