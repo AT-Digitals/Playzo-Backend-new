@@ -15,7 +15,7 @@ import PaginationRequestDto from "../../dto/PaginationRequestDto";
 import { Service } from "typedi";
 import { User } from "../../models/user/User";
 import { UserBookingType } from "../../models/booking/UserBookingType";
-import { filterBookingList } from "../../utils/helpFunc";
+import { combineFilterBookingsDate, filterBookingList } from "../../utils/helpFunc";
 import moment from "moment";
 
 @Service()
@@ -47,7 +47,9 @@ export default class BookingService {
 
     const courtFilteredList = this.filterBasedCourt(filteredBookingList, request.court);
 
-    if (courtFilteredList.length >= 1) {
+    const allowedLength = request.membership ? 8 : 1;
+
+    if (courtFilteredList.length >= allowedLength) {
       throw new AppErrorDto(AppError.ALREADY_BOOKED);
     }
     
@@ -179,9 +181,7 @@ export default class BookingService {
     //Amount Calculations 
     const amountList = await Amount.find({
       $and: [
-      
         {bookingtype: request.type},
-        {court: request.court},
       ],
     });
     const amount =  parseInt(amountList[0].bookingAmount.toString());
@@ -445,7 +445,6 @@ export default class BookingService {
   }
 
   async getBookingFilter(req: any) {
-    
     if(req.startDate){
       req.startDate = DateUtils.formatDate(req.startDate,"yyyy-MM-DDT00:00:00.000+00:00");
     }
@@ -528,14 +527,8 @@ export default class BookingService {
 
   public async filterBookings(request:BookingDateFilterRequestDto) {
     const bookList:any = [];
-    // { $match: {startDate: {
-    //   $gte: new Date(request.startDate)
-    // }}},
-    // { $match:{endDate: {
-    //   $lte: new Date(request.endDate)
-    // }}},
+  
     if(request.startDate && request.endDate && request.type){
-      // const endDate = DateUtils.add(new Date(request.endDate),1,"day");
       let bookedData;
       if(request.court ==="3"&&(request.type===BookingType.Turf||request.type===BookingType.Playstaion)){
         bookedData = [
@@ -594,14 +587,11 @@ export default class BookingService {
           {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},
         
         ];
-      }
-        else{
+      } else{
         bookedData= [
-
           { $match:{ type:request.type}},
           { $match:{ court:request.court}},
           { $match:{ isRefund:false}},
-          { $match:{ membership:false}},
           { $match:  {$or:[{$and: [{startDate: {
             $gte: new Date(request.startDate)
           }},{endDate: {
@@ -611,62 +601,19 @@ export default class BookingService {
           }},{endDate: {
             $gte: new Date(request.endDate)
           }}]}]}},
-          // { $match:},
-          
-          {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},
-        
+          {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type",membership:"$membership"},count:{$sum:1}}},  
         ];
       }
-    const  bookedData1= [
 
-      { $match:{ type:request.type}},
-      { $match:{ court:request.court}},
-      { $match:{ isRefund:false}},
-      { $match:{ membership:true}},
-      { $match:  {$or:[{$and: [{startDate: {
-        $gte: new Date(request.startDate)
-      }},{endDate: {
-        $lte: new Date(request.endDate)
-      }}]},{$and: [{startDate: {
-        $lte: new Date(request.startDate)
-      }},{endDate: {
-        $gte: new Date(request.endDate)
-      }}]}]}},
-      // { $match:},
-      
-      {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},
-    
-    ];
       const bookingsList =  await Booking.aggregate(bookedData); 
-      const bookingsList1 =  await Booking.aggregate(bookedData1); 
-      
-   if(bookingsList1.length>0){
-    const sum = bookingsList1.reduce((total, item) => total + item.count, 0);
-    console.log("bookingList1", bookingsList1);
-    if(sum>= 8){
-    bookingsList1.filter(async (book)=>{
-      console.log("book",book)
-      if (request.type !== undefined) {
-        // if (book["count"] >= 8) {
-          bookList.push(
-            {
-              startTime:book._id.startTime,
-              endTime: book._id.endTime,
-              type: book._id.type
-            }
-          );
-        // }
-      }
-    });
-  }
-    console.log("bookList", bookList);
 
-   }else{
-    console.log("bookingList", bookingsList);
+      const combinedBookingList = combineFilterBookingsDate(bookingsList);
 
-      bookingsList.filter(async (book)=>{
+      const allowedLength = request.membership ? 8 : 1;
+
+      combinedBookingList.filter((book: any)=>{
         if (request.type !== undefined) {
-          if (book["count"] >= 1) {
+          if (book["count"] >= allowedLength) {
             bookList.push(
               {
                 startTime:book._id.startTime,
@@ -679,10 +626,9 @@ export default class BookingService {
           }
         }
       });
-   }
 
     }
-    console.log("bookList1", bookList);
+
     return bookList;
   }
  
