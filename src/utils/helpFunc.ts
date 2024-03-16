@@ -81,6 +81,8 @@ export function combineFilterBookingsDate(filterBookings: any) {
 
         combinedFilterBookings.push(booking);
     }
-    combinedFilterBookings.push(filterBookings[filterBookings.length - 1]);
+    if(filterBookings.length > 0){
+        combinedFilterBookings.push(filterBookings[filterBookings.length - 1]);
+    }
     return combinedFilterBookings;
 }
