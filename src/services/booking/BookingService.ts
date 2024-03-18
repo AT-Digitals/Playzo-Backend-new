@@ -1,3 +1,5 @@
+import { combineFilterBookingsDate, filterBookingList } from "../../utils/helpFunc";
+
 import { AdminUser } from "../../models/admin/AdminUser";
 import { Amount } from "../../models/amount/Amount";
 import { AppError } from "../../dto/error/AppError";
@@ -15,7 +17,6 @@ import PaginationRequestDto from "../../dto/PaginationRequestDto";
 import { Service } from "typedi";
 import { User } from "../../models/user/User";
 import { UserBookingType } from "../../models/booking/UserBookingType";
-import { combineFilterBookingsDate, filterBookingList } from "../../utils/helpFunc";
 import moment from "moment";
 
 @Service()
@@ -182,6 +183,7 @@ export default class BookingService {
     const amountList = await Amount.find({
       $and: [
         {bookingtype: request.type},
+        {court: request.court},
       ],
     });
     const amount =  parseInt(amountList[0].bookingAmount.toString());
