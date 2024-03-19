@@ -44,37 +44,31 @@ export class DatabaseSeeder {
       {
         bookingAmount: 100,
         bookingtype: BookingType.Badminton,
-        court:1,
         deleted: false
       } as AmountModel,
       {
         bookingAmount: 100,
         bookingtype: BookingType.BowlingMachine,
-        court: 1,
         deleted: false
       } as AmountModel,
       {
         bookingAmount: 100,
         bookingtype: BookingType.BoardGame,
-        court: 1,
         deleted: false
       } as AmountModel,
       {
         bookingAmount: 100,
         bookingtype: BookingType.CricketNet,
-        court: 1,
         deleted: false
       } as AmountModel,
       {
         bookingAmount: 100,
         bookingtype: BookingType.Playstaion,
-        court: 1,
         deleted: false
       } as AmountModel,
       {
         bookingAmount: 100,
         bookingtype: BookingType.Turf,
-        court: 1,
         deleted: false
       } as AmountModel,
     ]; 

@@ -1,6 +1,5 @@
 import {
     Allow,
-    IsDefined,
     IsEnum,
 } from "class-validator";
 
@@ -13,8 +12,4 @@ export class AmountRequestDto {
   
     @IsEnum(BookingType, { message: "Please provide a valid Payment Type" })
     bookingtype: BookingType;
-
-    @IsDefined({message:"Please provide court number"})
-    court: number;
-
   }

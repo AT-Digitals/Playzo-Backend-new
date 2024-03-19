@@ -78,6 +78,41 @@ static BookingMail(booking: BookingModel) {
 
   }
 
+  static BulkBookingMail(bookings: BookingModel[]) {
+    let emails = "";
+    bookings.forEach(booking => {
+      emails += `<!DOCTYPE html>
+      <html lang="en">
+      <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Booking Confirmation</title>
+      <style>
+        /* CSS styles */
+      </style>
+      </head>
+      <body>
+      <div class="container">
+        <h1>Booking Confirmation</h1>
+        <div class="booking-details">
+          <h2>Booking Information:</h2>
+          <p><strong>Type :</strong> ${booking.type} </p>
+          <p><strong>Start Date :</strong> ${DateUtils.formatDate(new Date(booking.startDate),"DD-MM-YYYY")}</p>
+          <p><strong>End Date :</strong> ${DateUtils.formatDate(booking.endDate,"DD-MM-YYYY")} </p>
+          <p><strong>Start Time :</strong> ${DateUtils.formatDate(new Date(booking.startTime),"hh:00 A")}</p>
+          <p><strong>End Time :</strong> ${DateUtils.formatDate(new Date(booking.endTime),"hh:00 A")}</p>
+          <p><strong>Online Amount :</strong> ${booking.bookingAmount?.online}</p>
+        </div>
+        <p>Your booking has been confirmed. We look forward to welcoming you!</p>
+        <p class="footer">This email was sent by <a href="http://playzo33.in/">http://playzo33.in/</a></p>
+      </div>
+      </body>
+      </html>`;
+    });
+  
+    return emails;
+  }
+
   static UpdateAmountMail(booking: BookingModel) {
     return `
     <!DOCTYPE html>

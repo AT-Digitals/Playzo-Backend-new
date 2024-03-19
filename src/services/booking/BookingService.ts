@@ -2,7 +2,6 @@ import { AdminUser } from "../../models/admin/AdminUser";
 import { Amount } from "../../models/amount/Amount";
 import { AppError } from "../../dto/error/AppError";
 import { AppErrorDto } from "../../dto/error/AppErrorDto";
-import { BookedRequestDto } from "../../dto/booking/BookedRequestDto";
 import { Booking } from "../../models/booking/Booking";
 import { BookingAmountRequestDto } from "../../dto/booking/BookingAmountRequestDto";
 import { BookingDateFilterRequestDto } from "../../dto/booking/BookingDateFilterRequestDto";
@@ -82,23 +81,17 @@ export default class BookingService {
     booking.duration = days;
     //Amount Calculations
     const {totalAmount, onlineAmount} = await this.getAmount(request, days);
-    let amountVal = 0;
-    if(booking.numberOfPerson && booking.numberOfPerson> 0 && booking.type === BookingType.Badminton){
-      amountVal = onlineAmount*booking.numberOfPerson;
-    }else{
-      amountVal = onlineAmount;
-    }
 
     if(request.userBookingType === UserBookingType.Online){
       booking.bookingAmount = {
-        online : amountVal, 
+        online : onlineAmount, 
         cash: 0,
-        total: amountVal,
+        total: onlineAmount,
         refund:0,
         upi:0
       };
     }else{
-      const onlineValue =request.bookingAmount?.online?request.bookingAmount?.online:0;
+      const onlineValue = request.bookingAmount?.online?request.bookingAmount?.online:0;
       if(onlineValue<=totalAmount){
         booking.bookingAmount = {
           online : onlineValue,
@@ -120,6 +113,20 @@ export default class BookingService {
   
       // });
     return booking;
+  }
+
+  async createBulk(bookings: BookingRequestDto[]) {
+console.log("bookings",bookings)
+    const bookingList = await Booking.insertMany(bookings);
+  
+    // booking = await booking.save();
+      // MailUtils.sendMail({
+      //   to: "antoshoba@gmail.com",
+      //   subject: "Your booking successfully added",
+      //   html: MailTemplateUtils.BulkBookingMail(booking)
+  
+      // });
+   return bookingList;
   }
 
   checkForCombinedSlots(bookingList: any, request: any) {
@@ -152,7 +159,7 @@ export default class BookingService {
     return filteredBookingList;
   }
   
-  async getBookedList(request: BookedRequestDto) {
+  async getBookedList(request: BookingRequestDto) {
     const endDate = DateUtils.add(new Date(request.endDate),1,"day");
     const days = moment(endDate).diff(moment(request.startDate),"days");
     const bookingData = {
@@ -170,7 +177,20 @@ export default class BookingService {
     const bookingList = await Booking.find(bookingData);
     const filteredBookingList = filterBookingList(bookingList, request.startDate,request.endDate, request.startTime, request.endTime, days);
 
-    if (this.filterBasedCourt(filteredBookingList, request.court).length >= 1 || this.checkForCombinedSlots(filteredBookingList, request)) {
+    // if (this.filterBasedCourt(filteredBookingList, request.court).length >= 1 || this.checkForCombinedSlots(filteredBookingList, request)) {
+    //   throw new AppErrorDto(AppError.ALREADY_BOOKED);
+    // }
+
+     //check for combinedSlots
+     if(this.checkForCombinedSlots(filteredBookingList, request)){
+      throw new AppErrorDto(AppError.ALREADY_BOOKED);
+    }
+
+    const courtFilteredList = this.filterBasedCourt(filteredBookingList, request.court);
+
+    const allowedLength = request.membership ? 8 : 1;
+
+    if (courtFilteredList.length >= allowedLength) {
       throw new AppErrorDto(AppError.ALREADY_BOOKED);
     }
 
@@ -184,7 +204,16 @@ export default class BookingService {
         {bookingtype: request.type},
       ],
     });
-    const amount =  parseInt(amountList[0].bookingAmount.toString());
+    let amount =  0;
+    if(parseInt(request.court) === 3){
+      amount= parseInt(amountList[0].bookingAmount.toString()) * 2;
+    }
+    else if(request.numberOfPerson && request.numberOfPerson>0 && request.type === BookingType.Badminton){
+      amount= parseInt(amountList[0].bookingAmount.toString()) * request.numberOfPerson;
+    }else{
+      amount= parseInt(amountList[0].bookingAmount.toString());
+    }
+
     const duration = moment.duration(moment(request.endTime).diff(moment(request.startTime)));
     const minutes = parseInt(duration.asMinutes().toString());
     const hours = minutes/60;
@@ -233,13 +262,7 @@ export default class BookingService {
       const onlineAmount = booking.bookingAmount?.online??0;
       const upiAmount = request.bookingAmount.upi;
     const finalAmount = cashAmount+onlineAmount+upiAmount;
-    let totalAmt = 0;
-    if(booking.numberOfPerson && booking.numberOfPerson > 0 && booking.type === BookingType.Badminton){
-      totalAmt = totalAmount*booking.numberOfPerson;
-    }else{
-      totalAmt = totalAmount;
-    }
-    if(finalAmount<=totalAmt){
+    if(finalAmount<=totalAmount){
          
       booking.bookingAmount =
       {
@@ -296,12 +319,6 @@ export default class BookingService {
         const onlineAmount = request.bookingAmount.online + booking.bookingAmount.online;
         const upiAmount =  request.bookingAmount.upi + booking.bookingAmount.upi;
         const finalAmount = cashAmount+onlineAmount+upiAmount;
-        let totalAmt = 0;
-        if(booking.numberOfPerson && booking.numberOfPerson > 0 && booking.type === BookingType.Badminton){
-          totalAmt = totalAmount*booking.numberOfPerson;
-        }else{
-          totalAmt = totalAmount;
-        }
         let refund = booking.bookingAmount.refund + request.bookingAmount.refund;
         if(refund>0&&refund>=cashAmount){
           refund = refund-cashAmount;
@@ -309,7 +326,7 @@ export default class BookingService {
         if(refund>0&&refund>=upiAmount){
           refund = refund-upiAmount;
         }
-        if(finalAmount<=totalAmt){
+        if(finalAmount<=totalAmount){
          
           booking.bookingAmount =
           {
