@@ -1,3 +1,5 @@
+import { combineFilterBookingsDate, filterBookingList } from "../../utils/helpFunc";
+
 import { AdminUser } from "../../models/admin/AdminUser";
 import { Amount } from "../../models/amount/Amount";
 import { AppError } from "../../dto/error/AppError";
@@ -14,7 +16,6 @@ import PaginationRequestDto from "../../dto/PaginationRequestDto";
 import { Service } from "typedi";
 import { User } from "../../models/user/User";
 import { UserBookingType } from "../../models/booking/UserBookingType";
-import { combineFilterBookingsDate, filterBookingList } from "../../utils/helpFunc";
 import moment from "moment";
 
 @Service()
@@ -206,6 +207,7 @@ console.log("bookings",bookings)
     });
     let amount =  0;
     if(parseInt(request.court) === 3){
+     
       amount= parseInt(amountList[0].bookingAmount.toString()) * 2;
     }
     else if(request.numberOfPerson && request.numberOfPerson>0 && request.type === BookingType.Badminton){
@@ -214,12 +216,12 @@ console.log("bookings",bookings)
       amount= parseInt(amountList[0].bookingAmount.toString());
     }
 
-    const duration = moment.duration(moment(request.endTime).diff(moment(request.startTime)));
+    const joinTime = DateUtils.joinDate(new Date(request.startTime), new Date(request.endTime)).valueOf();
+    const duration = moment.duration(moment(joinTime).diff(moment(request.startTime)));
     const minutes = parseInt(duration.asMinutes().toString());
     const hours = minutes/60;
     const totalAmount = (days * hours * amount);
     const onlineAmount = totalAmount * (30/100);
-
     return {
       totalAmount,
       onlineAmount
