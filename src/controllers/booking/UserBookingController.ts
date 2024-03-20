@@ -4,6 +4,7 @@ import { BookingDto } from "../../dto/booking/BookingDto";
 import { BookingRequestDto } from "../../dto/booking/BookingRequestDto";
 import BookingService from "../../services/booking/BookingService";
 import { Service } from "typedi";
+import { BulkBookingRequestDto } from "../../dto/booking/BulkBookingRequestDto";
 
 @JsonController("/user/bookings")
 @Service()
@@ -16,6 +17,12 @@ export class UserBookingController {
   ) {
     const booking = await this.bookingService.create(request);
     return new BookingDto(booking);
+  }
+
+  @Post('/bulk')
+  async createBulkBookings(@Body() request: BulkBookingRequestDto): Promise<BookingDto[]> {
+    const bookings = await this.bookingService.createBulk(request.bookings);
+    return bookings.map(booking => new BookingDto(booking));
   }
 
   @Get("/:bookingId")

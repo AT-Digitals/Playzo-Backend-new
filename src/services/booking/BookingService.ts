@@ -116,15 +116,32 @@ export default class BookingService {
     return booking;
   }
 
-  async createBulk(bookings: BookingRequestDto[]) {
-console.log("bookings",bookings)
+  async createBulk( request: BookingDto[], isAdmin = false) {
+const bookings = [];
+    for (const book of request) {
+      const bookingData: any = {
+        ...book,
+        admin: book.user
+      };
+  
+      delete bookingData[isAdmin ? "user" : "admin"];
+      const booking = new Booking(bookingData);
+  
+      if(book.user){
+        const adminUser = await AdminUser.find({_id:book.user}) ?? [];
+        const users = await User.find({_id: book.user}) ?? [];
+        if(adminUser.length === 0 && users.length === 0){
+          throw new AppErrorDto("User not found"); 
+        }
+      }
+      bookings.push(booking);
+    }
     const bookingList = await Booking.insertMany(bookings);
   
-    // booking = await booking.save();
       // MailUtils.sendMail({
       //   to: "antoshoba@gmail.com",
       //   subject: "Your booking successfully added",
-      //   html: MailTemplateUtils.BulkBookingMail(booking)
+      //   html: MailTemplateUtils.BulkBookingMail(bookingList)
   
       // });
    return bookingList;
