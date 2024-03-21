@@ -116,6 +116,9 @@ export default class BookingService {
   async createBulk(request: BookingDto[], isAdmin = false) {
     const bookings = [];
     for (const book of request) {
+      const endDate = DateUtils.add(new Date(book.endDate), 1, "day");
+    const diffDuration = moment.duration(moment(book.endDate).diff(moment(book.startDate)));
+    const days = moment(endDate).diff(moment(book.startDate), "days");
       const bookingData: any = {
         ...book,
         admin: book.user
@@ -131,6 +134,11 @@ export default class BookingService {
           throw new AppErrorDto("User not found");
         }
       }
+      booking.dateOfBooking = new Date();
+      booking.isRefund = false;
+      booking.isAnnual = diffDuration.years() > 0;
+    booking.duration = days;
+    booking.deleted = false;
       bookings.push(booking);
     }
     const bookingList = await Booking.insertMany(bookings);
@@ -537,14 +545,8 @@ export default class BookingService {
 
   public async filterBookings(request:BookingDateFilterRequestDto) {
     const bookList:any = [];
-    // { $match: {startDate: {
-    //   $gte: new Date(request.startDate)
-    // }}},
-    // { $match:{endDate: {
-    //   $lte: new Date(request.endDate)
-    // }}},
+  
     if(request.startDate && request.endDate && request.type){
-      // const endDate = DateUtils.add(new Date(request.endDate),1,"day");
       let bookedData;
       if(request.court ==="3"&&(request.type===BookingType.Turf||request.type===BookingType.Playstaion)){
         bookedData = [
@@ -600,10 +602,8 @@ export default class BookingService {
           {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},
         
         ];
-      }
-        else{
+      } else{
         bookedData= [
-
           { $match:{ type:request.type}},
           { $match:{ court:request.court}},
           { $match:{ isRefund:false}},
@@ -616,18 +616,16 @@ export default class BookingService {
           }},{endDate: {
             $gte: new Date(request.endDate)
           }}]}]}},
-          // { $match:},
-          
-          {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type",membership:"$membership"},count:{$sum:1}}},
-        
+          {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},  
         ];
       }
-    
+
       const bookingsList =  await Booking.aggregate(bookedData); 
       const combinedBookingList = combineFilterBookingsDate(bookingsList);
 
       const allowedLength = request.membership ? 8 : 1;
-      combinedBookingList.filter(async (book:any)=>{
+
+      combinedBookingList.filter((book: any)=>{
         if (request.type !== undefined) {
           if (book["count"] >= allowedLength) {
             bookList.push(
@@ -642,7 +640,10 @@ export default class BookingService {
           }
         }
       });
+
     }
+
     return bookList;
   }
+
 }
