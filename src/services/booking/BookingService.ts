@@ -537,8 +537,14 @@ export default class BookingService {
 
   public async filterBookings(request:BookingDateFilterRequestDto) {
     const bookList:any = [];
-  
+    // { $match: {startDate: {
+    //   $gte: new Date(request.startDate)
+    // }}},
+    // { $match:{endDate: {
+    //   $lte: new Date(request.endDate)
+    // }}},
     if(request.startDate && request.endDate && request.type){
+      // const endDate = DateUtils.add(new Date(request.endDate),1,"day");
       let bookedData;
       if(request.court ==="3"&&(request.type===BookingType.Turf||request.type===BookingType.Playstaion)){
         bookedData = [
@@ -555,7 +561,7 @@ export default class BookingService {
             $gte: new Date(request.endDate)
           }}]}]}},
           
-          {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type",membership:"$membership"},count:{$sum:1}}},
+          {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},
         
         ];
       }else if(request.court ==="1"&&(request.type===BookingType.Turf||request.type===BookingType.Playstaion)){
@@ -573,7 +579,7 @@ export default class BookingService {
             $gte: new Date(request.endDate)
           }}]}]}},
           
-          {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type",membership:"$membership"},count:{$sum:1}}},
+          {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},
         
         ];
       }else if(request.court ==="2"&&(request.type===BookingType.Turf||request.type===BookingType.Playstaion)){
@@ -591,11 +597,13 @@ export default class BookingService {
             $gte: new Date(request.endDate)
           }}]}]}},
           
-          {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type",membership:"$membership"},count:{$sum:1}}},
+          {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type"},count:{$sum:1}}},
         
         ];
-      } else{
+      }
+        else{
         bookedData= [
+
           { $match:{ type:request.type}},
           { $match:{ court:request.court}},
           { $match:{ isRefund:false}},
@@ -608,17 +616,18 @@ export default class BookingService {
           }},{endDate: {
             $gte: new Date(request.endDate)
           }}]}]}},
-          {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type", membership:"$membership"},count:{$sum:1}}},  
+          // { $match:},
+          
+          {"$group" : {_id:{startTime:"$startTime",endTime:"$endTime",type:"$type",membership:"$membership"},count:{$sum:1}}},
+        
         ];
       }
-
+    
       const bookingsList =  await Booking.aggregate(bookedData); 
-      console.log("bookingsList",bookingsList)
       const combinedBookingList = combineFilterBookingsDate(bookingsList);
 
       const allowedLength = request.membership ? 8 : 1;
-
-      combinedBookingList.filter((book: any)=>{
+      combinedBookingList.filter(async (book:any)=>{
         if (request.type !== undefined) {
           if (book["count"] >= allowedLength) {
             bookList.push(
@@ -633,9 +642,7 @@ export default class BookingService {
           }
         }
       });
-
     }
-
     return bookList;
   }
 }
