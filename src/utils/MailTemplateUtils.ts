@@ -206,7 +206,7 @@ static BookingMail(booking: BookingModel) {
 
   }
 
-  static BulkBookingMail(bookings: BookingModel[]) {
+  static BulkBookingMail(bookings: any[]) {
     let emails = `<!DOCTYPE html>
     <html lang="en">
       <head>
@@ -217,7 +217,6 @@ static BookingMail(booking: BookingModel) {
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
         />
         <title>Booking Confirmation</title>
-        <div style="border: 1px solid #007bff"></div>
         <style>
           body {
             font-family: Arial, sans-serif;
@@ -251,11 +250,9 @@ static BookingMail(booking: BookingModel) {
             margin-bottom: 10px;
             max-width: 200px;
             background-color: #007bff;
-            /* margin: auto; */
             margin-left: 20px;
           }
           .footer {
-            /* text-align: center; */
             margin-top: 20px;
             color: #888;
             padding: 0 20px;
@@ -326,51 +323,31 @@ static BookingMail(booking: BookingModel) {
                 <tr>
                   <th>Type</th>
                   <th>Start Date</th>
-    
                   <th>End Date</th>
-    
                   <th>Start Time</th>
-    
                   <th>End Time</th>
-    
                   <th>Online Amount</th>
                 </tr>`;
+  
     bookings.forEach(booking => {
       emails += `
-                  <tr>
-                    <th class="items">${booking.type}</th>
-      
-                    <th class="items">
-                      ${DateUtils.formatDate(new
-                      Date(booking.startDate),"DD-MM-YYYY")}
-                    </th>
-      
-                    <th class="items">
-                      ${DateUtils.formatDate(booking.endDate,"DD-MM-YYYY")}
-                    </th>
-      
-                    <th class="items">
-                      ${DateUtils.formatDate(new Date(booking.startTime),"hh:00 A")}
-                    </th>
-      
-                    <th class="items">
-                      ${DateUtils.formatDate(new Date(booking.endTime),"hh:00 A")}
-                    </th>
-      
-                    <th class="items">${booking.bookingAmount?.online}</th>
-                  </tr>
-                </table>
-              </div>
-            </div>
-           `;
+                <tr>
+                  <td>${booking.type}</td>
+                  <td>${DateUtils.formatDate(new Date(booking.startDate), "DD-MM-YYYY")}</td>
+                  <td>${DateUtils.formatDate(new Date(booking.endDate), "DD-MM-YYYY")}</td>
+                  <td>${DateUtils.formatDate(new Date(booking.startTime), "hh:00 A")}</td>
+                  <td>${DateUtils.formatDate(new Date(booking.endTime), "hh:00 A")}</td>
+                  <td>${booking.bookingAmount?.online}</td>
+                </tr>`;
     });
-  emails+=` <p style="padding: 0 20px; display: flex; align-items: center">
-  Your booking has been confirmed. We look forward to welcoming you!
-  <i
-    class="fa fa-check-circle"
-    style="font-size: 32px; color: #007bff"
-  ></i>
-</p>
+  
+    emails += `</table>
+            </div>
+          </div>
+          <p style="padding: 0 20px; display: flex; align-items: center">
+            Your booking has been confirmed. We look forward to welcoming you!
+            <i class="fa fa-check-circle" style="font-size: 32px; color: #007bff"></i>
+          </p>
 
 <div
   style="
