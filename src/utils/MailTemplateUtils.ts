@@ -110,6 +110,9 @@ static BookingMail(booking: BookingModel) {
        .items {
          font-weight: 400;
        }
+       td {
+        text-align: center;
+      }
      </style>
    </head>
    <body>
@@ -132,7 +135,7 @@ static BookingMail(booking: BookingModel) {
                <th>Online Amount</th>
              </tr>
              <tr>
-               <th class="items">${booking.type}</th>
+               <th class="items" style="text-transform: capitalize;">${booking.type}</th>
  
                <th class="items">
                  ${DateUtils.formatDate(new
