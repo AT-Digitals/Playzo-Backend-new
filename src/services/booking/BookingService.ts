@@ -18,6 +18,14 @@ import { User } from "../../models/user/User";
 import { UserBookingType } from "../../models/booking/UserBookingType";
 import moment from "moment";
 
+// import MailTemplateUtils from "../../utils/MailTemplateUtils";
+// import MailUtils from "../../utils/MailUtils";
+
+
+
+
+
+
 @Service()
 export default class BookingService {
   async create(request: BookingRequestDto, isAdmin = false) {
@@ -276,8 +284,8 @@ export default class BookingService {
       const onlineAmount = booking.bookingAmount?.online ?? 0;
       const upiAmount = request.bookingAmount.upi;
       const finalAmount = cashAmount + onlineAmount + upiAmount;
-  
-      if (finalAmount <= totalAmount) {
+    
+      if (finalAmount <= totalAmount || (upiAmount === 0 && cashAmount === 0)) {
         booking.bookingAmount = {
           online: onlineAmount,
           cash: cashAmount,
