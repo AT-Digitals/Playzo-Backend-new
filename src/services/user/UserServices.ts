@@ -132,92 +132,156 @@ public async sendOtp(req: any) {
     //     to: req.email,
     //        subject: "OTP verification" ,
     //     html: `<!DOCTYPE html>
-    //     <html lang="en">
-    //     <head>
-    //     <meta charset="UTF-8">
-    //     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    //     <title>Password Reset OTP</title>
-    //     <style>
-    //       body {
-    //         font-family: Arial, sans-serif;
-    //         line-height: 1.6;
-    //         background-color: #f4f4f4;
-    //         margin: 0;
-    //         padding: 0;
-    //       }
-        
-    //       .container {
-    //         max-width: 600px;
-    //         margin: 20px auto;
-    //         padding: 20px;
-    //         background-color: #fff;
-    //         border-radius: 5px;
-    //         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    //       }
-        
-    //       h1 {
-    //         color: #333;
-    //         text-align: center;
-    //       }
-        
-    //       p {
-    //         margin-bottom: 20px;
-    //       }
-        
-    //       .otp {
-    //         font-size: 24px;
-    //         font-weight: bold;
-    //         text-align: center;
-    //         color: #007bff;
-    //         margin-bottom: 30px;
-    //       }
-        
-    //       .footer {
-    //         text-align: center;
-    //         margin-top: 20px;
-    //         color: #888;
-    //       }
-        
-    //       .logo {
-    //         display: block;
-    //         margin: 0 auto;
-    //         max-width: 200px;
-    //       }
-        
-    //       .redirect-link {
-    //         text-align: center;
-    //         margin-top: 30px;
-    //       }
-        
-    //       .redirect-link a {
-    //         color: #007bff;
-    //         text-decoration: none;
-    //         font-weight: bold;
-    //       }
-        
-    //       .redirect-link a:hover {
-    //         text-decoration: underline;
-    //       }
-    //     </style>
-    //     </head>
-    //     <body>
-        
-    //     <div class="container">
-          
-    //       <h1>Password Reset OTP</h1>
-    //       <p>You have requested to reset your password. Please use the following OTP (One-Time Password) to reset your password:</p>
-    //       <div class="otp">${otp}</div>
-    //       <div class="redirect-link">
-    //       <p>If you didn't request this change, please ignore this email.</p>
-    //       </div>
-    //       <div class="redirect-link">
-    //         Click Here for OTP Verification <a href=${link}>http://playzo33.in/verify</a>
-    //       </div>
-    //       <p class="footer">This email was sent by <a href="http://playzo33.in/">http://playzo33.in/</a></p>
-    //     </div>
-        
-    //     </body>
-    //     </html>
+// <html lang="en">
+// <head>
+//   <meta charset="UTF-8" />
+//   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+//   <title>Password Reset OTP</title>
+//   <link
+//     rel="stylesheet"
+//     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+//   />
+//   <style>
+//     body {
+//       font-family: Arial, sans-serif;
+//       line-height: 1.6;
+//       background-color: #F4F4F4;
+//       margin: 0;
+//       padding: 0;
+//     }
+//     .container {
+//       max-width: 600px;
+//       margin: 20px auto;
+//       background-color: #fff;
+//       border-radius: 5px;
+//       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+//     }
+//     h1 {
+//       color: white;
+//       text-align: center;
+//       background-color: #007BFF;
+//       padding: 20px;
+//     }
+//     p {
+//       margin-bottom: 20px;
+//       font-size: 15px;
+//     }
+//     .otp {
+//       font-size: 24px;
+//       font-weight: bold;
+//       text-align: center;
+//       color: white;
+//       margin-bottom: 10px;
+//       max-width: 200px;
+//       background-color: #007BFF;
+//       /* margin: auto; */
+//       margin-left: 20px;
+//     }
+//     .footer {
+//       /* text-align: center; */
+//       margin-top: 20px;
+//       color: #888;
+//       padding: 0 20px;
+//     }
+//     .logo {
+//       display: block;
+//       margin: 0 auto;
+//       max-width: 200px;
+//     }
+//     .redirect-link {
+//       margin-top: 30px;
+//       padding: 0 20px;
+//       font-size: 15px;
+//     }
+//     .redirect-link a {
+//       color: #007BFF;
+//       text-decoration: none;
+//       font-weight: bold;
+//     }
+//     .redirect-link a:hover {
+//       text-decoration: underline;
+//     }
+//     .fa {
+//       padding: 7px;
+//       font-size: 20px;
+//       width: 15px;
+//       border-radius: 30px;
+//       text-align: center;
+//       text-decoration: none;
+//       margin: 5px 2px;
+//     }
+//     .fa-facebook {
+//       background: white;
+//       color: #007BFF;
+//     }
+//     .fa-instagram {
+//       background: white;
+//       color: #007BFF;
+//     }
+//     .fa-youtube {
+//       background: white;
+//       color: #007BFF;
+//     }
+//   </style>
+// </head>
+// <body>
+//   <div class="container">
+//     <h1>Please reset your Password</h1>
+//     <div style="padding: 10px 20px">
+//       <p>Hello,</p>
+//       <p>
+//         We have send you this email in response to your request to reset your
+//         password on playzo33
+//       </p>
+//       <p>Please use this verification code:</p>
+//     </div>
+//     <div class="otp">${otp}</div>
+//     <div class="redirect-link">
+//       Click here for OTP verification:
+//       <a href="${link}">http://playzo33.in/verify</a>
+//     </div>
+//     <p style="font-size: 12px; color: darkgray; padding: 0 20px">
+//       Please ignore this email if you did not requested a password change
+//     </p>
+//     <div
+//       style="
+//         background: #007BFF;
+//         display: flex;
+//         justify-content: space-between;
+//         align-items: center;
+//       "
+//     >
+//       <p style="padding: 20px; font-size: 12px; color: #fff">
+//         Contact, <br />
+//         39/6 KCP Thottam, Kumalan Kuttai, Erode,
+//         <br />Tamil Nadu - 638011 <br />
+//         +91 70944 60944
+//         <br />
+//         +91 91088 83555
+//       </p>
+//       <div style="padding: 0 20px">
+//         <div style="display: flex; justify-content: flex-end; gap: 8px">
+//           <a
+//             href="https://www.facebook.com/PlayZo33"
+//             class="fa fa-facebook"
+//           ></a>
+//           <a
+//             href="https://www.instagram.com/playzo_33/"
+//             class="fa fa-instagram"
+//           ></a>
+//           <a
+//             href="https://www.instagram.com/playzo_33/"
+//             class="fa fa-youtube"
+//           ></a>
+//         </div>
+//         <p style="color: white; font-size: 12px">
+//           Copyright © 2024 Playzo33 | All Rights Reserved
+//         </p>
+//       </div>
+//     </div>
+//   </div>
+// </body>
+// </html>
         
     //   `
   

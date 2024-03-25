@@ -26,5 +26,4 @@ export class BookingAmountController {
     const booking = await this.bookingService.updateCashUpiAmount(bookingId, newPrice);
     return new BookingDto(booking);
   }
-
 }

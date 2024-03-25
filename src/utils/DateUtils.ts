@@ -73,4 +73,7 @@ export default class DateUtils {
     console.log("result",result)
     return result;
   }
+  static joiningTime(date: Date, time: Date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), 0);
+  }
 }

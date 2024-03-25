@@ -1,6 +1,7 @@
 import {
     IsDefined,
     IsEnum,
+    IsOptional,
 } from "class-validator";
 
 import { BookingType } from "../../models/booking/BookingType";
@@ -33,6 +34,7 @@ export class BookedRequestDto {
     @IsDefined({ message: "ServiceType is required" })
     court:string;
 
-
+    @IsOptional()
+    membership?:boolean;
   
   }

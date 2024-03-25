@@ -1,8 +1,9 @@
-import { Get, JsonController, QueryParams } from "routing-controllers";
+import { Body, Get, JsonController, Post, QueryParams } from "routing-controllers";
 import { BookingDateFilterRequestDto } from "../../dto/booking/BookingDateFilterRequestDto";
 import BookingService from "../../services/booking/BookingService";
 import PaginationRequestDto from "../../dto/PaginationRequestDto";
 import { Service } from "typedi";
+import { BookingRequestDto } from "../../dto/booking/BookingRequestDto";
 
 @JsonController("/admin/bookingFilter")
 @Service()
@@ -29,5 +30,13 @@ export class BookingFilterController {
   public async filterBookings(@QueryParams() request: BookingDateFilterRequestDto ) {
     return this.bookingService.filterBookings(request);
   }
+
+  @Post("/booked")
+  public async getBookedList(@Body() query: BookingRequestDto) {
+    const bookings = this.bookingService.getBookedList(query);
+    return bookings;
+  }
+
+
 
 }

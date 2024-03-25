@@ -2,15 +2,15 @@ import { Body, Get, JsonController, Post, QueryParams } from "routing-controller
 import BookingService from "../../services/booking/BookingService";
 import { Service } from "typedi";
 import { BookingDateFilterRequestDto } from "../../dto/booking/BookingDateFilterRequestDto";
-import { BookedRequestDto } from "../../dto/booking/BookedRequestDto";
+import { BookingRequestDto } from "../../dto/booking/BookingRequestDto";
 
 @JsonController("/user/bookedFilter")
 @Service()
-export class BookingFilterController {
+export class UserBookingFilterController {
   constructor(private bookingService: BookingService) {}
 
   @Post("/booked")
-  public async getBookedList(@Body() query: BookedRequestDto) {
+  public async getBookedList(@Body() query: BookingRequestDto) {
     const bookings = this.bookingService.getBookedList(query);
     return bookings;
   }

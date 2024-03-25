@@ -12,7 +12,6 @@ const amountSchema = new Schema({
         default: BookingType.Turf,
       },
       bookingAmount: Number,
-      court: Number,
       deleted: Boolean
 
 });

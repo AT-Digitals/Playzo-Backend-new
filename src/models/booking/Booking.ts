@@ -51,6 +51,7 @@ const bookingSchema = new Schema({
     type: Boolean,
     default: false,
   },  
+  connectId:String,
   isAnnual: Boolean,
   isRefund: Boolean,
   deleted: Boolean

@@ -29,6 +29,7 @@ export class BookingDto {
   numberOfPerson?:number;
   membership:boolean;
   isRefund?: boolean;
+  connectId?:string;
   deleted: boolean;
 
   constructor(booking: BookingModel) {
@@ -52,5 +53,6 @@ export class BookingDto {
     this.isRefund = booking.isRefund;
     this.isAnnual = booking.isAnnual;
     this.membership = booking.membership;
+    this.connectId = booking.connectId;
   }
 }
