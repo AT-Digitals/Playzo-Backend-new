@@ -94,11 +94,11 @@ export default class BookingService {
         upi: 0
       };
     } else {
-      const onlineValue = request.bookingAmount?.online ?? 0;
+      const onlineValue = request.bookingAmount?.cash ?? 0;
       if (onlineValue <= totalAmount) {
         booking.bookingAmount = {
-          online: onlineValue,
-          cash: 0,
+          online: 0,
+          cash: onlineValue,
           total: onlineValue,
           refund: 0,
           upi: 0
@@ -147,6 +147,7 @@ export default class BookingService {
       booking.isAnnual = diffDuration.years() > 0;
     booking.duration = days;
     booking.deleted = false;
+    console.log("bookings",bookings)
       bookings.push(booking);
     }
     const bookingList = await Booking.insertMany(bookings);
