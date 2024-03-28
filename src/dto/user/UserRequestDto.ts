@@ -21,5 +21,8 @@ export class UserRequestDto {
   
   @IsOptional()
   interestedSports?:string[];
+
+  @IsOptional()
+  image?:string;
  
 }

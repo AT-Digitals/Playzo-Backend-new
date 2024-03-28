@@ -147,7 +147,6 @@ export default class BookingService {
       booking.isAnnual = diffDuration.years() > 0;
     booking.duration = days;
     booking.deleted = false;
-    console.log("bookings",bookings)
       bookings.push(booking);
     }
     const bookingList = await Booking.insertMany(bookings);

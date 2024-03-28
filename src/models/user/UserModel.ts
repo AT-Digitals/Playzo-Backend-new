@@ -11,6 +11,7 @@ export interface UserModel extends Document {
   otp?:string;
   expireTime?:Date;
   interestedSports?:string[];
+  image?:string;
   bookingHistory: BookingModel["id"][] | BookingModel[];
   setPassword(password: string): Promise<void>;
   validateUser(password: string): Promise<boolean>;

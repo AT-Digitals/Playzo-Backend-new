@@ -11,6 +11,7 @@ export class UserDto extends AuthDto{
   phone?: number;
   interestedSports?:string[];
   token?:string;
+  image?: string;
   bookingHistory: BookingDto[] = [];
 
   constructor(user: UserModel) {
@@ -24,5 +25,6 @@ export class UserDto extends AuthDto{
     this.phone = user.phone;
     this.userType = UserType.USER;
     this.interestedSports = user.interestedSports;
+    this.image = user.image;
   }
 }

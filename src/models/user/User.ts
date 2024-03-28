@@ -26,7 +26,8 @@ const UserSchema = new Schema({
       ref: "bookings",
       index: true,
     },
-  ]
+  ],
+  images: String,
 });
 
 UserSchema.methods.setPassword = MongoDatabase.setPassword;

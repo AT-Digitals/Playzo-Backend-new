@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  QueryParam,
   Res,
 } from "routing-controllers";
 import AuthDto from "../../dto/auth/AuthDto";
@@ -19,11 +20,15 @@ import { UserRequestDto } from "../../dto/user/UserRequestDto";
 import { UserServices } from "../../services/user/UserServices"; 
 import { error } from "console";
 import PasswordRequestDto from "../../dto/auth/PasswordRequestDto";
+import UploadService from "../../services/upload/uploadService";
+import PresignedRequestDto from "../../dto/user/PresignedRequestDto";
 
 @JsonController("/user")
 @Service()
 export class UserLoginController {
-  constructor(private userService: UserServices) {}
+  constructor(
+   private userService: UserServices, 
+   private uploadService: UploadService) {}
 
   @Get("/me")
   // @Authorized()
@@ -107,6 +112,18 @@ export class UserLoginController {
     } 
     
     throw error("Not able to get token");
+  }
+
+  @Get("/media/presigned-url/:userId")
+  public async getPresignedUrlForNewMedia(
+    @QueryParam("name") name: string,
+    @Param("userId") userId: string,
+  ) {
+    const presignedRequest = await this.uploadService.getPresignedUrl(
+      "user/media/" + userId,
+      name
+    );
+    return new PresignedRequestDto(presignedRequest);
   }
   
 }
