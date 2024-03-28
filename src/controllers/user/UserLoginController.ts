@@ -114,13 +114,12 @@ export class UserLoginController {
     throw error("Not able to get token");
   }
 
-  @Get("/media/presigned-url/:userId")
+  @Get("/media/presigned-url")
   public async getPresignedUrlForNewMedia(
     @QueryParam("name") name: string,
-    @Param("userId") userId: string,
   ) {
     const presignedRequest = await this.uploadService.getPresignedUrl(
-      "user/media/" + userId,
+      "user/media",
       name
     );
     return new PresignedRequestDto(presignedRequest);

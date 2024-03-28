@@ -42,7 +42,7 @@ export default class StringUtils {
     return array.filter((val) => searchBy(val).toLowerCase().includes(value));
   }
 
-  public static splitByTarget(text: string, target: string): MatchedPart[] {
+  public static splitByTarget(text: any, target: string): MatchedPart[] {
     if (target === "") {
       return [{ startIndex: 0, text, matched: false }];
     }
